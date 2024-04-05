@@ -17,7 +17,7 @@ pub struct ClaimBox<'info> {
         // mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
         bump=box_acount.bump,
-        constraint = box_acount.authority != Pubkey::default() @ BoxErrors::BoxClosed,
+        constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
     )]
     pub box_acount: Account<'info, BoxStruct>,
 

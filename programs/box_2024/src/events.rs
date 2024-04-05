@@ -1,5 +1,22 @@
 use anchor_lang::prelude::*;
 
+use crate::{AuthRole, BoxStatus};
+
+#[event]
+pub struct SetAuthorityEvent {
+    pub admin: Pubkey,
+    pub role: AuthRole,
+    pub operators: Vec<Pubkey>,
+    pub time: i64,
+}
+
+#[event]
+pub struct SetStatusEvent {
+    pub admin: Pubkey,
+    pub status: BoxStatus,
+    pub time: i64,
+}
+
 #[event]
 pub struct CreationBoxEvent {
     pub authority: Pubkey,

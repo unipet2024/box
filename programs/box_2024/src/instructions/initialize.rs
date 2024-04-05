@@ -14,7 +14,7 @@ pub struct Initialize<'info> {
     pub unipet_box: Box<Account<'info, UnipetBox>>,
     #[account(
         init_if_needed,
-        space = 60,
+        space = 8 + 170,
         payer = authority,
         seeds = [ADMIN_ROLE], 
         bump,
@@ -22,7 +22,7 @@ pub struct Initialize<'info> {
     pub admin_account:  Account<'info, AuthorityRole>,
     #[account(
         init_if_needed,
-        space = 60,
+        space = 8 + 170,
         payer = authority,
         seeds = [OPERATOR_ROLE], 
         bump,
@@ -47,15 +47,14 @@ pub fn init_handler(ctx: Context<Initialize>) -> Result<()> {
     )?;
 
     //SET ADMIN
+    let authorities = vec![ctx.accounts.authority.key()];
     admin_account.initialize(
-        ctx.accounts.authority.key(),
+        &authorities,
         ctx.bumps.admin_account,
         AuthRole::Admin,
     )?;
-
-    //SET OPERATOR ROLE FOR ADMIN
     operator_account.initialize(
-        ctx.accounts.authority.key(),
+        &authorities,
         ctx.bumps.operator_account,
         AuthRole::Operator,
     )?;

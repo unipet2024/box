@@ -1,0 +1,531 @@
+import * as anchor from "@coral-xyz/anchor";
+import { Program, Wallet } from "@coral-xyz/anchor";
+import { Box2024 } from "../target/types/box_2024";
+import { assert } from "chai";
+
+import { setTimeout } from "timers/promises";
+
+import {
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  sendAndConfirmRawTransaction,
+  Transaction,
+  sendAndConfirmTransaction,
+  PublicKey,
+} from "@solana/web3.js";
+
+import {
+  createMint,
+  createAssociatedTokenAccount,
+  getAssociatedTokenAddress,
+  getOrCreateAssociatedTokenAccount,
+  mintTo,
+  transfer,
+  createAccount,
+} from "@solana/spl-token";
+
+describe("box_2024", () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+
+  const program = anchor.workspace.Box2024 as Program<Box2024>;
+  const owner = provider.wallet as Wallet;
+  const payer = owner.payer;
+  let conn = program.provider.connection;
+
+  // it("Is initialized!", async () => {
+  //   console.log("owner: ", owner.publicKey.toString());
+  //   const unipet_box_account = getUnipetBoxAccount();
+  //   const admin_account = getAdminAccount();
+  //   const operator_account = getOperatorAccount();
+
+  //   await program.methods
+  //     .initialize()
+  //     .accounts({
+  //       unipetBox: unipet_box_account,
+  //       adminAccount: admin_account,
+  //       operatorAccount: operator_account,
+  //     })
+  //     .rpc();
+
+  //   let unipet_box_account_info = await program.account.unipetBox.fetch(
+  //     unipet_box_account
+  //   );
+  //   assert.equal(
+  //     unipet_box_account_info.admin.toString(),
+  //     admin_account.toString()
+  //   );
+
+  //   assert.equal(
+  //     unipet_box_account_info.operator.toString(),
+  //     operator_account.toString()
+  //   );
+
+  //   let admin_account_info = await program.account.authorityRole.fetch(
+  //     admin_account
+  //   );
+
+  //   assert.equal(
+  //     admin_account_info.authorities[0].toString(),
+  //     owner.publicKey.toString()
+  //   );
+
+  //   // console.log(admin_account_info.authorities);
+
+  //   let operator_account_info = await program.account.authorityRole.fetch(
+  //     operator_account
+  //   );
+
+  //   assert.equal(
+  //     operator_account_info.authorities[0].toString(),
+  //     owner.publicKey.toString()
+  //   );
+  // });
+
+  // it("test add operator!", async () => {
+  //   const unipet_box_account = getUnipetBoxAccount();
+  //   const admin_account = getAdminAccount();
+  //   const operator_account = getOperatorAccount();
+
+  //   await program.methods
+  //     .initialize()
+  //     .accounts({
+  //       unipetBox: unipet_box_account,
+  //       adminAccount: admin_account,
+  //       operatorAccount: operator_account,
+  //     })
+  //     .rpc();
+
+  //   const operator1 = new anchor.web3.Keypair();
+  //   console.log("operator 1: ", operator1.publicKey.toString());
+
+  //   const operator2 = new anchor.web3.Keypair();
+  //   console.log("operator 2: ", operator2.publicKey.toString());
+
+  //   const operator3 = new anchor.web3.Keypair();
+  //   console.log("operator 3: ", operator3.publicKey.toString());
+
+  //   const admin2 = new anchor.web3.Keypair();
+  //   console.log("admin 2: ", admin2.publicKey.toString());
+
+  //   console.log("Airdrop to admin 2");
+  //   await airdrop(conn, owner, admin2.publicKey);
+
+  //   console.log("-----------Set admin---------------");
+  //   let admins_list = [owner.publicKey, admin2.publicKey];
+  //   await program.methods
+  //     .setAuthority({ admin: {} }, admins_list)
+  //     .accounts({
+  //       adminAccount: admin_account,
+  //       operatorAccount: operator_account,
+  //       unipetBox: unipet_box_account,
+  //     })
+  //     .rpc();
+  //   let admin_account_info = await program.account.authorityRole.fetch(
+  //     admin_account
+  //   );
+
+  //   // console.log(admin_account_info);
+
+  //   assert.equal(admin_account_info.authorities.length, admins_list.length);
+
+  //   for (let i in admins_list) {
+  //     assert.equal(
+  //       admin_account_info.authorities[i].toString(),
+  //       admins_list[i].toString()
+  //     );
+  //   }
+
+  //   console.log("-----------Set operator---------------");
+  //   console.log("Admin 2 set operator");
+  //   let operator_list = [
+  //     operator1.publicKey,
+  //     operator2.publicKey,
+  //     operator3.publicKey,
+  //   ];
+  //   await program.methods
+  //     .setAuthority({ operator: {} }, operator_list)
+  //     .accounts({
+  //       adminAccount: admin_account,
+  //       operatorAccount: operator_account,
+  //       unipetBox: unipet_box_account,
+  //       admin: admin2.publicKey,
+  //     })
+  //     .signers([admin2])
+  //     .rpc();
+  //   let operator_account_info = await program.account.authorityRole.fetch(
+  //     operator_account
+  //   );
+
+  //   assert.equal(
+  //     operator_account_info.authorities.length,
+  //     operator_list.length
+  //   );
+
+  //   for (let i in operator_list) {
+  //     assert.equal(
+  //       operator_account_info.authorities[i].toString(),
+  //       operator_list[i].toString()
+  //     );
+  //   }
+  // });
+
+  it("test create box!", async () => {
+    const unipet_box_account = getUnipetBoxAccount();
+    const admin_account = getAdminAccount();
+    const operator_account = getOperatorAccount();
+
+    await program.methods
+      .initialize()
+      .accounts({
+        unipetBox: unipet_box_account,
+        adminAccount: admin_account,
+        operatorAccount: operator_account,
+      })
+      .rpc();
+
+    let unipet_box_account_info = await program.account.unipetBox.fetch(
+      unipet_box_account
+    );
+
+    assert.equal(unipet_box_account_info.boxId, 1);
+
+    const currency1 = await createMint(conn, payer, owner.publicKey, null, 0);
+    console.log("currency: ", currency1);
+
+    const starttime = Math.floor(new Date().getTime() / 1000 - 1000);
+    const endtime = starttime + 5000;
+    const rates = [0, 50, 90, 100];
+    const box1_name = "BOX 1";
+    const price = 100;
+
+    const box_acount = getBoxAccount(1);
+    let currency1_box = await getOrCreateAta(
+      conn,
+      payer,
+      currency1,
+      box_acount
+    );
+
+    try {
+      await program.methods
+        .createBox(
+          box1_name,
+          new anchor.BN(starttime),
+          new anchor.BN(endtime),
+          currency1,
+          new anchor.BN(price),
+          Buffer.from(rates),
+          []
+        )
+        .accounts({
+          unipetBox: unipet_box_account,
+          operatorAccount: operator_account,
+          boxAcount: box_acount,
+        })
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log("------------Check box id after creating-------------");
+    unipet_box_account_info = await program.account.unipetBox.fetch(
+      unipet_box_account
+    );
+
+    assert.equal(unipet_box_account_info.boxId, 2);
+
+    console.log("------------Check box-------------");
+    let box_account_info = await program.account.boxStruct.fetch(box_acount);
+    // console.log(box_account_info);
+    assert.equal(box_account_info.name, box1_name);
+    assert.equal(box_account_info.amount.toNumber(), price);
+    assert.equal(box_account_info.currency.toString(), currency1.toString());
+    assert.equal(box_account_info.endtime.toNumber(), endtime);
+    assert.equal(box_account_info.starttime.toNumber(), starttime);
+    assert.equal(box_account_info.counter.toNumber(), 1);
+    assert.equal(box_account_info.id, 1);
+    assert.deepEqual([...box_account_info.rates], rates);
+
+    console.log("------------Create NFT-------------");
+
+    let mint_list = [];
+    for (let i = 0; i < 10; i++) {
+      const mint = await createMint(conn, payer, owner.publicKey, null, 0);
+      console.log("mint: ", mint.toString());
+      mint_list.push(mint);
+
+      let mint_box = await getOrCreateAta(conn, payer, mint, box_acount);
+
+      await mintTo(conn, owner.payer, mint, mint_box.address, payer, 1);
+    }
+
+    await program.methods
+      .addMints(1, mint_list)
+      .accounts({
+        operatorAccount: operator_account,
+        boxAcount: box_acount,
+      })
+      .rpc();
+
+    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    assert.deepEqual(box_account_info.mints, mint_list);
+
+    // console.log(box_account_info);
+
+    console.log("--------------Buyer 1--------------");
+    const buyer1 = await create_user(currency1);
+    console.log("--------------Buyer 1 buy box 1--------------");
+    try {
+      await program.methods
+        .buyBoxSpl(1)
+        .accounts({
+          boxAcount: box_acount,
+          currencyBox: currency1_box.address,
+          currencyBuyer: buyer1.currency_buyer,
+          currencyMint: currency1,
+          buyer: buyer1.user.publicKey,
+          buyerAccount: buyer1.buyer_account,
+        })
+        .signers([buyer1.user])
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+
+    box_account_info = await program.account.boxStruct.fetch(box_acount);
+
+    let buyer1_account_info = await program.account.userStruct.fetch(
+      buyer1.buyer_account
+    );
+
+    assert.equal(
+      buyer1_account_info.authority.toString(),
+      buyer1.user.publicKey.toString()
+    );
+
+    let currency1_box_balance = await conn.getTokenAccountBalance(
+      currency1_box.address
+    );
+
+    assert.equal(currency1_box_balance.value.amount, "100");
+
+    console.log("-----------Buyer 1 claim---------------");
+    console.log(buyer1_account_info.boughts);
+
+    // console.log(box_account_info);
+    console.log("-----------Box counter---------------");
+    console.log(box_account_info.counter.toNumber());
+
+    console.log("-----------Box purchased---------------");
+    console.log(box_account_info.mintsPurchased);
+
+    console.log("-----------Box mints---------------");
+    console.log(box_account_info.mints);
+
+    console.log("--------------Buyer 2--------------");
+    const buyer2 = await create_user(currency1);
+    console.log("--------------Buyer 2 buy box 1--------------");
+    try {
+      await program.methods
+        .buyBoxSpl(1)
+        .accounts({
+          boxAcount: box_acount,
+          currencyBox: currency1_box.address,
+          currencyBuyer: buyer2.currency_buyer,
+          currencyMint: currency1,
+          buyer: buyer2.user.publicKey,
+          buyerAccount: buyer2.buyer_account,
+        })
+        .signers([buyer2.user])
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+    box_account_info = await program.account.boxStruct.fetch(box_acount);
+
+    currency1_box_balance = await conn.getTokenAccountBalance(
+      currency1_box.address
+    );
+
+    assert.equal(currency1_box_balance.value.amount, "200");
+
+    let buyer2_account_info = await program.account.userStruct.fetch(
+      buyer2.buyer_account
+    );
+
+    assert.equal(
+      buyer2_account_info.authority.toString(),
+      buyer2.user.publicKey.toString()
+    );
+
+    console.log("-----------Buyer 2 claim---------------");
+    console.log(buyer2_account_info.boughts);
+
+    // console.log(box_account_info);
+    console.log("-----------Box counter---------------");
+    console.log(box_account_info.counter.toNumber());
+
+    console.log("-----------Box purchased---------------");
+    console.log(box_account_info.mintsPurchased);
+
+    console.log("-----------Box mints---------------");
+    console.log(box_account_info.mints);
+
+    console.log("--------------Buyer 3--------------");
+    const buyer3 = await create_user(currency1);
+    console.log("--------------Buyer 3 buy box 1--------------");
+    try {
+      await program.methods
+        .buyBoxSpl(1)
+        .accounts({
+          boxAcount: box_acount,
+          currencyBox: currency1_box.address,
+          currencyBuyer: buyer3.currency_buyer,
+          currencyMint: currency1,
+          buyer: buyer3.user.publicKey,
+          buyerAccount: buyer3.buyer_account,
+        })
+        .signers([buyer3.user])
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+    box_account_info = await program.account.boxStruct.fetch(box_acount);
+
+    currency1_box_balance = await conn.getTokenAccountBalance(
+      currency1_box.address
+    );
+
+    assert.equal(currency1_box_balance.value.amount, "300");
+
+    let buyer3_account_info = await program.account.userStruct.fetch(
+      buyer3.buyer_account
+    );
+
+    assert.equal(
+      buyer3_account_info.authority.toString(),
+      buyer3.user.publicKey.toString()
+    );
+
+    console.log("-----------Buyer 3 claim---------------");
+    console.log(buyer3_account_info.boughts);
+
+    // console.log(box_account_info);
+    console.log("-----------Box counter---------------");
+    console.log(box_account_info.counter.toNumber());
+
+    console.log("-----------Box purchased---------------");
+    console.log(box_account_info.mintsPurchased);
+
+    console.log("-----------Box mints---------------");
+    console.log(box_account_info.mints);
+  });
+
+  const getUnipetBoxAccount = () => {
+    const UNIPET_BOX_ACCOUNT = "UNIPET_BOX_ACCOUNT";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(UNIPET_BOX_ACCOUNT)],
+      program.programId
+    );
+    console.log("unipet_box_account: ", mint.toString());
+    return mint;
+  };
+
+  const getOperatorAccount = () => {
+    const OPERATOR_ROLE = "OPERATOR_ROLE";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(OPERATOR_ROLE)],
+      program.programId
+    );
+    console.log("operator_account: ", mint.toString());
+    return mint;
+  };
+
+  const getAdminAccount = () => {
+    const ADMIN_ROLE = "ADMIN_ROLE";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(ADMIN_ROLE)],
+      program.programId
+    );
+    console.log("admin_account: ", mint.toString());
+
+    return mint;
+  };
+
+  const getBoxAccount = (id) => {
+    const BOX_ACCOUNT = "BOX_ACCOUNT";
+    const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from(BOX_ACCOUNT),
+        new anchor.BN(id).toArrayLike(Buffer, "le", 1),
+      ],
+      program.programId
+    );
+    console.log("box account: ", box_account.toString());
+
+    return box_account;
+  };
+
+  const getBuyerAccount = (user) => {
+    const USER_ACCOUNT = "USER_ACCOUNT";
+    const [buyer_account] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(USER_ACCOUNT), user.publicKey.toBuffer()],
+      program.programId
+    );
+    console.log("buyer account: ", buyer_account);
+
+    return buyer_account;
+  };
+
+  async function create_user(currency) {
+    const buyer1 = new anchor.web3.Keypair();
+    console.log("Buyer 1: ", buyer1.publicKey.toString());
+
+    await airdrop(conn, owner, buyer1.publicKey);
+    const currency1_buyer1 = await createAta(
+      conn,
+      owner.payer,
+      currency,
+      buyer1.publicKey
+    );
+    console.log("Buyer 1 currency 1: ", currency1_buyer1.toString());
+
+    const buyer1_account = getBuyerAccount(buyer1);
+    console.log("Buyer 1 account: ", buyer1_account.toString());
+
+    console.log("Mint currency to user");
+    await mintTo(conn, payer, currency, currency1_buyer1, payer, 10000);
+
+    return {
+      user: buyer1,
+      currency_buyer: currency1_buyer1,
+      buyer_account: buyer1_account,
+    };
+  }
+});
+
+async function airdrop(con, from, to) {
+  let transaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: from.publicKey,
+      toPubkey: to,
+      lamports: LAMPORTS_PER_SOL,
+    })
+  );
+
+  // Sign transaction, broadcast, and confirm
+  await sendAndConfirmTransaction(con, transaction, [from.payer]);
+}
+
+async function getAta(mint, user) {
+  return await getAssociatedTokenAddress(mint, user);
+}
+
+async function createAta(conn, payer, mint, to) {
+  return await createAssociatedTokenAccount(conn, payer, mint, to);
+}
+
+async function getOrCreateAta(conn, payer, mint1, acc) {
+  return await getOrCreateAssociatedTokenAccount(conn, payer, mint1, acc, true);
+}

@@ -18,7 +18,7 @@ pub struct CreateBox<'info> {
     #[account(
         seeds = [OPERATOR_ROLE],
         bump = operator_account.bump,
-        constraint = operator_account.authority == authority.key() @ BoxErrors::OnlyOperator,
+        constraint = operator_account.is_authority(authority.key) == true @ BoxErrors::OnlyOperator,
         constraint = operator_account.role == AuthRole::Operator @ BoxErrors::OnlyOperator,
         constraint = operator_account.status == true @ BoxErrors::OnlyOperator,
     )]
@@ -30,8 +30,9 @@ pub struct CreateBox<'info> {
     #[account(
         init,
         payer=authority,
-        space = 8 + 32100,
+        space = 8 + 3300,
         seeds = [BOX_ACCOUNT, unipet_box.box_id.to_le_bytes().as_ref()],
+        // seeds = [BOX_ACCOUNT],
         bump,
     )]
     pub box_acount: Account<'info, BoxStruct>,
@@ -57,7 +58,7 @@ pub fn create_box_handler(
 
     let current = Clock::get()?.unix_timestamp;
 
-    require_gt!(starttime, current, BoxErrors::InvalidTime);
+    // require_gt!(starttime, current, BoxErrors::InvalidTime);
 
     let box_id = unipet_box.box_id;
 

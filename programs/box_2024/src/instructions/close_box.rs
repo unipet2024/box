@@ -10,7 +10,7 @@ pub struct CloseBox<'info> {
     #[account(
         seeds = [OPERATOR_ROLE],
         bump = operator_account.bump,
-        constraint = operator_account.authority == authority.key() @ BoxErrors::OnlyOperator,
+        constraint = operator_account.is_authority(authority.key) == true @ BoxErrors::OnlyOperator,
         constraint = operator_account.role == AuthRole::Operator @ BoxErrors::OnlyOperator,
         constraint = operator_account.status == true @ BoxErrors::OnlyOperator,
     )]

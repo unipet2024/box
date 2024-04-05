@@ -5,7 +5,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-box_2024 = "72FjLwoRaTuaCeWUWBFYGLZo53tx99Wvb3FmE8jyhaqb"
+box_2024 = "3HqqDK1dSviUyVUSXrT4W76PEjAJGJpytRHgezvYiUsR"
 
 [registry]
 url = "https://api.apr.dev"

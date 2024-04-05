@@ -2,6 +2,9 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum BoxErrors {
+    #[msg("Authority already")]
+    AuthorityAlready,
+
     #[msg("Box closed")]
     BoxClosed,
 

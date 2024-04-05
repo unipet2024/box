@@ -10,7 +10,7 @@ pub struct AddMint<'info> {
     #[account(
         seeds = [OPERATOR_ROLE],
         bump = operator_account.bump,
-        constraint = operator_account.authority == authority.key() @ BoxErrors::OnlyOperator,
+        constraint = operator_account.is_authority(authority.key) == true @ BoxErrors::OnlyOperator,
         constraint = operator_account.role == AuthRole::Operator @ BoxErrors::OnlyOperator,
         constraint = operator_account.status == true @ BoxErrors::OnlyOperator,
     )]
@@ -20,7 +20,7 @@ pub struct AddMint<'info> {
         mut,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
         bump=box_acount.bump,
-        constraint = box_acount.authority == authority.key() @ BoxErrors::OnlyOperator,
+        // constraint = box_acount.authority == authority.key() @ BoxErrors::OnlyOperator,
     )]
     pub box_acount: Account<'info, BoxStruct>,
 
