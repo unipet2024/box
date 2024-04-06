@@ -45,8 +45,11 @@ pub mod box_2024 {
         amount: u64,
         rates: Vec<u8>,
         nfts: Vec<Pubkey>,
+        holder: Pubkey,
     ) -> Result<()> {
-        create_box::create_box_handler(ctx, name, starttime, endtime, currency, amount, rates, nfts)
+        create_box::create_box_handler(
+            ctx, name, starttime, endtime, currency, amount, rates, nfts, holder,
+        )
     }
 
     pub fn add_mints(ctx: Context<AddMint>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
@@ -59,5 +62,9 @@ pub mod box_2024 {
 
     pub fn buy_box_sol(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
         buy_box_sol::buy_box_sol_handler(ctx, box_id)
+    }
+
+    pub fn claim(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> {
+        claim_box::claim_handler(ctx, box_id, id)
     }
 }

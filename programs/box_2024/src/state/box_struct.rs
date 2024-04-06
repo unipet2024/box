@@ -16,8 +16,9 @@ pub struct BoxStruct {
     pub rates: Vec<u8>,     // 4+ 1*10 = 14
     pub mints: Vec<Pubkey>, // 4 + 32*100= 3200
     pub mints_purchased: Vec<Pubkey>,
-    pub counter: u64, //8
-    pub bump: u8,     //1
+    pub counter: u64,   //8
+    pub holder: Pubkey, //32
+    pub bump: u8,       //1
 }
 
 impl BoxStruct {
@@ -32,6 +33,7 @@ impl BoxStruct {
         amount: u64,
         rates: Vec<u8>,
         mints: &Vec<Pubkey>,
+        holder: &Pubkey,
         bump: u8,
     ) -> Result<()> {
         self.creator = *creator;
@@ -41,6 +43,7 @@ impl BoxStruct {
         self.endtime = endtime;
         self.currency = currency;
         self.amount = amount;
+        self.holder = *holder;
 
         self.set_rates(rates)?;
         self.set_mints(&mints)?;

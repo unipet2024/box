@@ -22,6 +22,7 @@ import {
   mintTo,
   transfer,
   createAccount,
+  approve,
 } from "@solana/spl-token";
 
 const address0 = new PublicKey("11111111111111111111111111111111");
@@ -39,6 +40,9 @@ describe("box_2024_sol", () => {
     const unipet_box_account = getUnipetBoxAccount();
     const admin_account = getAdminAccount();
     const operator_account = getOperatorAccount();
+    const box_holder = new anchor.web3.Keypair();
+
+    await airdrop(conn, owner, box_holder.publicKey);
 
     await program.methods
       .initialize()
@@ -72,7 +76,8 @@ describe("box_2024_sol", () => {
           address0,
           new anchor.BN(price),
           Buffer.from(rates),
-          []
+          [],
+          box_holder.publicKey
         )
         .accounts({
           unipetBox: unipet_box_account,
@@ -105,15 +110,54 @@ describe("box_2024_sol", () => {
 
     console.log("------------Create NFT-------------");
 
+    console.log("--------------Buyer 1--------------");
+    const buyer1 = await create_user();
+    console.log("--------------Buyer 2--------------");
+    const buyer2 = await create_user();
+    console.log("--------------Buyer 3--------------");
+    const buyer3 = await create_user();
+
     let mint_list = [];
+    let mints_box_account = {};
+    let mints_buyer1 = {};
+    let mints_buyer2 = {};
+    let mints_buyer3 = {};
+    let mints_holder = {}
+
     for (let i = 0; i < 10; i++) {
-      const mint = await createMint(conn, payer, owner.publicKey, null, 0);
-      console.log("mint: ", mint.toString());
-      mint_list.push(mint);
+      const mintNew = await createMint(conn, payer, owner.publicKey, null, 0);
+      console.log("mint: ", mintNew.toString());
+      mint_list.push(mintNew);
 
-      let mint_box = await getOrCreateAta(conn, payer, mint, box_acount);
+      let mint_box = await getOrCreateAta(conn, payer, mintNew, box_acount);
+      let mint_holder = await getOrCreateAta(
+        conn,
+        payer,
+        mintNew,
+        box_holder.publicKey
+      );
 
-      await mintTo(conn, owner.payer, mint, mint_box.address, payer, 1);
+      let mint_buyer1 = await getAta(mintNew, buyer1.user.publicKey);
+      let mint_buyer2 = await getAta(mintNew, buyer2.user.publicKey);
+      let mint_buyer3 = await getAta(mintNew, buyer3.user.publicKey);
+
+      approve(
+        conn,
+        box_holder,
+        mint_holder.address,
+        box_acount,
+        box_holder.publicKey,
+        1
+      );
+
+      mints_box_account[mintNew.toString()] = mint_box;
+      mints_buyer1[mintNew.toString()] = mint_buyer1;
+      mints_buyer2[mintNew.toString()] = mint_buyer2;
+      mints_buyer3[mintNew.toString()] = mint_buyer3;
+      mints_holder[mintNew.toString()] = mint_holder
+
+      // await mintTo(conn, owner.payer, mintNew, mint_box.address, payer, 1);
+      await mintTo(conn, owner.payer, mintNew, mint_holder.address, payer, 1);
     }
 
     await program.methods
@@ -129,8 +173,6 @@ describe("box_2024_sol", () => {
 
     // console.log(box_account_info);
 
-    console.log("--------------Buyer 1--------------");
-    const buyer1 = await create_user();
     console.log("--------------Buyer 1 buy box 1--------------");
     let box_balance_before = await conn.getBalance(box_acount);
     try {
@@ -162,7 +204,6 @@ describe("box_2024_sol", () => {
 
     assert.equal(box_balance_before + 100, box_balance);
 
-    console.log("-----------Buyer 1 claim---------------");
     console.log(buyer1_account_info.boughts);
 
     // console.log(box_account_info);
@@ -175,8 +216,52 @@ describe("box_2024_sol", () => {
     console.log("-----------Box mints---------------");
     console.log(box_account_info.mints);
 
-    console.log("--------------Buyer 2--------------");
-    const buyer2 = await create_user();
+    console.log("-----------Buyer 1 claim---------------");
+
+    let buyer1_claims = buyer1_account_info.boughts;
+
+    for (let i = 0; i < buyer1_claims.length; i++) {
+      console.log(
+        "=====> Buyer 1 claim box id = ",
+        buyer1_claims[i].boxId,
+        " id = ",
+        buyer1_claims[i].id.toNumber(),
+        " mint = ",
+        buyer1_claims[i].mint.toString()
+      );
+
+      if (!buyer1_claims[i].isClaim) {
+        let mint = buyer1_claims[i].mint;
+
+        try {
+          await program.methods
+            .claim(buyer1_claims[i].boxId, buyer1_claims[i].id)
+            .accounts({
+              mint: mint,
+              boxAcount: box_acount,
+              buyer: buyer1.user.publicKey,
+              buyerAccount: buyer1.buyer_account,
+              nftHolder: mints_holder[mint.toString()].address,
+              nftBuyer: mints_buyer1[mint.toString()],
+              holder: box_holder.publicKey
+            })
+            .signers([buyer1.user])
+            .rpc();
+
+          let buyer1_nft_balance_after = await conn.getTokenAccountBalance(
+            mints_buyer1[mint.toString()]
+          );
+
+          console.log(
+            "Balance after claim : ",
+            buyer1_nft_balance_after.value.amount
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+    /*
     console.log("--------------Buyer 2 buy box 1--------------");
     try {
       await program.methods
@@ -219,8 +304,6 @@ describe("box_2024_sol", () => {
     console.log("-----------Box mints---------------");
     console.log(box_account_info.mints);
 
-    console.log("--------------Buyer 3--------------");
-    const buyer3 = await create_user();
     console.log("--------------Buyer 3 buy box 1--------------");
     try {
       await program.methods
@@ -262,6 +345,7 @@ describe("box_2024_sol", () => {
 
     console.log("-----------Box mints---------------");
     console.log(box_account_info.mints);
+    */
   });
 
   const getUnipetBoxAccount = () => {
@@ -315,14 +399,14 @@ describe("box_2024_sol", () => {
       [Buffer.from(USER_ACCOUNT), user.publicKey.toBuffer()],
       program.programId
     );
-    console.log("buyer account: ", buyer_account);
+    // console.log("buyer account: ", buyer_account);
 
     return buyer_account;
   };
 
   async function create_user() {
     const buyer1 = new anchor.web3.Keypair();
-    console.log("Buyer 1: ", buyer1.publicKey.toString());
+    console.log("Buyer : ", buyer1.publicKey.toString());
 
     await airdrop(conn, owner, buyer1.publicKey);
 

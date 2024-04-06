@@ -42,13 +42,14 @@ impl UserStruct {
         Ok(())
     }
 
-    pub fn get_claim(&self, box_id: u8, id: u64) -> usize {
+    pub fn get_claim(&self, box_id: u8, id: u64) -> (usize, bool) {
         for (i, user_claim) in self.boughts.iter().enumerate() {
+            msg!("user_claim: {:?}", user_claim);
             if user_claim.box_id == box_id && user_claim.id == id && !user_claim.is_claim {
-                return i;
+                return (i, true);
             }
         }
-        0
+        (0, false)
     }
 
     // pub fn add_mints(&mut self, mints: Vec<Pubkey>) -> Result<()> {
