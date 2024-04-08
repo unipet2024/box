@@ -31,7 +31,7 @@ const provider = new AnchorProvider(
 
 const idl = IDL;
 // Address of the deployed program.
-const programId = "3HqqDK1dSviUyVUSXrT4W76PEjAJGJpytRHgezvYiUsR";
+const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
@@ -69,8 +69,8 @@ async function create_box() {
         usdc,
         new anchor.BN(price),
         Buffer.from(rates),
-        [],
-        box_holder
+        []
+        // box_holder
       )
       .accounts({
         unipetBox: unipet_box_account,

@@ -18,7 +18,7 @@ pub struct ClaimBox<'info> {
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
         bump=box_acount.bump,
         constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
-        constraint = box_acount.holder == holder.key() @ BoxErrors::InputInvalid,
+        // constraint = box_acount.holder == holder.key() @ BoxErrors::InputInvalid,
     )]
     pub box_acount: Account<'info, BoxStruct>,
 
@@ -31,9 +31,9 @@ pub struct ClaimBox<'info> {
     #[account(
         mut,
         associated_token::mint = mint,
-        associated_token::authority = holder,
+        associated_token::authority = box_acount,
     )]
-    pub nft_holder: Account<'info, TokenAccount>,
+    pub nft_box: Account<'info, TokenAccount>,
 
     #[account(
         mut,
@@ -55,7 +55,7 @@ pub struct ClaimBox<'info> {
     pub buyer: Signer<'info>,
 
     ///CHECK: read only
-    pub holder: UncheckedAccount<'info>,
+    // pub holder: UncheckedAccount<'info>,
 
     pub mint: Account<'info, Mint>,
     pub associated_token_program: Program<'info, AssociatedToken>,
@@ -88,7 +88,7 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
         CpiContext::new(
             mint.to_account_info(),
             Transfer {
-                from: ctx.accounts.nft_holder.to_account_info(),
+                from: ctx.accounts.nft_box.to_account_info(),
                 to: ctx.accounts.nft_buyer.to_account_info(),
                 authority: box_acount.to_account_info(),
             },

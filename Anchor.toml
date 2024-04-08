@@ -5,7 +5,7 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-box_2024 = "3HqqDK1dSviUyVUSXrT4W76PEjAJGJpytRHgezvYiUsR"
+box_2024 = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL"
 
 [registry]
 url = "https://api.apr.dev"

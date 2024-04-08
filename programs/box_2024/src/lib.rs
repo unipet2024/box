@@ -14,7 +14,7 @@ pub use instructions::*;
 pub use state::*;
 pub use types::*;
 
-declare_id!("3HqqDK1dSviUyVUSXrT4W76PEjAJGJpytRHgezvYiUsR");
+declare_id!("88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL");
 
 #[program]
 pub mod box_2024 {
@@ -45,11 +45,8 @@ pub mod box_2024 {
         amount: u64,
         rates: Vec<u8>,
         nfts: Vec<Pubkey>,
-        holder: Pubkey,
     ) -> Result<()> {
-        create_box::create_box_handler(
-            ctx, name, starttime, endtime, currency, amount, rates, nfts, holder,
-        )
+        create_box::create_box_handler(ctx, name, starttime, endtime, currency, amount, rates, nfts)
     }
 
     pub fn add_mints(ctx: Context<AddMint>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {

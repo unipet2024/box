@@ -48,7 +48,7 @@ pub fn create_box_handler(
     amount: u64,
     rates: Vec<u8>,
     nfts: Vec<Pubkey>,
-    holder: Pubkey,
+    // holder: Pubkey,
 ) -> Result<()> {
     let unipet_box = &mut ctx.accounts.unipet_box;
     let box_account = &mut ctx.accounts.box_acount;
@@ -58,7 +58,7 @@ pub fn create_box_handler(
     require_gt!(endtime, starttime, BoxErrors::InvalidTime);
 
     //check holder
-    require_keys_neq!(holder, Pubkey::default(), BoxErrors::InputInvalid);
+    // require_keys_neq!(holder, Pubkey::default(), BoxErrors::InputInvalid);
 
     let current = Clock::get()?.unix_timestamp;
 
@@ -76,7 +76,7 @@ pub fn create_box_handler(
         amount,
         rates,
         &nfts,
-        &holder,
+        // &holder,
         ctx.bumps.box_acount,
     )?;
 

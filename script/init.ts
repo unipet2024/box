@@ -31,7 +31,7 @@ const provider = new AnchorProvider(
 
 const idl = IDL;
 // Address of the deployed program.
-const programId = "3HqqDK1dSviUyVUSXrT4W76PEjAJGJpytRHgezvYiUsR";
+const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
@@ -41,7 +41,7 @@ async function init() {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  const holder = new PublicKey("ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum");
+  // const holder = new PublicKey("ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum");
 
   const unipet_box_account = getUnipetBoxAccount();
   const admin_account = getAdminAccount();

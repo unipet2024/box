@@ -34,6 +34,8 @@ pub fn close_box_handler(
     id: u8
 ) -> Result<()> {
 
+    //
+
     emit!(CloseBoxEvent {
         authority: ctx.accounts.authority.key(),
         id,

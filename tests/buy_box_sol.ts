@@ -143,11 +143,11 @@ describe("box_2024_sol", () => {
 
       approve(
         conn,
-        box_holder,
-        mint_holder.address,
-        box_acount,
-        box_holder.publicKey,
-        1
+        box_holder, // holder
+        mint_holder.address, //holder ata
+        box_acount, // box 
+        box_holder.publicKey, //holder pubkey
+        1 // NFT = 1
       );
 
       mints_box_account[mintNew.toString()] = mint_box;

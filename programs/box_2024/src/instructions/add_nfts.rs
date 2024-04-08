@@ -30,11 +30,15 @@ pub struct AddMint<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn add_mints_handler(ctx: Context<AddMint>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
+pub fn add_mints_handler(ctx: Context<AddMint>, id: u8, mints: Vec<Pubkey>) -> Result<()> {
     let box_account = &mut ctx.accounts.box_acount;
     let authority = &ctx.accounts.authority;
 
-    box_account.add_mints(nfts)?;
+    box_account.add_mints(mints)?;
+
+    // TODO: thêm logic check isApproved
+    // mint NFT cho holder
+    // từ holder approve nft cho box
 
     emit!(AddNftsBoxEvent {
         authority: authority.key(),
