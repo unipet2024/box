@@ -17,7 +17,7 @@ pub struct BuyBoxSPL<'info> {
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
         bump=box_acount.bump,
         constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
-        constraint = box_acount.currency == currency_mint.key() @ BoxErrors::CurrencyNotSupport,
+        // constraint = box_acount.currency == currency_mint.key() @ BoxErrors::CurrencyNotSupport,
         constraint = box_acount.mints.len() >0 @ BoxErrors::SoldOut,
 
     )]
@@ -69,9 +69,13 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     msg!("Start: {:}", box_account.starttime);
     msg!("End: {:}", box_account.endtime);
     require_gte!(current, box_account.starttime, BoxErrors::BoxNotStartYet);
+
+    let amount = box_account.get_currency_amount(ctx.accounts.currency_mint.key());
+    require_gt!(amount, 0, BoxErrors::CurrencyNotSupport);
+
     require_gte!(
         ctx.accounts.currency_buyer.amount,
-        box_account.amount,
+        amount,
         BoxErrors::InsufficientAmount
     );
 
@@ -85,7 +89,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
                 to: ctx.accounts.currency_box.to_account_info(),
             },
         ),
-        box_account.amount,
+        amount,
     )?;
 
     //get random

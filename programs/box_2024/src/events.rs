@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{AuthRole, BoxStatus};
+use crate::{AuthRole, BoxStatus, Currency};
 
 #[event]
 pub struct SetAuthorityEvent {
@@ -24,8 +24,8 @@ pub struct CreationBoxEvent {
     pub name: String,
     pub starttime: i64,   //4
     pub endtime: i64,     //4
-    pub currency: Pubkey, //32
-    pub amount: u64,      //8
+    pub currencies: Vec<Currency>, //32
+    // pub amount: u64,      //8
     pub time: i64,
 }
 

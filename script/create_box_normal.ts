@@ -44,46 +44,48 @@ async function create_box() {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  const box_holder = new PublicKey(
-    "ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum"
-  );
-
   const unipet_box_account = getUnipetBoxAccount();
-  const admin_account = getAdminAccount();
+  // const admin_account = getAdminAccount();
   const operator_account = getOperatorAccount();
 
   const starttime = Math.floor(new Date().getTime() / 1000);
   const endtime = starttime + 30 * 86400;
   const rates = [0, 50, 90, 100];
-  const box1_name = "BOX 1";
-  const price = 1000000;
-
-  const box_acount = getBoxAccount(2);
-
-  let operator_list = [
-    new PublicKey("2z6bJQHscXWHNQAB8Q3YA1RiKg2QBn84Uax3FSANtvDU"),
-    new PublicKey("aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16"),
+  let currencies = [
+    { mint: address0, amount: new anchor.BN(1000000) },
+    {
+      mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
+      amount: new anchor.BN(1000000),
+    },
   ];
+  const box1_name = "BOX NORMAL";
 
-  // try {
-  //   await program.methods
-  //     .setAuthority({ operator: {} }, operator_list)
-  //     .accounts({
-  //       adminAccount: admin_account,
-  //       operatorAccount: operator_account,
-  //       unipetBox: unipet_box_account,
-  //       // admin: wallet.publicKey,
-  //     })
-  //     // .signers([admin2])
-  //     .rpc();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  const box_acount = getBoxAccount(3);
 
-  let operator_account_info = await program.account.authorityRole.fetch(
-    operator_account
+  try {
+    await program.methods
+      .createBox(
+        box1_name,
+        new anchor.BN(starttime),
+        new anchor.BN(endtime),
+        currencies,
+        Buffer.from(rates),
+        []
+      )
+      .accounts({
+        unipetBox: unipet_box_account,
+        operatorAccount: operator_account,
+        boxAcount: box_acount,
+      })
+      .rpc();
+  } catch (error) {
+    console.log(error);
+  }
+
+  let unipet_box_account_info = await program.account.unipetBox.fetch(
+    unipet_box_account
   );
-  console.log(operator_account_info);
+  console.log(unipet_box_account_info);
 }
 
 const getBoxAccount = (id) => {

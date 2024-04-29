@@ -11,3 +11,5 @@ Deployer: aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16
 Box 1 USDC: [5rdRGWEsPR2CPqSZHR9PpbWknHiSd12vN8RTEFPm7YPU](https://explorer.solana.com/address/5rdRGWEsPR2CPqSZHR9PpbWknHiSd12vN8RTEFPm7YPU?cluster=devnet)
 
 Box 2 SOL: [3t7kGt3CJVZjVu2pzFWFknRyBSyiuy3MDXu2f7M6MLaV](https://explorer.solana.com/address/3t7kGt3CJVZjVu2pzFWFknRyBSyiuy3MDXu2f7M6MLaV?cluster=devnet)
+
+Box 3 Normal: [7y85iokPqonC67SDZ5pseFrpsqpdDeGC5D3BfoCtnBGs](https://explorer.solana.com/address/7y85iokPqonC67SDZ5pseFrpsqpdDeGC5D3BfoCtnBGs?cluster=devnet)

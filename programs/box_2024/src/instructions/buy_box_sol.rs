@@ -17,13 +17,13 @@ pub struct BuyBoxSOL<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
-        bump=box_acount.bump,
-        constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
-        constraint = box_acount.currency == Pubkey::default() @ BoxErrors::CurrencyNotSupport,
-        constraint = box_acount.mints.len() >0 @ BoxErrors::SoldOut,
+        bump=box_account.bump,
+        constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
+        // constraint = box_account.get_currency_amount(Pubkey::default()) >0 @ BoxErrors::CurrencyNotSupport,
+        constraint = box_account.mints.len() >0 @ BoxErrors::SoldOut,
 
     )]
-    pub box_acount: Box<Account<'info, BoxStruct>>,
+    pub box_account: Box<Account<'info, BoxStruct>>,
 
     #[account(
         init_if_needed,
@@ -41,7 +41,7 @@ pub struct BuyBoxSOL<'info> {
 }
 
 pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
-    let box_account = &mut ctx.accounts.box_acount;
+    let box_account = &mut ctx.accounts.box_account;
     let buyer_account = &mut ctx.accounts.buyer_account;
     let buyer = &ctx.accounts.buyer;
 
@@ -52,9 +52,13 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
     msg!("Start: {:}", box_account.starttime);
     msg!("End: {:}", box_account.endtime);
     require_gte!(current, box_account.starttime, BoxErrors::BoxNotStartYet);
+
+    let amount = box_account.get_currency_amount(Pubkey::default()) ;
+    require_gt!(amount, 0 ,BoxErrors::CurrencyNotSupport);
+    
     require_gte!(
         ctx.accounts.buyer.to_account_info().lamports(),
-        box_account.amount,
+        amount,
         BoxErrors::InsufficientAmount
     );
 
@@ -63,7 +67,7 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
     let transfer_instruction = system_instruction::transfer(
         buyer.key,
         box_account.to_account_info().key,
-        box_account.amount,
+        amount,
     );
 
     // Invoke the transfer instruction

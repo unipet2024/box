@@ -1,11 +1,19 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    AuthRole, AuthorityRole, BoxErrors, BoxStruct, CreationBoxEvent, UnipetBox, BOX_ACCOUNT,
-    OPERATOR_ROLE, UNIPET_BOX_ACCOUNT,
+    AuthRole, AuthorityRole, BoxErrors, BoxStruct, CreationBoxEvent, Currency, UnipetBox,
+    BOX_ACCOUNT, OPERATOR_ROLE, UNIPET_BOX_ACCOUNT,
 };
 
 #[derive(Accounts)]
+#[instruction(
+    name: String,
+    starttime: i64,
+    endtime: i64,
+    currencies: Vec<Currency>,
+    rates: Vec<u8>,
+    nfts: Vec<Pubkey>
+)]
 pub struct CreateBox<'info> {
     #[account(
         mut,
@@ -44,11 +52,9 @@ pub fn create_box_handler(
     name: String,
     starttime: i64,
     endtime: i64,
-    currency: Pubkey,
-    amount: u64,
+    currencies: Vec<Currency>,
     rates: Vec<u8>,
     nfts: Vec<Pubkey>,
-    // holder: Pubkey,
 ) -> Result<()> {
     let unipet_box = &mut ctx.accounts.unipet_box;
     let box_account = &mut ctx.accounts.box_acount;
@@ -72,11 +78,9 @@ pub fn create_box_handler(
         name.clone(),
         starttime,
         endtime,
-        currency,
-        amount,
+        &currencies,
         rates,
         &nfts,
-        // &holder,
         ctx.bumps.box_acount,
     )?;
 
@@ -88,8 +92,8 @@ pub fn create_box_handler(
         name,
         starttime,
         endtime,
-        currency,
-        amount,
+        currencies,
+        // amount,
         time: current
     });
     Ok(())

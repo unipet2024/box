@@ -36,9 +36,6 @@ pub fn add_mints_handler(ctx: Context<AddMint>, id: u8, mints: Vec<Pubkey>) -> R
 
     box_account.add_mints(mints)?;
 
-    // TODO: thêm logic check isApproved
-    // mint NFT cho holder
-    // từ holder approve nft cho box
 
     emit!(AddNftsBoxEvent {
         authority: authority.key(),

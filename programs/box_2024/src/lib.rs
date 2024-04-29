@@ -41,12 +41,11 @@ pub mod box_2024 {
         name: String,
         starttime: i64,
         endtime: i64,
-        currency: Pubkey,
-        amount: u64,
+        currencies: Vec<Currency>,
         rates: Vec<u8>,
         nfts: Vec<Pubkey>,
     ) -> Result<()> {
-        create_box::create_box_handler(ctx, name, starttime, endtime, currency, amount, rates, nfts)
+        create_box::create_box_handler(ctx, name, starttime, endtime, currencies, rates, nfts)
     }
 
     pub fn add_mints(ctx: Context<AddMint>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {

@@ -6,7 +6,6 @@ pub enum AuthRole {
     Operator,
 }
 
-
 #[derive(PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Clone, Debug, Copy)]
 pub enum BoxStatus {
     Waiting,
@@ -21,4 +20,10 @@ pub struct UserClaim {
     pub id: u64,        //8
     pub mint: Pubkey,   //32
     pub is_claim: bool, // 1
+}
+
+#[derive(PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Clone, Debug, Copy)]
+pub struct Currency {
+    pub mint: Pubkey, //32
+    pub amount: u64,  // 8
 }

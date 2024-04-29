@@ -36,17 +36,13 @@ const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
 const program = new anchor.Program(idl, programId, provider);
 
 const address0 = new PublicKey("11111111111111111111111111111111");
-// const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
+const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
-async function create_box() {
+async function add_nfts() {
   let owner = provider.wallet as Wallet;
   const payer = owner.payer;
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
-
-  const box_holder = new PublicKey(
-    "ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum"
-  );
 
   const unipet_box_account = getUnipetBoxAccount();
   // const admin_account = getAdminAccount();
@@ -58,22 +54,16 @@ async function create_box() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_acount = getBoxAccount(2);
+  const box_acount = getBoxAccount(3);
 
+  let listMint = [
+    new PublicKey("GqYMY6rEC1gAfzgteAmzCECKXZ8MeYsJnAjpQ3CQeN9z"),
+    new PublicKey("Ah8cetRhnCbAdwV83nQdwTta9mXEmy97mrF57B7Xy2qN"),
+  ];
   try {
     await program.methods
-      .createBox(
-        box1_name,
-        new anchor.BN(starttime),
-        new anchor.BN(endtime),
-        address0,
-        new anchor.BN(price),
-        Buffer.from(rates),
-        []
-        // box_holder
-      )
+      .addMints(3, listMint)
       .accounts({
-        unipetBox: unipet_box_account,
         operatorAccount: operator_account,
         boxAcount: box_acount,
       })
@@ -130,4 +120,4 @@ const getAdminAccount = () => {
   return mint;
 };
 
-create_box();
+add_nfts();
