@@ -54,7 +54,7 @@ async function add_nfts() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_acount = getBoxAccount(3);
+  const box_account = getBoxAccount(3);
 
   let listMint = [
     new PublicKey("GqYMY6rEC1gAfzgteAmzCECKXZ8MeYsJnAjpQ3CQeN9z"),
@@ -65,7 +65,7 @@ async function add_nfts() {
       .addMints(3, listMint)
       .accounts({
         operatorAccount: operator_account,
-        boxAcount: box_acount,
+        boxaccount: box_account,
       })
       .rpc();
   } catch (error) {

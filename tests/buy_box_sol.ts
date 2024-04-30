@@ -65,7 +65,7 @@ describe("box_2024_sol", () => {
     const box1_name = "BOX 1";
     const price = 100;
 
-    const box_acount = getBoxAccount(1);
+    const box_account = getBoxAccount(1);
 
     try {
       await program.methods
@@ -82,7 +82,7 @@ describe("box_2024_sol", () => {
         .accounts({
           unipetBox: unipet_box_account,
           operatorAccount: operator_account,
-          boxAcount: box_acount,
+          boxaccount: box_account,
         })
         .rpc();
     } catch (error) {
@@ -97,7 +97,7 @@ describe("box_2024_sol", () => {
     assert.equal(unipet_box_account_info.boxId, 2);
 
     console.log("------------Check box-------------");
-    let box_account_info = await program.account.boxStruct.fetch(box_acount);
+    let box_account_info = await program.account.boxStruct.fetch(box_account);
     // console.log(box_account_info);
     assert.equal(box_account_info.name, box1_name);
     assert.equal(box_account_info.amount.toNumber(), price);
@@ -122,14 +122,14 @@ describe("box_2024_sol", () => {
     let mints_buyer1 = {};
     let mints_buyer2 = {};
     let mints_buyer3 = {};
-    let mints_holder = {}
+    let mints_holder = {};
 
     for (let i = 0; i < 10; i++) {
       const mintNew = await createMint(conn, payer, owner.publicKey, null, 0);
       console.log("mint: ", mintNew.toString());
       mint_list.push(mintNew);
 
-      let mint_box = await getOrCreateAta(conn, payer, mintNew, box_acount);
+      let mint_box = await getOrCreateAta(conn, payer, mintNew, box_account);
       let mint_holder = await getOrCreateAta(
         conn,
         payer,
@@ -145,7 +145,7 @@ describe("box_2024_sol", () => {
         conn,
         box_holder, // holder
         mint_holder.address, //holder ata
-        box_acount, // box 
+        box_account, // box
         box_holder.publicKey, //holder pubkey
         1 // NFT = 1
       );
@@ -154,7 +154,7 @@ describe("box_2024_sol", () => {
       mints_buyer1[mintNew.toString()] = mint_buyer1;
       mints_buyer2[mintNew.toString()] = mint_buyer2;
       mints_buyer3[mintNew.toString()] = mint_buyer3;
-      mints_holder[mintNew.toString()] = mint_holder
+      mints_holder[mintNew.toString()] = mint_holder;
 
       // await mintTo(conn, owner.payer, mintNew, mint_box.address, payer, 1);
       await mintTo(conn, owner.payer, mintNew, mint_holder.address, payer, 1);
@@ -164,22 +164,22 @@ describe("box_2024_sol", () => {
       .addMints(1, mint_list)
       .accounts({
         operatorAccount: operator_account,
-        boxAcount: box_acount,
+        boxaccount: box_account,
       })
       .rpc();
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
     assert.deepEqual(box_account_info.mints, mint_list);
 
     // console.log(box_account_info);
 
     console.log("--------------Buyer 1 buy box 1--------------");
-    let box_balance_before = await conn.getBalance(box_acount);
+    let box_balance_before = await conn.getBalance(box_account);
     try {
       await program.methods
         .buyBoxSol(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           buyer: buyer1.user.publicKey,
           buyerAccount: buyer1.buyer_account,
         })
@@ -189,7 +189,7 @@ describe("box_2024_sol", () => {
       console.log(error);
     }
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
     let buyer1_account_info = await program.account.userStruct.fetch(
       buyer1.buyer_account
@@ -200,7 +200,7 @@ describe("box_2024_sol", () => {
       buyer1.user.publicKey.toString()
     );
 
-    let box_balance = await conn.getBalance(box_acount);
+    let box_balance = await conn.getBalance(box_account);
 
     assert.equal(box_balance_before + 100, box_balance);
 
@@ -238,12 +238,12 @@ describe("box_2024_sol", () => {
             .claim(buyer1_claims[i].boxId, buyer1_claims[i].id)
             .accounts({
               mint: mint,
-              boxAcount: box_acount,
+              boxaccount: box_account,
               buyer: buyer1.user.publicKey,
               buyerAccount: buyer1.buyer_account,
               nftHolder: mints_holder[mint.toString()].address,
               nftBuyer: mints_buyer1[mint.toString()],
-              holder: box_holder.publicKey
+              holder: box_holder.publicKey,
             })
             .signers([buyer1.user])
             .rpc();
@@ -267,7 +267,7 @@ describe("box_2024_sol", () => {
       await program.methods
         .buyBoxSol(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           buyer: buyer2.user.publicKey,
           buyerAccount: buyer2.buyer_account,
         })
@@ -276,9 +276,9 @@ describe("box_2024_sol", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
-    box_balance = await conn.getBalance(box_acount);
+    box_balance = await conn.getBalance(box_account);
 
     assert.equal(box_balance_before + 200, box_balance);
 
@@ -309,7 +309,7 @@ describe("box_2024_sol", () => {
       await program.methods
         .buyBoxSol(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           buyer: buyer3.user.publicKey,
           buyerAccount: buyer3.buyer_account,
         })
@@ -318,9 +318,9 @@ describe("box_2024_sol", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
-    box_balance = await conn.getBalance(box_acount);
+    box_balance = await conn.getBalance(box_account);
 
     assert.equal(box_balance_before + 300, box_balance);
 

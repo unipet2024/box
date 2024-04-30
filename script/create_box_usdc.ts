@@ -58,7 +58,7 @@ async function create_box() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_acount = getBoxAccount(1);
+  const box_account = getBoxAccount(1);
 
   try {
     await program.methods
@@ -75,7 +75,7 @@ async function create_box() {
       .accounts({
         unipetBox: unipet_box_account,
         operatorAccount: operator_account,
-        boxAcount: box_acount,
+        boxaccount: box_account,
       })
       .rpc();
   } catch (error) {

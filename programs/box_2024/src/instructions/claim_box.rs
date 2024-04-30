@@ -16,22 +16,22 @@ pub struct ClaimBox<'info> {
     #[account(
         // mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
-        bump=box_acount.bump,
-        constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
-        // constraint = box_acount.holder == holder.key() @ BoxErrors::InputInvalid,
+        bump=box_account.bump,
+        constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
+        // constraint = box_account.holder == holder.key() @ BoxErrors::InputInvalid,
     )]
-    pub box_acount: Account<'info, BoxStruct>,
+    pub box_account: Account<'info, BoxStruct>,
 
     // #[account(
     //     mut,
     //     associated_token::mint = mint,
-    //     associated_token::authority = box_acount,
+    //     associated_token::authority = box_account,
     // )]
     // pub nft_box: Account<'info, TokenAccount>,
     #[account(
         mut,
         associated_token::mint = mint,
-        associated_token::authority = box_acount,
+        associated_token::authority = box_account,
     )]
     pub nft_box: Account<'info, TokenAccount>,
 
@@ -56,7 +56,6 @@ pub struct ClaimBox<'info> {
 
     ///CHECK: read only
     // pub holder: UncheckedAccount<'info>,
-
     pub mint: Account<'info, Mint>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Program<'info, Token>,
@@ -65,7 +64,7 @@ pub struct ClaimBox<'info> {
 
 pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> {
     let buyer_account = &mut ctx.accounts.buyer_account;
-    let box_acount = &ctx.accounts.box_acount;
+    let box_account = &ctx.accounts.box_account;
     // let buyer = &ctx.accounts.buyer;
     let mint = &ctx.accounts.mint;
     msg!("BOX ID: {:}", box_id);
@@ -82,7 +81,7 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
 
     //transfer NFT  from box to buyer
     msg!("Transfer NFT to buyer");
-    let seeds: &[&[u8]] = &[BOX_ACCOUNT, &[box_id], &[box_acount.bump]];
+    let seeds: &[&[u8]] = &[BOX_ACCOUNT, &[box_id], &[box_account.bump]];
     let signer = &[&seeds[..]];
     transfer(
         CpiContext::new(
@@ -90,7 +89,7 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
             Transfer {
                 from: ctx.accounts.nft_box.to_account_info(),
                 to: ctx.accounts.nft_buyer.to_account_info(),
-                authority: box_acount.to_account_info(),
+                authority: box_account.to_account_info(),
             },
         )
         .with_signer(signer),

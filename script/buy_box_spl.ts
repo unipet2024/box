@@ -8,6 +8,10 @@ import data from "../keys/dev/holder.json";
 // import { setTimeout } from "timers/promises";
 
 import { PublicKey, Keypair, Connection, clusterApiUrl } from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  getOrCreateAssociatedTokenAccount,
+} from "@solana/spl-token";
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 const wallet = Keypair.fromSecretKey(
@@ -31,7 +35,7 @@ const provider = new AnchorProvider(
 
 const idl = IDL;
 // Address of the deployed program.88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL
-const programId = "";
+const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
@@ -54,16 +58,36 @@ async function buy_box() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_acount = getBoxAccount(3);
+  const box_account = getBoxAccount(3);
 
   let buyer_account = getBuyerAccount(owner.publicKey);
+
+  const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
+
+  const box_usdc_account = await getOrCreateAssociatedTokenAccount(
+    connection,
+    owner.payer,
+    usdc,
+    box_account,
+    true
+  );
+  console.log("BOX account usdc: ", box_usdc_account.address.toString());
+
+  const user_usdc_account = await getAssociatedTokenAddress(
+    usdc,
+    owner.publicKey
+  );
+
   try {
     await program.methods
-      .buyBoxSol(3)
+      .buyBoxSpl(3)
       .accounts({
-        boxAccount: box_acount,
+        boxAccount: box_account,
         buyer: owner.publicKey,
         buyerAccount: buyer_account,
+        currencyMint: usdc,
+        currencyBox: box_usdc_account.address,
+        currencyBuyer: user_usdc_account,
       })
       .signers([owner.payer])
       .rpc();
@@ -71,7 +95,7 @@ async function buy_box() {
     console.log(error);
   }
 
-  let box_account_info = await program.account.boxStruct.fetch(box_acount);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
   console.log(box_account_info);
 }
 

@@ -15,19 +15,19 @@ pub struct BuyBoxSPL<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
-        bump=box_acount.bump,
-        constraint = box_acount.creator != Pubkey::default() @ BoxErrors::BoxClosed,
-        // constraint = box_acount.currency == currency_mint.key() @ BoxErrors::CurrencyNotSupport,
-        constraint = box_acount.mints.len() >0 @ BoxErrors::SoldOut,
+        bump=box_account.bump,
+        constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
+        // constraint = box_account.currency == currency_mint.key() @ BoxErrors::CurrencyNotSupport,
+        constraint = box_account.mints.len() >0 @ BoxErrors::SoldOut,
 
     )]
-    pub box_acount: Box<Account<'info, BoxStruct>>,
+    pub box_account: Box<Account<'info, BoxStruct>>,
 
     #[account(
         init_if_needed,
         payer = buyer,
         associated_token::mint = currency_mint,
-        associated_token::authority = box_acount
+        associated_token::authority = box_account
     )]
     pub currency_box: Box<Account<'info, TokenAccount>>,
 
@@ -58,7 +58,7 @@ pub struct BuyBoxSPL<'info> {
 }
 
 pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
-    let box_account = &mut ctx.accounts.box_acount;
+    let box_account = &mut ctx.accounts.box_account;
     let buyer_account = &mut ctx.accounts.buyer_account;
     let buyer = &ctx.accounts.buyer;
 

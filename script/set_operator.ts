@@ -58,7 +58,7 @@ async function create_box() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_acount = getBoxAccount(2);
+  const box_account = getBoxAccount(2);
 
   let operator_list = [
     new PublicKey("2z6bJQHscXWHNQAB8Q3YA1RiKg2QBn84Uax3FSANtvDU"),

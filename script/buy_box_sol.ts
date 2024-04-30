@@ -30,62 +30,49 @@ const provider = new AnchorProvider(
 // console.log("Provider: ", provider);
 
 const idl = IDL;
-// Address of the deployed program.
+// Address of the deployed program.88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL
 const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
 const address0 = new PublicKey("11111111111111111111111111111111");
-// const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
+const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
-async function create_box() {
+async function buy_box() {
   let owner = provider.wallet as Wallet;
   const payer = owner.payer;
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  const unipet_box_account = getUnipetBoxAccount();
+  // const unipet_box_account = getUnipetBoxAccount();
   // const admin_account = getAdminAccount();
-  const operator_account = getOperatorAccount();
+  // const operator_account = getOperatorAccount();
 
   const starttime = Math.floor(new Date().getTime() / 1000);
   const endtime = starttime + 30 * 86400;
   const rates = [0, 50, 90, 100];
-  let currencies = [
-    { mint: address0, amount: new anchor.BN(1000000) },
-    {
-      mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
-      amount: new anchor.BN(1000000),
-    },
-  ];
-  const box1_name = "BOX NORMAL";
+  const box1_name = "BOX 1";
+  const price = 1000000;
 
   const box_account = getBoxAccount(3);
 
+  let buyer_account = getBuyerAccount(owner.publicKey);
   try {
     await program.methods
-      .createBox(
-        box1_name,
-        new anchor.BN(starttime),
-        new anchor.BN(endtime),
-        currencies,
-        Buffer.from(rates),
-        []
-      )
+      .buyBoxSol(3)
       .accounts({
-        unipetBox: unipet_box_account,
-        operatorAccount: operator_account,
-        boxaccount: box_account,
+        boxAccount: box_account,
+        buyer: owner.publicKey,
+        buyerAccount: buyer_account,
       })
+      .signers([owner.payer])
       .rpc();
   } catch (error) {
     console.log(error);
   }
 
-  let unipet_box_account_info = await program.account.unipetBox.fetch(
-    unipet_box_account
-  );
-  console.log(unipet_box_account_info);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
+  console.log(box_account_info);
 }
 
 const getBoxAccount = (id) => {
@@ -130,4 +117,15 @@ const getAdminAccount = () => {
   return mint;
 };
 
-create_box();
+const getBuyerAccount = (user) => {
+  const USER_ACCOUNT = "USER_ACCOUNT";
+  const [buyer] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from(USER_ACCOUNT), user.toBuffer()],
+    program.programId
+  );
+  // console.log("admin_account: ", mint.toString());
+
+  return buyer;
+};
+
+buy_box();

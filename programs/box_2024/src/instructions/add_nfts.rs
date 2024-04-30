@@ -19,10 +19,10 @@ pub struct AddMint<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
-        bump=box_acount.bump,
-        // constraint = box_acount.authority == authority.key() @ BoxErrors::OnlyOperator,
+        bump=box_account.bump,
+        // constraint = box_account.authority == authority.key() @ BoxErrors::OnlyOperator,
     )]
-    pub box_acount: Account<'info, BoxStruct>,
+    pub box_account: Account<'info, BoxStruct>,
 
     #[account(mut, signer)]
     pub authority: Signer<'info>,
@@ -31,11 +31,10 @@ pub struct AddMint<'info> {
 }
 
 pub fn add_mints_handler(ctx: Context<AddMint>, id: u8, mints: Vec<Pubkey>) -> Result<()> {
-    let box_account = &mut ctx.accounts.box_acount;
+    let box_account = &mut ctx.accounts.box_account;
     let authority = &ctx.accounts.authority;
 
     box_account.add_mints(mints)?;
-
 
     emit!(AddNftsBoxEvent {
         authority: authority.key(),

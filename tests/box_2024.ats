@@ -199,12 +199,12 @@ describe("box_2024", () => {
     const box1_name = "BOX 1";
     const price = 100;
 
-    const box_acount = getBoxAccount(1);
+    const box_account = getBoxAccount(1);
     let currency1_box = await getOrCreateAta(
       conn,
       payer,
       currency1,
-      box_acount
+      box_account
     );
 
     try {
@@ -221,7 +221,7 @@ describe("box_2024", () => {
         .accounts({
           unipetBox: unipet_box_account,
           operatorAccount: operator_account,
-          boxAcount: box_acount,
+          boxaccount: box_account,
         })
         .rpc();
     } catch (error) {
@@ -236,7 +236,7 @@ describe("box_2024", () => {
     assert.equal(unipet_box_account_info.boxId, 2);
 
     console.log("------------Check box-------------");
-    let box_account_info = await program.account.boxStruct.fetch(box_acount);
+    let box_account_info = await program.account.boxStruct.fetch(box_account);
     // console.log(box_account_info);
     assert.equal(box_account_info.name, box1_name);
     assert.equal(box_account_info.amount.toNumber(), price);
@@ -255,7 +255,7 @@ describe("box_2024", () => {
       console.log("mint: ", mint.toString());
       mint_list.push(mint);
 
-      let mint_box = await getOrCreateAta(conn, payer, mint, box_acount);
+      let mint_box = await getOrCreateAta(conn, payer, mint, box_account);
 
       await mintTo(conn, owner.payer, mint, mint_box.address, payer, 1);
     }
@@ -264,11 +264,11 @@ describe("box_2024", () => {
       .addMints(1, mint_list)
       .accounts({
         operatorAccount: operator_account,
-        boxAcount: box_acount,
+        boxaccount: box_account,
       })
       .rpc();
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
     assert.deepEqual(box_account_info.mints, mint_list);
 
     // console.log(box_account_info);
@@ -280,7 +280,7 @@ describe("box_2024", () => {
       await program.methods
         .buyBoxSpl(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           currencyBox: currency1_box.address,
           currencyBuyer: buyer1.currency_buyer,
           currencyMint: currency1,
@@ -293,7 +293,7 @@ describe("box_2024", () => {
       console.log(error);
     }
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
     let buyer1_account_info = await program.account.userStruct.fetch(
       buyer1.buyer_account
@@ -330,7 +330,7 @@ describe("box_2024", () => {
       await program.methods
         .buyBoxSpl(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           currencyBox: currency1_box.address,
           currencyBuyer: buyer2.currency_buyer,
           currencyMint: currency1,
@@ -342,7 +342,7 @@ describe("box_2024", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
     currency1_box_balance = await conn.getTokenAccountBalance(
       currency1_box.address
@@ -379,7 +379,7 @@ describe("box_2024", () => {
       await program.methods
         .buyBoxSpl(1)
         .accounts({
-          boxAcount: box_acount,
+          boxaccount: box_account,
           currencyBox: currency1_box.address,
           currencyBuyer: buyer3.currency_buyer,
           currencyMint: currency1,
@@ -391,7 +391,7 @@ describe("box_2024", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_account);
 
     currency1_box_balance = await conn.getTokenAccountBalance(
       currency1_box.address

@@ -43,7 +43,7 @@ pub struct CreateBox<'info> {
         // seeds = [BOX_ACCOUNT],
         bump,
     )]
-    pub box_acount: Account<'info, BoxStruct>,
+    pub box_account: Account<'info, BoxStruct>,
     pub system_program: Program<'info, System>,
 }
 
@@ -57,7 +57,7 @@ pub fn create_box_handler(
     nfts: Vec<Pubkey>,
 ) -> Result<()> {
     let unipet_box = &mut ctx.accounts.unipet_box;
-    let box_account = &mut ctx.accounts.box_acount;
+    let box_account = &mut ctx.accounts.box_account;
     let authority = &ctx.accounts.authority;
 
     //Check time
@@ -81,7 +81,7 @@ pub fn create_box_handler(
         &currencies,
         rates,
         &nfts,
-        ctx.bumps.box_acount,
+        ctx.bumps.box_account,
     )?;
 
     unipet_box.box_id = box_id + 1;

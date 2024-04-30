@@ -23,9 +23,9 @@ pub struct CloseBox<'info> {
         mut,
         close = authority,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
-        bump=box_acount.bump, 
+        bump=box_account.bump, 
     )]
-    pub box_acount: Account<'info, BoxStruct>,
+    pub box_account: Account<'info, BoxStruct>,
     pub system_program: Program<'info, System>,
 }
 
