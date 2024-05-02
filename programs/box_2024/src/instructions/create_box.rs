@@ -79,7 +79,7 @@ pub fn create_box_handler(
         starttime,
         endtime,
         &currencies,
-        rates,
+        &rates,
         &nfts,
         ctx.bumps.box_account,
     )?;

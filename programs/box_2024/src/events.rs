@@ -22,8 +22,8 @@ pub struct CreationBoxEvent {
     pub authority: Pubkey,
     pub id: u8,
     pub name: String,
-    pub starttime: i64,   //4
-    pub endtime: i64,     //4
+    pub starttime: i64,            //4
+    pub endtime: i64,              //4
     pub currencies: Vec<Currency>, //32
     // pub amount: u64,      //8
     pub time: i64,
@@ -33,6 +33,15 @@ pub struct CreationBoxEvent {
 pub struct AddNftsBoxEvent {
     pub authority: Pubkey,
     pub id: u8,
+    pub mints: Vec<Pubkey>,
+    pub time: i64,
+}
+
+#[event]
+pub struct ChangRateBoxEvent {
+    pub authority: Pubkey,
+    pub id: u8,
+    pub rates: Vec<u8>,
     pub time: i64,
 }
 

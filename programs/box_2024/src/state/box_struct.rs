@@ -31,7 +31,7 @@ impl BoxStruct {
         endtime: i64,
         currencies: &Vec<Currency>,
         // amount: u64,
-        rates: Vec<u8>,
+        rates: &Vec<u8>,
         mints: &Vec<Pubkey>,
         // holder: &Pubkey,
         bump: u8,
@@ -46,7 +46,7 @@ impl BoxStruct {
         // self.holder = *holder;
 
         self.set_currencies(&currencies)?;
-        self.set_rates(rates)?;
+        self.set_rates(&rates)?;
         self.set_mints(&mints)?;
         self.counter = 1;
 
@@ -91,7 +91,7 @@ impl BoxStruct {
         Ok(())
     }
 
-    pub fn add_mints(&mut self, mints: Vec<Pubkey>) -> Result<()> {
+    pub fn add_mints(&mut self, mints: &Vec<Pubkey>) -> Result<()> {
         for mint in mints.iter() {
             self.add_mint(&mint)?;
         }
@@ -103,10 +103,14 @@ impl BoxStruct {
         Ok(())
     }
 
-    fn set_rates(&mut self, rates: Vec<u8>) -> Result<()> {
+    pub fn set_rates(&mut self, rates: &Vec<u8>) -> Result<()> {
         require_eq!(self.check_rates(&rates), true, BoxErrors::RateInvalid);
 
-        self.rates = rates;
+        self.rates = vec![];
+
+        for rate in rates.iter() {
+            self.rates.push(*rate);
+        }
         Ok(())
     }
 

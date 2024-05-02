@@ -38,15 +38,11 @@ const program = new anchor.Program(idl, programId, provider);
 const address0 = new PublicKey("11111111111111111111111111111111");
 const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
-async function create_box() {
+async function change_rates() {
   let owner = provider.wallet as Wallet;
   const payer = owner.payer;
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
-
-  const box_holder = new PublicKey(
-    "ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum"
-  );
 
   const unipet_box_account = getUnipetBoxAccount();
   // const admin_account = getAdminAccount();
@@ -58,34 +54,26 @@ async function create_box() {
   const box1_name = "BOX 1";
   const price = 1000000;
 
-  const box_account = getBoxAccount(1);
+  const box_account = getBoxAccount(3);
 
-  try {
-    await program.methods
-      .createBox(
-        box1_name,
-        new anchor.BN(starttime),
-        new anchor.BN(endtime),
-        usdc,
-        new anchor.BN(price),
-        Buffer.from(rates),
-        []
-        // box_holder
-      )
-      .accounts({
-        unipetBox: unipet_box_account,
-        operatorAccount: operator_account,
-        boxaccount: box_account,
-      })
-      .rpc();
-  } catch (error) {
-    console.log(error);
-  }
+  let listMint = [
+    new PublicKey("GqYMY6rEC1gAfzgteAmzCECKXZ8MeYsJnAjpQ3CQeN9z"),
+    new PublicKey("Ah8cetRhnCbAdwV83nQdwTta9mXEmy97mrF57B7Xy2qN"),
+  ];
+  // try {
+  //   await program.methods
+  //     .changeRates(3, Buffer.from([0, 100]))
+  //     .accounts({
+  //       operatorAccount: operator_account,
+  //       boxAccount: box_account,
+  //     })
+  //     .rpc();
+  // } catch (error) {
+  //   console.log(error);
+  // }
 
-  let unipet_box_account_info = await program.account.unipetBox.fetch(
-    unipet_box_account
-  );
-  console.log(unipet_box_account_info);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
+  console.log(box_account_info);
 }
 
 const getBoxAccount = (id) => {
@@ -130,4 +118,4 @@ const getAdminAccount = () => {
   return mint;
 };
 
-create_box();
+change_rates();

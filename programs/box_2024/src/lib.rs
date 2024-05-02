@@ -48,8 +48,12 @@ pub mod box_2024 {
         create_box::create_box_handler(ctx, name, starttime, endtime, currencies, rates, nfts)
     }
 
-    pub fn add_mints(ctx: Context<AddMint>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
-        add_nfts::add_mints_handler(ctx, id, nfts)
+    pub fn add_mints(ctx: Context<OperatorInstruction>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
+        operator_instruction::add_mints_handler(ctx, id, nfts)
+    }
+
+    pub fn change_rates(ctx: Context<OperatorInstruction>, id: u8, rates: Vec<u8>) -> Result<()> {
+        operator_instruction::change_rate_handler(ctx, id, rates)
     }
 
     pub fn buy_box_spl(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
