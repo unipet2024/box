@@ -60,3 +60,12 @@ pub struct BuyBoxEvent {
     pub mints: Vec<Pubkey>,
     pub time: i64,
 }
+
+#[event]
+pub struct ClaimBoxEvent {
+    pub buyer: Pubkey,
+    pub box_id: u8,
+    pub id: u64,
+    pub mint: Pubkey,
+    pub time: i64,
+}

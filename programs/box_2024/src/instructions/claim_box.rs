@@ -8,7 +8,7 @@ use anchor_spl::{
 use anchor_spl::token::transfer;
 use anchor_spl::token::Transfer;
 
-use crate::{BoxErrors, BoxStruct, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
+use crate::{BoxErrors, BoxStruct, ClaimBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
 
 #[derive(Accounts)]
 #[instruction(box_id: u8, id: u64)]
@@ -98,6 +98,14 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
 
     //update buyer account
     buyer_account.boughts[claim_id].is_claim = true;
+
+    emit!(ClaimBoxEvent {
+        buyer: ctx.accounts.buyer.key(),
+        box_id,
+        id,
+        time: Clock::get()?.unix_timestamp,
+        mint: mint.key()
+    });
 
     Ok(())
 }
