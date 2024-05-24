@@ -35,11 +35,13 @@ pub fn close_box_handler(
 ) -> Result<()> {
 
     //
-
+    let clock = Clock::get().unwrap();
     emit!(CloseBoxEvent {
         authority: ctx.accounts.authority.key(),
         id,
-        time: Clock::get()?.unix_timestamp
+        time: Clock::get()?.unix_timestamp,
+        slot: clock.slot,
+
     });
 
     Ok(())

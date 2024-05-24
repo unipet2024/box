@@ -99,12 +99,14 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
     //update buyer account
     buyer_account.boughts[claim_id].is_claim = true;
 
+    let lock = Clock::get().unwrap();
     emit!(ClaimBoxEvent {
         buyer: ctx.accounts.buyer.key(),
         box_id,
         id,
-        time: Clock::get()?.unix_timestamp,
-        mint: mint.key()
+        time: lock.unix_timestamp,
+        mint: mint.key(),  //CHECK: mint.key().to_string() or mint.key().to_string(),
+        slot: lock.slot,
     });
 
     Ok(())

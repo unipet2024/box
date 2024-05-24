@@ -86,6 +86,8 @@ pub fn create_box_handler(
 
     unipet_box.box_id = box_id + 1;
 
+    let clock = Clock::get().unwrap();
+
     emit!(CreationBoxEvent {
         authority: authority.key(),
         id: box_id,
@@ -93,7 +95,7 @@ pub fn create_box_handler(
         starttime,
         endtime,
         currencies,
-        // amount,
+        slot: clock.slot,
         time: current
     });
     Ok(())

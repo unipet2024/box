@@ -155,12 +155,15 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     // //update box counter
     box_account.counter = box_account.counter + unlock as u64;
 
+
+    let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
         box_id,
         id: box_account.counter,
         buyer: buyer.key(),
         mints: mint_unlocks,
-        time: current
+        time: clock.unix_timestamp,
+        slot: clock.slot,
     });
 
     Ok(())

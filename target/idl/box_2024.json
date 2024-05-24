@@ -714,6 +714,11 @@
           "name": "time",
           "type": "i64",
           "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
         }
       ]
     },
@@ -786,6 +791,11 @@
           "name": "time",
           "type": "i64",
           "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
         }
       ]
     },
@@ -818,6 +828,11 @@
           "name": "time",
           "type": "i64",
           "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
         }
       ]
     },
@@ -847,6 +862,11 @@
         {
           "name": "time",
           "type": "i64",
+          "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
           "index": false
         }
       ]
