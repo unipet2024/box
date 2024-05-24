@@ -1,9 +1,0 @@
-/Users/roster/Projects/unipet-2024/box/target/debug/deps/libspl_type_length_value-f39c49bee47de826.rmeta: /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/lib.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/error.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/length.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/state.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/variable_len_pack.rs
-
-/Users/roster/Projects/unipet-2024/box/target/debug/deps/spl_type_length_value-f39c49bee47de826.d: /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/lib.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/error.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/length.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/state.rs /Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/variable_len_pack.rs
-
-/Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/lib.rs:
-/Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/error.rs:
-/Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/length.rs:
-/Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/state.rs:
-/Users/roster/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spl-type-length-value-0.3.0/src/variable_len_pack.rs:

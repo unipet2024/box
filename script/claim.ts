@@ -32,7 +32,7 @@ const provider = new AnchorProvider(
 
 const idl = IDL;
 // Address of the deployed program.
-const programId = "88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL";
+const programId = "FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 

@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
-use crate::{ AuthRole, AuthorityRole, UnipetBox, ADMIN_ROLE, OPERATOR_ROLE, UNIPET_BOX_ACCOUNT};
+use crate::{AuthRole, AuthorityRole, UnipetBox, ADMIN_ROLE, OPERATOR_ROLE, UNIPET_BOX_ACCOUNT};
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     #[account(
-        init_if_needed,  
-        payer = authority, 
+        init_if_needed,
+        payer = authority,
         space =8 + 250,
         seeds = [UNIPET_BOX_ACCOUNT],
         bump
@@ -16,29 +16,28 @@ pub struct Initialize<'info> {
         init_if_needed,
         space = 8 + 170,
         payer = authority,
-        seeds = [ADMIN_ROLE], 
+        seeds = [ADMIN_ROLE],
         bump,
     )]
-    pub admin_account:  Account<'info, AuthorityRole>,
+    pub admin_account: Account<'info, AuthorityRole>,
     #[account(
         init_if_needed,
         space = 8 + 170,
         payer = authority,
-        seeds = [OPERATOR_ROLE], 
+        seeds = [OPERATOR_ROLE],
         bump,
     )]
-    pub operator_account:  Account<'info, AuthorityRole>,
+    pub operator_account: Account<'info, AuthorityRole>,
 
     #[account(mut, signer)]
     pub authority: Signer<'info>,
-    pub system_program: Program<'info, System>, 
+    pub system_program: Program<'info, System>,
 }
 
 pub fn init_handler(ctx: Context<Initialize>) -> Result<()> {
     let unipet_box = &mut ctx.accounts.unipet_box;
     let admin_account = &mut ctx.accounts.admin_account;
     let operator_account = &mut ctx.accounts.operator_account;
-
 
     unipet_box.init(
         admin_account.key(),
@@ -48,16 +47,8 @@ pub fn init_handler(ctx: Context<Initialize>) -> Result<()> {
 
     //SET ADMIN
     let authorities = vec![ctx.accounts.authority.key()];
-    admin_account.initialize(
-        &authorities,
-        ctx.bumps.admin_account,
-        AuthRole::Admin,
-    )?;
-    operator_account.initialize(
-        &authorities,
-        ctx.bumps.operator_account,
-        AuthRole::Operator,
-    )?;
+    admin_account.initialize(&authorities, ctx.bumps.admin_account, AuthRole::Admin)?;
+    operator_account.initialize(&authorities, ctx.bumps.operator_account, AuthRole::Operator)?;
 
     Ok(())
 }

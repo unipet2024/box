@@ -2,16 +2,10 @@
 
 ## DEVNET
 
-HOLDER: ESAaePH3mJjw9zZxnLGfnR1jVdnA7ieq2YaYeu8NcKum
-
-PROGRAM ID: [88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL](https://explorer.solana.com/address/88R4EnKBkAZ746qLeMDVmvYL4DfeyYmt4TawJchzT2vL?cluster=devnet)
+PROGRAM ID: [FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f](https://explorer.solana.com/address/FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f?cluster=devnet)
 
 Deployer: aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16
 
-Box 1 USDC: [5rdRGWEsPR2CPqSZHR9PpbWknHiSd12vN8RTEFPm7YPU](https://explorer.solana.com/address/5rdRGWEsPR2CPqSZHR9PpbWknHiSd12vN8RTEFPm7YPU?cluster=devnet)
+Box 1 Normal: [Zn5wSJSeqURq8zsgjQ5ZPkyyfCrmrT3Sq8SCJUdmB5V](https://explorer.solana.com/address/Zn5wSJSeqURq8zsgjQ5ZPkyyfCrmrT3Sq8SCJUdmB5V?cluster=devnet)
 
-Box 2 SOL: [3t7kGt3CJVZjVu2pzFWFknRyBSyiuy3MDXu2f7M6MLaV](https://explorer.solana.com/address/3t7kGt3CJVZjVu2pzFWFknRyBSyiuy3MDXu2f7M6MLaV?cluster=devnet)
-
-Box 3 Normal: [7y85iokPqonC67SDZ5pseFrpsqpdDeGC5D3BfoCtnBGs](https://explorer.solana.com/address/7y85iokPqonC67SDZ5pseFrpsqpdDeGC5D3BfoCtnBGs?cluster=devnet)
-
-Box 4 Premium [CFJwwRhRt8UoPHdLesX3KAyHCD3pPihR2YvbHmBT8WRn](https://explorer.solana.com/address/CFJwwRhRt8UoPHdLesX3KAyHCD3pPihR2YvbHmBT8WRn?cluster=devnet)
+Box 2 Premium [5qYqj5kydPBvwPesuQ2e2Bbk5dJLJrBqhc8ToikRpMQZ](https://explorer.solana.com/address/5qYqj5kydPBvwPesuQ2e2Bbk5dJLJrBqhc8ToikRpMQZ?cluster=devnet)
