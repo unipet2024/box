@@ -20,7 +20,9 @@ export const set_operator = async () => {
         adminAccount: admin_account,
         operatorAccount: operator_account,
         unipetBox: unipet_box_account,
+        // admin: wallet.publicKey,
       })
+      // .signers([admin2])
       .rpc();
   } catch (error) {
     console.log(error);

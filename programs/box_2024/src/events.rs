@@ -35,6 +35,7 @@ pub struct AddNftsBoxEvent {
     pub id: u8,
     pub mints: Vec<Pubkey>,
     pub time: i64,
+    pub slot: u64,
 }
 
 #[event]

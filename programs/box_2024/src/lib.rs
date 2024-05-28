@@ -14,7 +14,7 @@ pub use instructions::*;
 pub use state::*;
 pub use types::*;
 
-declare_id!("FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f");
+declare_id!("6ZHVd3e9rykT1WeMrAxbs7ur8hkrwXwDn7VV1eBuQyDW");
 
 #[program]
 pub mod box_2024 {

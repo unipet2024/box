@@ -40,11 +40,13 @@ pub fn add_mints_handler(
 
     box_account.add_mints(&mints)?;
 
+    let clock = Clock::get().unwrap();
     emit!(AddNftsBoxEvent {
         authority: authority.key(),
         id,
         mints,
-        time: Clock::get()?.unix_timestamp
+        time: clock.unix_timestamp,
+        slot:clock.slot
     });
 
     Ok(())

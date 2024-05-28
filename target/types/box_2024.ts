@@ -746,6 +746,11 @@ export type Box2024 = {
           "name": "time",
           "type": "i64",
           "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
         }
       ]
     },
@@ -1703,6 +1708,11 @@ export const IDL: Box2024 = {
         {
           "name": "time",
           "type": "i64",
+          "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
           "index": false
         }
       ]
