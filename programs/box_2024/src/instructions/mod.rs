@@ -7,6 +7,7 @@ pub mod close_box;
 pub mod create_box;
 pub mod initialize;
 pub mod operator_instruction;
+pub mod add_nft_box;
 
 // pub use add_nfts::*;
 pub use admin_instruction::*;
@@ -17,3 +18,4 @@ pub use close_box::*;
 pub use create_box::*;
 pub use initialize::*;
 pub use operator_instruction::*;
+pub use add_nft_box::*;

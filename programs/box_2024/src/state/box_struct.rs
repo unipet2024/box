@@ -96,9 +96,9 @@ impl BoxStruct {
             self.add_mint(&mint)?;
         }
         Ok(())
-    }
+    } 
 
-    fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
+    pub fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
         self.mints.push(*mint);
         Ok(())
     }

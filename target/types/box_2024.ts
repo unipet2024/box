@@ -157,11 +157,11 @@ export type Box2024 = {
           "type": "string"
         },
         {
-          "name": "starttime",
+          "name": "startTime",
           "type": "i64"
         },
         {
-          "name": "endtime",
+          "name": "endTime",
           "type": "i64"
         },
         {
@@ -218,6 +218,62 @@ export type Box2024 = {
           "type": {
             "vec": "publicKey"
           }
+        }
+      ]
+    },
+    {
+      "name": "addNftToBox",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "boxAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authorityAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u8"
         }
       ]
     },
@@ -692,12 +748,12 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "starttime",
+          "name": "startTime",
           "type": "i64",
           "index": false
         },
         {
-          "name": "endtime",
+          "name": "endTime",
           "type": "i64",
           "index": false
         },
@@ -740,6 +796,36 @@ export type Box2024 = {
           "type": {
             "vec": "publicKey"
           },
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "AddNftBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "id",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "mint",
+          "type": "publicKey",
           "index": false
         },
         {
@@ -1120,11 +1206,11 @@ export const IDL: Box2024 = {
           "type": "string"
         },
         {
-          "name": "starttime",
+          "name": "startTime",
           "type": "i64"
         },
         {
-          "name": "endtime",
+          "name": "endTime",
           "type": "i64"
         },
         {
@@ -1181,6 +1267,62 @@ export const IDL: Box2024 = {
           "type": {
             "vec": "publicKey"
           }
+        }
+      ]
+    },
+    {
+      "name": "addNftToBox",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "boxAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authorityAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u8"
         }
       ]
     },
@@ -1655,12 +1797,12 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "starttime",
+          "name": "startTime",
           "type": "i64",
           "index": false
         },
         {
-          "name": "endtime",
+          "name": "endTime",
           "type": "i64",
           "index": false
         },
@@ -1703,6 +1845,36 @@ export const IDL: Box2024 = {
           "type": {
             "vec": "publicKey"
           },
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "slot",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "AddNftBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "id",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "mint",
+          "type": "publicKey",
           "index": false
         },
         {

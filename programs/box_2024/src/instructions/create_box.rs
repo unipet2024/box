@@ -18,7 +18,7 @@ pub struct CreateBox<'info> {
     #[account(
         mut,
         seeds = [UNIPET_BOX_ACCOUNT],
-        bump=unipet_box.bump,
+        bump = unipet_box.bump,
         constraint = unipet_box.operator.key() == operator_account.key() @ BoxErrors::OperatorAccountInvalid,
     )]
     pub unipet_box: Box<Account<'info, UnipetBox>>,
@@ -50,8 +50,8 @@ pub struct CreateBox<'info> {
 pub fn create_box_handler(
     ctx: Context<CreateBox>,
     name: String,
-    starttime: i64,
-    endtime: i64,
+    start_time: i64,
+    end_time: i64,
     currencies: Vec<Currency>,
     rates: Vec<u8>,
     nfts: Vec<Pubkey>,
@@ -61,7 +61,7 @@ pub fn create_box_handler(
     let authority = &ctx.accounts.authority;
 
     //Check time
-    require_gt!(endtime, starttime, BoxErrors::InvalidTime);
+    require_gt!(end_time, start_time, BoxErrors::InvalidTime);
 
     //check holder
     // require_keys_neq!(holder, Pubkey::default(), BoxErrors::InputInvalid);
@@ -76,8 +76,8 @@ pub fn create_box_handler(
         authority.key,
         box_id,
         name.clone(),
-        starttime,
-        endtime,
+        start_time,
+        end_time,
         &currencies,
         &rates,
         &nfts,
@@ -92,8 +92,8 @@ pub fn create_box_handler(
         authority: authority.key(),
         id: box_id,
         name,
-        starttime,
-        endtime,
+        start_time,
+        end_time,
         currencies,
         slot: clock.slot,
         time: current

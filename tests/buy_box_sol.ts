@@ -36,6 +36,50 @@ describe("box_2024_sol", () => {
   const payer = owner.payer;
   let conn = program.provider.connection;
 
+  const getUnipetBoxAccount = () => {
+    const UNIPET_BOX_ACCOUNT = "UNIPET_BOX_ACCOUNT";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(UNIPET_BOX_ACCOUNT)],
+      program.programId
+    );
+    console.log("unipet_box_account: ", mint.toString());
+    return mint;
+  };
+
+  const getOperatorAccount = () => {
+    const OPERATOR_ROLE = "OPERATOR_ROLE";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(OPERATOR_ROLE)],
+      program.programId
+    );
+    console.log("operator_account: ", mint.toString());
+    return mint;
+  };
+
+  const getAdminAccount = () => {
+    const ADMIN_ROLE = "ADMIN_ROLE";
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(ADMIN_ROLE)],
+      program.programId
+    );
+    console.log("admin_account: ", mint.toString());
+
+    return mint;
+  };
+
+  const getBoxAccount = (id) => {
+    const BOX_ACCOUNT = "BOX_ACCOUNT";
+    const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from(BOX_ACCOUNT),
+        new anchor.BN(id).toArrayLike(Buffer, "le", 1),
+      ],
+      program.programId
+    );
+    console.log("box account: ", box_account.toString());
+
+    return box_account;
+  };
   // it("test buy box sol! ", async () => {
   //   const unipet_box_account = getUnipetBoxAccount();
   //   const admin_account = getAdminAccount();
@@ -348,259 +392,224 @@ describe("box_2024_sol", () => {
   //   */
   // });
 
-  // it('test init', async () => {
-  //   const unipet_box_account = getUnipetBoxAccount();
-  //   const admin_account = getAdminAccount();
-  //   const operator_account = getOperatorAccount();
+  it('test init', async () => {
+    const unipet_box_account = getUnipetBoxAccount();
+    const admin_account = getAdminAccount();
+    const operator_account = getOperatorAccount();
 
-  //   try {
-  //     await program.methods
-  //       .initialize()
-  //       .accounts({
-  //         unipetBox: unipet_box_account,
-  //         adminAccount: admin_account,
-  //         operatorAccount: operator_account,
-  //       })
-  //       .rpc();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-  //   let unipet_box_account_info = await program.account.unipetBox.fetch(
-  //     unipet_box_account
-  //   );
-  //   console.log(unipet_box_account_info);
-  // // });
-  // it('should create box normal', async () => {
-  //   const unipet_box_account = getUnipetBoxAccount();
-  //   const operator_account = getOperatorAccount();
-
-  // const starttime = Math.floor(new Date().getTime() / 1000);
-  // const endtime = starttime + 30 * 86400;
-  // const rates = [0, 50, 90, 100];
-  // let currencies = [
-  //   { mint: address0, amount: new anchor.BN(1000000) },
-  //   {
-  //     mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
-  //     amount: new anchor.BN(1000000),
-  //   },
-  // ];
-  // const box1_name = "BOX NORMAL";
-
-  // const box_account = getBoxAccount(1);
-
-  // try {
-  //   await program.methods
-  //     .createBox(
-  //       box1_name,
-  //       new anchor.BN(starttime),
-  //       new anchor.BN(endtime),
-  //       currencies,
-  //       Buffer.from(rates),
-  //       []
-  //     )
-  //     .accounts({
-  //       unipetBox: unipet_box_account,
-  //       operatorAccount: operator_account,
-  //       boxAccount: box_account,
-  //     })
-  //     .rpc();
-  // } catch (error) {
-  //   console.log(error);
-  // }
-
-  // let unipet_box_account_info = await program.account.unipetBox.fetch(
-  //   unipet_box_account
-  // );
-  // console.log(unipet_box_account_info);
-
-  // })
-  // it('should create box premium', async () => {
-  //   const unipet_box_account = getUnipetBoxAccount();
-  //   // const admin_account = getAdminAccount();
-  //   const operator_account = getOperatorAccount();
-  
-  //   const starttime = Math.floor(new Date().getTime() / 1000);
-  //   const endtime = starttime + 30 * 86400;
-  //   const rates = [0, 50, 90, 100];
-  //   let currencies = [
-  //     { mint: address0, amount: new anchor.BN(1000000) },
-  //     {
-  //       mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
-  //       amount: new anchor.BN(1000000),
-  //     },
-  //   ];
-  //   const box1_name = "BOX PREMIUN";
-  
-  //   const box_account = getBoxAccount(2);
-  
-  //   try {
-  //     await program.methods
-  //       .createBox(
-  //         box1_name,
-  //         new anchor.BN(starttime),
-  //         new anchor.BN(endtime),
-  //         currencies,
-  //         Buffer.from(rates),
-  //         []
-  //       )
-  //       .accounts({
-  //         unipetBox: unipet_box_account,
-  //         operatorAccount: operator_account,
-  //         boxAccount: box_account,
-  //       })
-  //       .rpc();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  
-  //   let box_account_info = await program.account.boxStruct.fetch(box_account);
-  //   console.log(box_account_info);
-
-  // })
-
-  it('should set operator', async () => {
-
-  const unipet_box_account = getUnipetBoxAccount();
-  const admin_account = getAdminAccount();
-  const operator_account = getOperatorAccount();
-    let operator_list = [
-      new PublicKey("2z6bJQHscXWHNQAB8Q3YA1RiKg2QBn84Uax3FSANtvDU"),
-      new PublicKey("aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16"),
-      new PublicKey("aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16"),
-    ];
-  
     try {
       await program.methods
-        .setAuthority({ operator: {} }, operator_list)
+        .initialize()
         .accounts({
+          unipetBox: unipet_box_account,
           adminAccount: admin_account,
           operatorAccount: operator_account,
-          unipetBox: unipet_box_account,
-          // admin: wallet.publicKey,
         })
-        // .signers([admin2])
         .rpc();
     } catch (error) {
       console.log(error);
     }
-  
-  })
 
-
-  // it("test buy box sol! ", async () => {
-  //   const unipet_box_account = getUnipetBoxAccount();
-  //   const admin_account = getAdminAccount();
-  //   const operator_account = getOperatorAccount();
-  //   const box_holder = new anchor.web3.Keypair();
-
-
-
-  //   let unipet_box_account_info = await program.account.unipetBox.fetch(unipet_box_account);
-
-
-
-  //   const box_acount = getBoxAccount(2);
-  //   const box_account_info = await program.account.authorityRole.fetch(operator_account);
-  //   console.log(JSON.stringify(box_account_info));
+    let unipet_box_account_info = await program.account.unipetBox.fetch(
+      unipet_box_account
+    );
+    console.log(unipet_box_account_info);
+    // });
+    
     
 
+
+    // it("test buy box sol! ", async () => {
+    //   const unipet_box_account = getUnipetBoxAccount();
+    //   const admin_account = getAdminAccount();
+    //   const operator_account = getOperatorAccount();
+    //   const box_holder = new anchor.web3.Keypair();
+
+
+
+    //   let unipet_box_account_info = await program.account.unipetBox.fetch(unipet_box_account);
+
+
+
+    //   const box_acount = getBoxAccount(2);
+    //   const box_account_info = await program.account.authorityRole.fetch(operator_account);
+    //   console.log(JSON.stringify(box_account_info));
+
+
+
+    // })
+
     
-  // })
 
-  const getUnipetBoxAccount = () => {
-    const UNIPET_BOX_ACCOUNT = "UNIPET_BOX_ACCOUNT";
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from(UNIPET_BOX_ACCOUNT)],
-      program.programId
-    );
-    console.log("unipet_box_account: ", mint.toString());
-    return mint;
-  };
+    const getBuyerAccount = (user) => {
+      const USER_ACCOUNT = "USER_ACCOUNT";
+      const [buyer_account] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from(USER_ACCOUNT), user.publicKey.toBuffer()],
+        program.programId
+      );
+      // console.log("buyer account: ", buyer_account);
 
-  const getOperatorAccount = () => {
-    const OPERATOR_ROLE = "OPERATOR_ROLE";
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from(OPERATOR_ROLE)],
-      program.programId
-    );
-    console.log("operator_account: ", mint.toString());
-    return mint;
-  };
-
-  const getAdminAccount = () => {
-    const ADMIN_ROLE = "ADMIN_ROLE";
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from(ADMIN_ROLE)],
-      program.programId
-    );
-    console.log("admin_account: ", mint.toString());
-
-    return mint;
-  };
-
-  const getBoxAccount = (id) => {
-    const BOX_ACCOUNT = "BOX_ACCOUNT";
-    const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from(BOX_ACCOUNT),
-        new anchor.BN(id).toArrayLike(Buffer, "le", 1),
-      ],
-      program.programId
-    );
-    console.log("box account: ", box_account.toString());
-
-    return box_account;
-  };
-
-  const getBuyerAccount = (user) => {
-    const USER_ACCOUNT = "USER_ACCOUNT";
-    const [buyer_account] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from(USER_ACCOUNT), user.publicKey.toBuffer()],
-      program.programId
-    );
-    // console.log("buyer account: ", buyer_account);
-
-    return buyer_account;
-  };
-
-  async function create_user() {
-    const buyer1 = new anchor.web3.Keypair();
-    console.log("Buyer : ", buyer1.publicKey.toString());
-
-    await airdrop(conn, owner, buyer1.publicKey);
-
-    const buyer1_account = getBuyerAccount(buyer1);
-    console.log("Buyer 1 account: ", buyer1_account.toString());
-
-    return {
-      user: buyer1,
-      buyer_account: buyer1_account,
+      return buyer_account;
     };
-  }
-});
 
-async function airdrop(con, from, to) {
-  let transaction = new Transaction().add(
-    SystemProgram.transfer({
-      fromPubkey: from.publicKey,
-      toPubkey: to,
-      lamports: LAMPORTS_PER_SOL,
+    // async function create_user() {
+    //   const buyer1 = new anchor.web3.Keypair();
+    //   console.log("Buyer : ", buyer1.publicKey.toString());
+
+    //   await airdrop(conn, owner, buyer1.publicKey);
+
+    //   const buyer1_account = getBuyerAccount(buyer1);
+    //   console.log("Buyer 1 account: ", buyer1_account.toString());
+
+    //   return {
+    //     user: buyer1,
+    //     buyer_account: buyer1_account,
+    //   };
+    // }
+  });
+  
+
+  //
+
+  it('should create box normal', async () => {
+    const unipet_box_account = getUnipetBoxAccount();
+    const operator_account = getOperatorAccount();
+
+    const starttime = Math.floor(new Date().getTime() / 1000);
+    const endtime = starttime + 30 * 86400;
+    const rates = [0, 50, 90, 100];
+    let currencies = [
+      { mint: address0, amount: new anchor.BN(1000000) },
+      {
+        mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
+        amount: new anchor.BN(1000000),
+      },
+    ];
+    const box1_name = "BOX NORMAL";
+
+    const box_account = getBoxAccount(1);
+
+    try {
+      await program.methods
+        .createBox(
+          box1_name,
+          new anchor.BN(starttime),
+          new anchor.BN(endtime),
+          currencies,
+          Buffer.from(rates),
+          []
+        )
+        .accounts({
+          unipetBox: unipet_box_account,
+          operatorAccount: operator_account,
+          boxAccount: box_account,
+        })
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+
+    let unipet_box_account_info = await program.account.unipetBox.fetch(
+      unipet_box_account
+    );
+    console.log(unipet_box_account_info);
+
+  })
+  it('should create box premium', async () => {
+    const unipet_box_account = getUnipetBoxAccount();
+
+    
+    // const admin_account = getAdminAccount();
+    const operator_account = getOperatorAccount();
+
+    const starttime = Math.floor(new Date().getTime() / 1000);
+    const endtime = starttime + 30 * 86400;
+    const rates = [0, 50, 90, 100];
+    let currencies = [
+      { mint: address0, amount: new anchor.BN(1000000) },
+      {
+        mint: new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW"),
+        amount: new anchor.BN(1000000),
+      },
+    ];
+    const box1_name = "BOX PREMIUN";
+
+    const box_account = getBoxAccount(2);
+
+    try {
+      await program.methods
+        .createBox(
+          box1_name,
+          new anchor.BN(starttime),
+          new anchor.BN(endtime),
+          currencies,
+          Buffer.from(rates),
+          []
+        )
+        .accounts({
+          unipetBox: unipet_box_account,
+          operatorAccount: operator_account,
+          boxAccount: box_account,
+        })
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+
+    let box_account_info = await program.account.boxStruct.fetch(box_account);
+    console.log(box_account_info);
+
+  })
+  it('should set operator', async () => {
+
+      const unipet_box_account = getUnipetBoxAccount();
+      const admin_account = getAdminAccount();
+      const operator_account = getOperatorAccount();
+      let operator_list = [
+        new PublicKey("2z6bJQHscXWHNQAB8Q3YA1RiKg2QBn84Uax3FSANtvDU"),
+        new PublicKey("aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16"),
+        new PublicKey("aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16"),
+      ];
+  
+      try {
+        await program.methods
+          .setAuthority({ operator: {} }, operator_list)
+          .accounts({
+            adminAccount: admin_account,
+            operatorAccount: operator_account,
+            unipetBox: unipet_box_account,
+            // admin: wallet.publicKey,
+          })
+          // .signers([admin2])
+          .rpc();
+      } catch (error) {
+        console.log(error);
+      }
+  
     })
-  );
 
-  // Sign transaction, broadcast, and confirm
-  await sendAndConfirmTransaction(con, transaction, [from.payer]);
-}
+// async function airdrop(con, from, to) {
+//   let transaction = new Transaction().add(
+//     SystemProgram.transfer({
+//       fromPubkey: from.publicKey,
+//       toPubkey: to,
+//       lamports: LAMPORTS_PER_SOL,
+//     })
+//   );
 
-async function getAta(mint, user) {
-  return await getAssociatedTokenAddress(mint, user);
-}
+//   // Sign transaction, broadcast, and confirm
+//   await sendAndConfirmTransaction(con, transaction, [from.payer]);
+// }
 
-async function createAta(conn, payer, mint, to) {
-  return await createAssociatedTokenAccount(conn, payer, mint, to);
-}
+// async function getAta(mint, user) {
+//   return await getAssociatedTokenAddress(mint, user);
+// }
 
-async function getOrCreateAta(conn, payer, mint1, acc) {
-  return await getOrCreateAssociatedTokenAccount(conn, payer, mint1, acc, true);
-}
+// async function createAta(conn, payer, mint, to) {
+//   return await createAssociatedTokenAccount(conn, payer, mint, to);
+// }
+
+// async function getOrCreateAta(conn, payer, mint1, acc) {
+//   return await getOrCreateAssociatedTokenAccount(conn, payer, mint1, acc, true);
+// }  
+})

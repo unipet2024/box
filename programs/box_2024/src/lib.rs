@@ -14,7 +14,7 @@ pub use instructions::*;
 pub use state::*;
 pub use types::*;
 
-declare_id!("6ZHVd3e9rykT1WeMrAxbs7ur8hkrwXwDn7VV1eBuQyDW");
+declare_id!("D186vYcHBQkqi3pwWgef4vbhrGagEdCXFf2JkyBXFowL");
 
 #[program]
 pub mod box_2024 {
@@ -39,17 +39,21 @@ pub mod box_2024 {
     pub fn create_box(
         ctx: Context<CreateBox>,
         name: String,
-        starttime: i64,
-        endtime: i64,
+        start_time: i64,
+        end_time: i64,
         currencies: Vec<Currency>,
         rates: Vec<u8>,
         nfts: Vec<Pubkey>,
     ) -> Result<()> {
-        create_box::create_box_handler(ctx, name, starttime, endtime, currencies, rates, nfts)
+        create_box::create_box_handler(ctx, name, start_time, end_time, currencies, rates, nfts)
     }
 
     pub fn add_mints(ctx: Context<OperatorInstruction>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
         operator_instruction::add_mints_handler(ctx, id, nfts)
+    }
+
+    pub fn add_nft_to_box(ctx: Context<OperatorAddNftBox>, id: u8) -> Result<()> {
+        handle_add_nft_to_box(ctx, id)
     }
 
     pub fn change_rates(ctx: Context<OperatorInstruction>, id: u8, rates: Vec<u8>) -> Result<()> {
