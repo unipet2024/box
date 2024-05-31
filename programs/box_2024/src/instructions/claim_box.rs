@@ -20,28 +20,14 @@ pub struct ClaimBox<'info> {
         constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
         // constraint = box_account.holder == holder.key() @ BoxErrors::InputInvalid,
     )]
-    pub box_account: Account<'info, BoxStruct>,
+    pub box_account: Box<Account<'info, BoxStruct>>,
 
     #[account(
         mut,
-        associated_token::mint = mint1,
+        associated_token::mint = mint,
         associated_token::authority = box_account,
     )]
-    pub nft1_box: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        associated_token::mint = mint2,
-        associated_token::authority = box_account,
-    )]
-    pub nft2_box: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        associated_token::mint = mint3,
-        associated_token::authority = box_account,
-    )]
-    pub nft3_box: Account<'info, TokenAccount>,
+    pub nft_box: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
@@ -49,40 +35,22 @@ pub struct ClaimBox<'info> {
         constraint = buyer_account.authority == buyer.key() @ BoxErrors::AccountInvalid,
         bump,
     )]
-    pub buyer_account: Account<'info, UserStruct>,
+    pub buyer_account: Box<Account<'info, UserStruct>>,
 
     #[account(
         init_if_needed,
         payer= buyer,
-        associated_token::mint = mint1,
+        associated_token::mint = mint,
         associated_token::authority = buyer,
     )]
-    pub nft1_buyer: Account<'info, TokenAccount>,
-
-    #[account(
-        init_if_needed,
-        payer= buyer,
-        associated_token::mint = mint2,
-        associated_token::authority = buyer,
-    )]
-    pub nft2_buyer: Account<'info, TokenAccount>,
-
-    #[account(
-        init_if_needed,
-        payer= buyer,
-        associated_token::mint = mint3,
-        associated_token::authority = buyer,
-    )]
-    pub nft3_buyer: Account<'info, TokenAccount>,
+    pub nft_buyer: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, signer)]
     pub buyer: Signer<'info>,
 
     ///CHECK: read only
     // pub holder: UncheckedAccount<'info>,
-    pub mint1: Account<'info, Mint>,
-    pub mint2: Account<'info, Mint>,
-    pub mint3: Account<'info, Mint>,
+    pub mint: Account<'info, Mint>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
@@ -92,16 +60,16 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
     let buyer_account = &mut ctx.accounts.buyer_account;
     let box_account = &ctx.accounts.box_account;
     // let buyer = &ctx.accounts.buyer;
-    let mint1 = &ctx.accounts.mint1;
-    msg!("BOX ID: {:}", box_id);
-    msg!("ID: {:}", id);
+    let mint = &ctx.accounts.mint;
+    // msg!("BOX ID: {:}", box_id);
+    // msg!("ID: {:}", id);
 
     let (claim_id, check) = buyer_account.get_claim(box_id, id);
     require_neq!(check, false, BoxErrors::InputInvalid);
 
     require_keys_eq!(
         buyer_account.boughts[claim_id].mint,
-        mint1.key(),
+        mint.key(),
         BoxErrors::InputInvalid
     );
 
@@ -111,10 +79,10 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
     let signer = &[&seeds[..]];
     transfer(
         CpiContext::new(
-            mint1.to_account_info(),
+            mint.to_account_info(),
             Transfer {
-                from: ctx.accounts.nft1_box.to_account_info(),
-                to: ctx.accounts.nft1_buyer.to_account_info(),
+                from: ctx.accounts.nft_box.to_account_info(),
+                to: ctx.accounts.nft_buyer.to_account_info(),
                 authority: box_account.to_account_info(),
             },
         )
@@ -131,7 +99,7 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
         box_id,
         id,
         time: lock.unix_timestamp,
-        mint: mint1.key(), //CHECK: mint.key().to_string() or mint.key().to_string(),
+        mint: mint.key(), //CHECK: mint.key().to_string() or mint.key().to_string(),
         slot: lock.slot,
     });
 

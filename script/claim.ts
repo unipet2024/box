@@ -1,13 +1,19 @@
 import { getAssociatedTokenAddress } from "@solana/spl-token";
-import { getBoxAccount, program, provider } from "./helper";
-import { PublicKey } from "@solana/web3.js";
+import { getBoxAccount, program, wallet, connection } from "./helper";
+import {
+  PublicKey,
+  ComputeBudgetProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
+import { SystemProgram } from "@coral-xyz/anchor";
 // const address0 = new PublicKey("11111111111111111111111111111111");
 // const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
 async function claim() {
-  const claimer = new PublicKey("GeYNaiuvHU3aq4WUhGcR5W1kYsdUcudUgNqJVt5aM5tv");
-  const MINT = new PublicKey("H3G1zaoUyS6bi1JGLYmaCR29utH2xKUoEXdhzdDACauS");
+  const claimer = wallet.publicKey;
+  const MINT = new PublicKey("22GbdSSMFXNTmsHi9cXVCAnM1wwvTnv6DaCgfU4axRdT");
 
   const buyer_account = getBuyerAccount(claimer.toBuffer());
   // const buyer_account_info
@@ -23,23 +29,52 @@ async function claim() {
     buyer_account
   );
 
+  buyer_account_info.boughts.map((data) => {
+    return {
+      ...data,
+      id: data.id.toNumber(),
+      mint: data.mint.toString(),
+    };
+  });
+
   console.log(buyer_account_info);
 
-  // try {
-  //   await program.methods
-  //     .claim(1, new anchor.BN(25))
-  //     .accounts({
-  //       boxAccount: box_account,
-  //       nftBox: nft_box,
-  //       buyerAccount: buyer_account,
-  //       nftBuyer: nft_buyer,
-  //       mint: MINT,
-  //       buyer: claimer
-  //     })
-  //     .rpc();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+      units: 1000000,
+    });
+
+    const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: 1,
+    });
+
+    const instruction = await program.methods
+      .claim(1, new anchor.BN(26))
+      .accounts({
+        boxAccount: box_account,
+        nftBox: nft_box,
+        buyerAccount: buyer_account,
+        nftBuyer: nft_buyer,
+        mint: MINT,
+        buyer: claimer,
+      })
+      .signers([wallet])
+      .instruction();
+
+    const transaction = new Transaction()
+      .add(modifyComputeUnits)
+      .add(addPriorityFee)
+      .add(instruction);
+
+    const signature = await sendAndConfirmTransaction(connection, transaction, [
+      wallet,
+    ]);
+    console.log(signature);
+    const result = await connection.getParsedTransaction(signature);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const getBuyerAccount = (buyer) => {
