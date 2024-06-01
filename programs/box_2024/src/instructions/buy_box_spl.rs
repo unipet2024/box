@@ -152,10 +152,6 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     }
     buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
 
-    // //update box counter
-    box_account.counter = box_account.counter + unlock as u64;
-
-
     let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
         box_id,
@@ -165,6 +161,9 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         time: clock.unix_timestamp,
         slot: clock.slot,
     });
+
+    // //update box counter
+    box_account.counter = box_account.counter + unlock as u64;
 
     Ok(())
 }

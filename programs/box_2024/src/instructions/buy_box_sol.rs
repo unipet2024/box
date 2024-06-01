@@ -53,9 +53,9 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
     msg!("End: {:}", box_account.endtime);
     require_gte!(current, box_account.starttime, BoxErrors::BoxNotStartYet);
 
-    let amount = box_account.get_currency_amount(Pubkey::default()) ;
-    require_gt!(amount, 0 ,BoxErrors::CurrencyNotSupport);
-    
+    let amount = box_account.get_currency_amount(Pubkey::default());
+    require_gt!(amount, 0, BoxErrors::CurrencyNotSupport);
+
     require_gte!(
         ctx.accounts.buyer.to_account_info().lamports(),
         amount,
@@ -64,11 +64,8 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
 
     //transfer sol from buyer to box
     msg!("Transfer SOL from buyer to box");
-    let transfer_instruction = system_instruction::transfer(
-        buyer.key,
-        box_account.to_account_info().key,
-        amount,
-    );
+    let transfer_instruction =
+        system_instruction::transfer(buyer.key, box_account.to_account_info().key, amount);
 
     // Invoke the transfer instruction
     anchor_lang::solana_program::program::invoke_signed(
@@ -141,9 +138,6 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
     }
     buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
 
-    // //update box counter
-    box_account.counter = box_account.counter + unlock as u64;
-
     let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
         box_id,
@@ -153,6 +147,9 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
         time: clock.unix_timestamp,
         slot: clock.slot,
     });
+
+    // //update box counter
+    box_account.counter = box_account.counter + unlock as u64;
 
     Ok(())
 }
