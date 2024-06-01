@@ -23,21 +23,31 @@ impl UserStruct {
         Ok(())
     }
 
-    pub fn add_claims(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
-        for (index, mint) in mints.iter().enumerate() {
-            self.add_claim(box_id, id + (index as u64), mint)?;
-        }
-
-        Ok(())
+    pub fn is_authority(&self, authority: &Pubkey) -> bool {
+        return self.authority == *authority;
     }
 
-    pub fn add_claim(&mut self, box_id: u8, id: u64, mint: &Pubkey) -> Result<()> {
-        self.boughts.push(UserClaim {
+    // pub fn add_claims(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
+    //     for (index, mint) in mints.iter().enumerate() {
+    //         self.add_claim(box_id, id + (index as u64), mint)?;
+    //     }
+
+    //     Ok(())
+    // }
+
+    pub fn add_claim(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
+        let mut user_claim = UserClaim {
             box_id,
             id,
-            mint: *mint,
+            mints: vec![],
             is_claim: false,
-        });
+        };
+
+        for mint in mints.iter() {
+            user_claim.mints.push(*mint);
+        }
+
+        self.boughts.push(user_claim);
 
         Ok(())
     }
@@ -52,15 +62,8 @@ impl UserStruct {
         (0, false)
     }
 
-    // pub fn add_mints(&mut self, mints: Vec<Pubkey>) -> Result<()> {
-    //     for mint in mints.iter() {
-    //         self.add_mint(&mint)?;
-    //     }
-    //     Ok(())
-    // }
+    // pub fn check_mints(box_id: u8, id: u64, mint1: Pubkey, mint2: Pubkey, mint3: Pubkey) -> bool {
 
-    // fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
-    //     self.boughts.push(*mint);
-    //     Ok(())
+    //     true
     // }
 }

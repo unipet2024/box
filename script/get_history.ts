@@ -44,7 +44,7 @@ const getBuyerAccount = (user) => {
     [Buffer.from(USER_ACCOUNT), user.toBuffer()],
     program.programId
   );
-  // console.log("admin_account: ", mint.toString());
+  console.log("buyer account: ", buyer.toString());
 
   return buyer;
 };

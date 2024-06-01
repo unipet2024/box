@@ -150,7 +150,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     if buyer_account.authority == Pubkey::default() {
         buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
     }
-    buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
+    buyer_account.add_claim(box_account.id, box_account.counter, &mint_unlocks)?;
 
     let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
