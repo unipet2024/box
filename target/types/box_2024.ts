@@ -352,7 +352,17 @@ export type Box2024 = {
           "isSigner": false
         },
         {
-          "name": "nftBox",
+          "name": "nft1Box",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft2Box",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft3Box",
           "isMut": true,
           "isSigner": false
         },
@@ -362,7 +372,17 @@ export type Box2024 = {
           "isSigner": false
         },
         {
-          "name": "nftBuyer",
+          "name": "nft1Buyer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft2Buyer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft3Buyer",
           "isMut": true,
           "isSigner": false
         },
@@ -372,7 +392,17 @@ export type Box2024 = {
           "isSigner": true
         },
         {
-          "name": "mint",
+          "name": "mint1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint2",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint3",
           "isMut": false,
           "isSigner": false
         },
@@ -563,8 +593,10 @@ export type Box2024 = {
             "type": "u64"
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            "name": "mints",
+            "type": {
+              "vec": "publicKey"
+            }
           },
           {
             "name": "isClaim",
@@ -855,8 +887,10 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "mint",
-          "type": "publicKey",
+          "name": "mints",
+          "type": {
+            "vec": "publicKey"
+          },
           "index": false
         },
         {
@@ -1310,7 +1344,17 @@ export const IDL: Box2024 = {
           "isSigner": false
         },
         {
-          "name": "nftBox",
+          "name": "nft1Box",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft2Box",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft3Box",
           "isMut": true,
           "isSigner": false
         },
@@ -1320,7 +1364,17 @@ export const IDL: Box2024 = {
           "isSigner": false
         },
         {
-          "name": "nftBuyer",
+          "name": "nft1Buyer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft2Buyer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft3Buyer",
           "isMut": true,
           "isSigner": false
         },
@@ -1330,7 +1384,17 @@ export const IDL: Box2024 = {
           "isSigner": true
         },
         {
-          "name": "mint",
+          "name": "mint1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint2",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint3",
           "isMut": false,
           "isSigner": false
         },
@@ -1521,8 +1585,10 @@ export const IDL: Box2024 = {
             "type": "u64"
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            "name": "mints",
+            "type": {
+              "vec": "publicKey"
+            }
           },
           {
             "name": "isClaim",
@@ -1813,8 +1879,10 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "mint",
-          "type": "publicKey",
+          "name": "mints",
+          "type": {
+            "vec": "publicKey"
+          },
           "index": false
         },
         {

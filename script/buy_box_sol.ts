@@ -35,8 +35,8 @@ const programId = "FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
-const address0 = new PublicKey("11111111111111111111111111111111");
-const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
+// const address0 = new PublicKey("11111111111111111111111111111111");
+// const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
 async function buy_box() {
   let owner = provider.wallet as Wallet;
@@ -49,17 +49,13 @@ async function buy_box() {
   // const operator_account = getOperatorAccount();
 
   const starttime = Math.floor(new Date().getTime() / 1000);
-  const endtime = starttime + 30 * 86400;
-  const rates = [0, 50, 90, 100];
-  const box1_name = "BOX 1";
-  const price = 1000000;
 
-  const box_account = getBoxAccount(3);
+  const box_account = getBoxAccount(2);
 
   let buyer_account = getBuyerAccount(owner.publicKey);
   try {
     await program.methods
-      .buyBoxSol(3)
+      .buyBoxSol(2)
       .accounts({
         boxAccount: box_account,
         buyer: owner.publicKey,
@@ -68,7 +64,7 @@ async function buy_box() {
       .signers([owner.payer])
       .rpc();
   } catch (error) {
-    console.log(error);
+    console.log(error.error.errorMessage);
   }
 
   let box_account_info = await program.account.boxStruct.fetch(box_account);

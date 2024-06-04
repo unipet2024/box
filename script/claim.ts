@@ -13,11 +13,11 @@ import { SystemProgram } from "@coral-xyz/anchor";
 
 async function claim() {
   const claimer = wallet.publicKey;
-  const MINT = new PublicKey("22GbdSSMFXNTmsHi9cXVCAnM1wwvTnv6DaCgfU4axRdT");
+  const MINT = new PublicKey("6B9FAoRGZLwYM7UQzhv5HyrHjVLneVVSbojEWoGLrpNd");
 
   const buyer_account = getBuyerAccount(claimer.toBuffer());
   // const buyer_account_info
-  const box_account = getBoxAccount(1);
+  const box_account = getBoxAccount(2);
 
   const nft_box = await getAssociatedTokenAddress(MINT, box_account, true);
   console.log("NFT BOX:", nft_box.toString());
@@ -29,7 +29,7 @@ async function claim() {
     buyer_account
   );
 
-  buyer_account_info.boughts.map((data) => {
+  let boughts = buyer_account_info.boughts.map((data) => {
     return {
       ...data,
       id: data.id.toNumber(),
@@ -37,44 +37,44 @@ async function claim() {
     };
   });
 
-  console.log(buyer_account_info);
+  console.log(boughts);
 
-  try {
-    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-      units: 1000000,
-    });
+  // try {
+  //   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+  //     units: 1000000,
+  //   });
 
-    const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: 1,
-    });
+  //   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+  //     microLamports: 1,
+  //   });
 
-    const instruction = await program.methods
-      .claim(1, new anchor.BN(26))
-      .accounts({
-        boxAccount: box_account,
-        nftBox: nft_box,
-        buyerAccount: buyer_account,
-        nftBuyer: nft_buyer,
-        mint: MINT,
-        buyer: claimer,
-      })
-      .signers([wallet])
-      .instruction();
+  //   const instruction = await program.methods
+  //     .claim(2, new anchor.BN(27))
+  //     .accounts({
+  //       boxAccount: box_account,
+  //       nftBox: nft_box,
+  //       buyerAccount: buyer_account,
+  //       nftBuyer: nft_buyer,
+  //       mint: MINT,
+  //       buyer: claimer,
+  //     })
+  //     .signers([wallet])
+  //     .instruction();
 
-    const transaction = new Transaction()
-      .add(modifyComputeUnits)
-      .add(addPriorityFee)
-      .add(instruction);
+  //   const transaction = new Transaction()
+  //     .add(modifyComputeUnits)
+  //     .add(addPriorityFee)
+  //     .add(instruction);
 
-    const signature = await sendAndConfirmTransaction(connection, transaction, [
-      wallet,
-    ]);
-    console.log(signature);
-    const result = await connection.getParsedTransaction(signature);
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  }
+  //   const signature = await sendAndConfirmTransaction(connection, transaction, [
+  //     wallet,
+  //   ]);
+  //   console.log(signature);
+  //   const result = await connection.getParsedTransaction(signature);
+  //   console.log(result);
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 const getBuyerAccount = (buyer) => {

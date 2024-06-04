@@ -107,26 +107,6 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
     let signer = &[&seeds[..]];
 
     match buyer_account.boughts[claim_id].mints.len() {
-        _ => {
-            require_eq!(
-                buyer_account.boughts[claim_id].mints[0],
-                mint1.key(),
-                BoxErrors::InputInvalid
-            );
-
-            transfer(
-                CpiContext::new(
-                    mint1.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.nft1_box.to_account_info(),
-                        to: ctx.accounts.nft1_buyer.to_account_info(),
-                        authority: box_account.to_account_info(),
-                    },
-                )
-                .with_signer(signer),
-                1,
-            )?;
-        }
         2 => {
             require_eq!(
                 buyer_account.boughts[claim_id].mints[0],
@@ -214,6 +194,26 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
                     Transfer {
                         from: ctx.accounts.nft3_box.to_account_info(),
                         to: ctx.accounts.nft3_buyer.to_account_info(),
+                        authority: box_account.to_account_info(),
+                    },
+                )
+                .with_signer(signer),
+                1,
+            )?;
+        }
+        _ => {
+            require_eq!(
+                buyer_account.boughts[claim_id].mints[0],
+                mint1.key(),
+                BoxErrors::InputInvalid
+            );
+
+            transfer(
+                CpiContext::new(
+                    mint1.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.nft1_box.to_account_info(),
+                        to: ctx.accounts.nft1_buyer.to_account_info(),
                         authority: box_account.to_account_info(),
                     },
                 )
