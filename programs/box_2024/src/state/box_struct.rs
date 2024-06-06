@@ -15,7 +15,7 @@ pub struct BoxStruct {
     // pub amount: u64,               //8
     pub rates: Vec<u8>,     // 4+ 1*10 = 14
     pub mints: Vec<Pubkey>, // 4 + 32*100= 3200
-    pub mints_purchased: Vec<Pubkey>,
+    // pub mints_purchased: Vec<Pubkey>,
     pub counter: u64, //8
     // pub holder: Pubkey, //32
     pub bump: u8, //1
@@ -129,6 +129,7 @@ impl BoxStruct {
     }
 
     pub fn get_size(&self) -> usize {
-        return 300 + ((self.mints.len() + self.mints_purchased.len()) * 32);
+        // return 300 + ((self.mints.len() + self.mints_purchased.len()) * 32);
+        return 300 + self.mints.len() * 32;
     }
 }

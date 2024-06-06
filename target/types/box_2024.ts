@@ -477,12 +477,6 @@ export type Box2024 = {
             }
           },
           {
-            "name": "mintsPurchased",
-            "type": {
-              "vec": "publicKey"
-            }
-          },
-          {
             "name": "counter",
             "type": "u64"
           },
@@ -1430,12 +1424,6 @@ export const IDL: Box2024 = {
           },
           {
             "name": "mints",
-            "type": {
-              "vec": "publicKey"
-            }
-          },
-          {
-            "name": "mintsPurchased",
             "type": {
               "vec": "publicKey"
             }

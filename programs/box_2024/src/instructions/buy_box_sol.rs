@@ -125,7 +125,7 @@ pub fn buy_box_sol_handler(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
         box_account.mints.remove(mint_index);
 
         //add mint to purchased mints
-        box_account.mints_purchased.push(mint);
+        // box_account.mints_purchased.push(mint);
 
         //update total
         total = total - 1;

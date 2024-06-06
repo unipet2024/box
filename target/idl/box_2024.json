@@ -477,12 +477,6 @@
             }
           },
           {
-            "name": "mintsPurchased",
-            "type": {
-              "vec": "publicKey"
-            }
-          },
-          {
             "name": "counter",
             "type": "u64"
           },
