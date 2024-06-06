@@ -1,11 +1,12 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangRateBoxEvent, BOX_ACCOUNT, OPERATOR_ROLE
+    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangRateBoxEvent, BOX_ACCOUNT,
+    OPERATOR_ROLE,
 };
 
 #[derive(Accounts)]
-#[instruction(id: u8)]
+#[instruction(id: u8, mints: Vec<Pubkey>)]
 pub struct OperatorInstruction<'info> {
     #[account(
         seeds = [OPERATOR_ROLE],
@@ -20,7 +21,9 @@ pub struct OperatorInstruction<'info> {
         mut,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
         bump=box_account.bump,
-        // constraint = box_account.authority == authority.key() @ BoxErrors::OnlyOperator,
+        realloc = 8 + box_account.get_size() + mints.len()*32,
+        realloc::zero = false,
+        realloc::payer = authority,
     )]
     pub box_account: Account<'info, BoxStruct>,
 
@@ -39,6 +42,8 @@ pub fn add_mints_handler(
     let authority = &ctx.accounts.authority;
 
     box_account.add_mints(&mints)?;
+
+    // box_account.
 
     emit!(AddNftsBoxEvent {
         authority: authority.key(),

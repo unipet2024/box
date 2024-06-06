@@ -52,6 +52,10 @@ impl UserStruct {
         (0, false)
     }
 
+    pub fn get_size(&self) -> usize {
+        return 32 + 1 + 4 + ((self.boughts.len()) * 42);
+    }
+
     // pub fn add_mints(&mut self, mints: Vec<Pubkey>) -> Result<()> {
     //     for mint in mints.iter() {
     //         self.add_mint(&mint)?;

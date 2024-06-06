@@ -127,4 +127,8 @@ impl BoxStruct {
 
         true
     }
+
+    pub fn get_size(&self) -> usize {
+        return 300 + ((self.mints.len() + self.mints_purchased.len()) * 32);
+    }
 }

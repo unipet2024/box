@@ -29,6 +29,11 @@ pub struct BuyBoxSOL<'info> {
         init_if_needed,
         space = 8 + 4200,
         payer=buyer,
+
+        // realloc = 8 + box_account.get_size() + mints.len()*32,
+        // realloc::zero = false,
+        // realloc::payer = authority,
+
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
     )]
