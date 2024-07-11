@@ -16,7 +16,7 @@ export const create_box_normal = async () => {
   const endtime = starttime + 30 * 86400;
   const rates = [0, 100];
   let currencies = [
-    { mint: address0, amount: new anchor.BN(1000000) },
+    // { mint: address0, amount: new anchor.BN(1000000) },
     { mint: usdc, amount: new anchor.BN(1000000) },
   ];
   const box1_name = "BOX NORMAL";
@@ -44,8 +44,8 @@ export const create_box_normal = async () => {
     console.log(error);
   }
 
-  let unipet_box_account_info = await program.account.unipetBox.fetch(
-    unipet_box_account
-  );
-  console.log(unipet_box_account_info);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
+  console.log(box_account_info);
 };
+
+// create_box_normal();

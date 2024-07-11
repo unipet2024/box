@@ -40,15 +40,23 @@ pub struct AddNftsBoxEvent {
 #[event]
 pub struct ChangRateBoxEvent {
     pub authority: Pubkey,
-    pub id: u8,
+    pub box_id: u8,
     pub rates: Vec<u8>,
+    pub time: i64,
+}
+
+#[event]
+pub struct ChangCurrencyBoxEvent {
+    pub authority: Pubkey,
+    pub box_id: u8,
+    pub currencies: Vec<Currency>,
     pub time: i64,
 }
 
 #[event]
 pub struct CloseBoxEvent {
     pub authority: Pubkey,
-    pub id: u8,
+    pub box_id: u8,
     pub time: i64,
     pub slot: u64,
 }

@@ -34,8 +34,8 @@ const provider = new AnchorProvider(
 // console.log("Provider: ", provider);
 
 const idl = IDL;
-// Address of the deployed program.FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f
-const programId = "FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f";
+// Address of the deployed program.FVqBXTrZRY9532siwpbRd4WWvYnHSLbUhrz72eTVvWbJ
+const programId = "FVqBXTrZRY9532siwpbRd4WWvYnHSLbUhrz72eTVvWbJ";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
@@ -48,30 +48,18 @@ async function buy_box() {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  // const unipet_box_account = getUnipetBoxAccount();
-  // const admin_account = getAdminAccount();
-  // const operator_account = getOperatorAccount();
-
-  const starttime = Math.floor(new Date().getTime() / 1000);
-  const endtime = starttime + 30 * 86400;
-  const rates = [0, 50, 90, 100];
-  const box1_name = "BOX 1";
-  const price = 1000000;
-
-  const box_account = getBoxAccount(3);
+  const box_account = getBoxAccount(1);
 
   let buyer_account = getBuyerAccount(owner.publicKey);
 
   const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
-  const box_usdc_account = await getOrCreateAssociatedTokenAccount(
-    connection,
-    owner.payer,
+  const box_usdc_account = await getAssociatedTokenAddress(
     usdc,
     box_account,
     true
   );
-  console.log("BOX account usdc: ", box_usdc_account.address.toString());
+  console.log("BOX account usdc: ", box_usdc_account.toString());
 
   const user_usdc_account = await getAssociatedTokenAddress(
     usdc,
@@ -80,13 +68,13 @@ async function buy_box() {
 
   try {
     await program.methods
-      .buyBoxSpl(3)
+      .buyBoxSpl(1)
       .accounts({
         boxAccount: box_account,
         buyer: owner.publicKey,
         buyerAccount: buyer_account,
         currencyMint: usdc,
-        currencyBox: box_usdc_account.address,
+        currencyBox: box_usdc_account,
         currencyBuyer: user_usdc_account,
       })
       .signers([owner.payer])
@@ -95,8 +83,8 @@ async function buy_box() {
     console.log(error);
   }
 
-  let box_account_info = await program.account.boxStruct.fetch(box_account);
-  console.log(box_account_info);
+  // let box_account_info = await program.account.boxStruct.fetch(box_account);
+  // console.log(box_account_info);
 }
 
 const getBoxAccount = (id) => {

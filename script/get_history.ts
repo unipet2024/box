@@ -10,7 +10,7 @@ const eventParser = new EventParser(
 
 const run = async () => {
   // const signatures = await connection.getSignaturesForAddress(
-  //   new PublicKey("FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f"),
+  //   new PublicKey("FVqBXTrZRY9532siwpbRd4WWvYnHSLbUhrz72eTVvWbJ"),
   //   {}
   // );
 
@@ -33,7 +33,7 @@ const run = async () => {
 
   const buyer_user_info = await program.account.userStruct.fetch(buyer_user);
 
-  buyer_user_info
+  buyer_user_info;
 
   console.log(buyer_user_info);
 };

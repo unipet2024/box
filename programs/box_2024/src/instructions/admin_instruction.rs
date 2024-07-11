@@ -1,6 +1,10 @@
 use anchor_lang::prelude::*;
 
-use crate::{ AuthRole, AuthorityRole, BoxErrors, BoxStatus, SetAuthorityEvent, SetStatusEvent, UnipetBox, ADMIN_ROLE, OPERATOR_ROLE, UNIPET_BOX_ACCOUNT};
+use crate::state::*;
+use crate::error::*;
+use crate::constants::*;
+use crate::types::*;
+use crate::events::*;
 
 #[derive(Accounts)]
 pub struct AdminInstruction<'info> {
@@ -78,16 +82,16 @@ fn set_admin_handler(ctx: Context<AdminInstruction>, admins: Vec<Pubkey>) -> Res
     Ok(())
 }
 
-pub fn set_status_handler(ctx: Context<AdminInstruction>, status: &BoxStatus) -> Result<()> {
-    let unipet_box = &mut ctx.accounts.unipet_box;
+// pub fn set_status_handler(ctx: Context<AdminInstruction>, status: &BoxStatus) -> Result<()> {
+//     let unipet_box = &mut ctx.accounts.unipet_box;
 
-    unipet_box.set_status(*status);
+//     unipet_box.set_status(*status);
 
-    emit!(SetStatusEvent{
-        admin: ctx.accounts.admin.key(),
-        status: *status,
-        time: Clock::get()?.unix_timestamp
-    });
+//     emit!(SetStatusEvent{
+//         admin: ctx.accounts.admin.key(),
+//         status: *status,
+//         time: Clock::get()?.unix_timestamp
+//     });
 
-    Ok(())
-}
+//     Ok(())
+// }

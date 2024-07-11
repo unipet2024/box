@@ -85,44 +85,6 @@ export type Box2024 = {
       ]
     },
     {
-      "name": "setStatus",
-      "accounts": [
-        {
-          "name": "unipetBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "adminAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "operatorAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "status",
-          "type": {
-            "defined": "BoxStatus"
-          }
-        }
-      ]
-    },
-    {
       "name": "createBox",
       "accounts": [
         {
@@ -257,6 +219,45 @@ export type Box2024 = {
       ]
     },
     {
+      "name": "changeCurrencies",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u8"
+        },
+        {
+          "name": "currencies",
+          "type": {
+            "vec": {
+              "defined": "Currency"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "buyBoxSpl",
       "accounts": [
         {
@@ -298,37 +299,6 @@ export type Box2024 = {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "buyBoxSol",
-      "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
         },
         {
           "name": "systemProgram",
@@ -400,6 +370,37 @@ export type Box2024 = {
         {
           "name": "id",
           "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "closeBox",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "boxId",
+          "type": "u8"
         }
       ]
     }
@@ -503,12 +504,6 @@ export type Box2024 = {
           {
             "name": "boxId",
             "type": "u8"
-          },
-          {
-            "name": "status",
-            "type": {
-              "defined": "BoxStatus"
-            }
           },
           {
             "name": "bump",
@@ -752,13 +747,42 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "id",
+          "name": "boxId",
           "type": "u8",
           "index": false
         },
         {
           "name": "rates",
           "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ChangCurrencyBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "boxId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "currencies",
+          "type": {
+            "vec": {
+              "defined": "Currency"
+            }
+          },
           "index": false
         },
         {
@@ -777,7 +801,7 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "id",
+          "name": "boxId",
           "type": "u8",
           "index": false
         },
@@ -1037,44 +1061,6 @@ export const IDL: Box2024 = {
       ]
     },
     {
-      "name": "setStatus",
-      "accounts": [
-        {
-          "name": "unipetBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "adminAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "operatorAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "status",
-          "type": {
-            "defined": "BoxStatus"
-          }
-        }
-      ]
-    },
-    {
       "name": "createBox",
       "accounts": [
         {
@@ -1209,6 +1195,45 @@ export const IDL: Box2024 = {
       ]
     },
     {
+      "name": "changeCurrencies",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u8"
+        },
+        {
+          "name": "currencies",
+          "type": {
+            "vec": {
+              "defined": "Currency"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "buyBoxSpl",
       "accounts": [
         {
@@ -1250,37 +1275,6 @@ export const IDL: Box2024 = {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "buyBoxSol",
-      "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
         },
         {
           "name": "systemProgram",
@@ -1352,6 +1346,37 @@ export const IDL: Box2024 = {
         {
           "name": "id",
           "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "closeBox",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "boxId",
+          "type": "u8"
         }
       ]
     }
@@ -1455,12 +1480,6 @@ export const IDL: Box2024 = {
           {
             "name": "boxId",
             "type": "u8"
-          },
-          {
-            "name": "status",
-            "type": {
-              "defined": "BoxStatus"
-            }
           },
           {
             "name": "bump",
@@ -1704,13 +1723,42 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "id",
+          "name": "boxId",
           "type": "u8",
           "index": false
         },
         {
           "name": "rates",
           "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ChangCurrencyBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "boxId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "currencies",
+          "type": {
+            "vec": {
+              "defined": "Currency"
+            }
+          },
           "index": false
         },
         {
@@ -1729,7 +1777,7 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "id",
+          "name": "boxId",
           "type": "u8",
           "index": false
         },

@@ -8,7 +8,7 @@ import {
 export const init = async () => {
   // anchor.setProvider(provider);
 
-  console.log("--------------INIT-----------------")
+  console.log("--------------INIT-----------------");
   try {
     await program.methods
       .initialize()
@@ -22,8 +22,8 @@ export const init = async () => {
     console.log(error);
   }
 
-  let unipet_box_account_info = await program.account.unipetBox.fetch(
-    unipet_box_account
-  );
-  console.log(unipet_box_account_info);
+  // let unipet_box_account_info = await program.account.unipetBox.fetch(
+  //   unipet_box_account
+  // );
+  // console.log(unipet_box_account_info);
 };

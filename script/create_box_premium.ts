@@ -9,7 +9,7 @@ import * as anchor from "@coral-xyz/anchor";
 
 import { PublicKey } from "@solana/web3.js";
 
-const address0 = new PublicKey("11111111111111111111111111111111");
+// const address0 = new PublicKey("11111111111111111111111111111111");
 const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
 export const create_box_premium = async () => {
@@ -17,7 +17,7 @@ export const create_box_premium = async () => {
   const endtime = starttime + 30 * 86400;
   const rates = [0, 60, 90, 100];
   let currencies = [
-    { mint: address0, amount: new anchor.BN(1000000) },
+    // { mint: address0, amount: new anchor.BN(1000000) },
     { mint: usdc, amount: new anchor.BN(1000000) },
   ];
   const box1_name = "BOX PREMIUM";
@@ -50,3 +50,5 @@ export const create_box_premium = async () => {
   );
   console.log(unipet_box_account_info);
 };
+
+// create_box_premium();

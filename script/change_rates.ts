@@ -31,7 +31,7 @@ const provider = new AnchorProvider(
 
 const idl = IDL;
 // Address of the deployed program.
-const programId = "FYh8FdzipaoA5hWFH4P2UEiGYmgFbB1A35ELWjBLvo1f";
+const programId = "FVqBXTrZRY9532siwpbRd4WWvYnHSLbUhrz72eTVvWbJ";
 // Generate the program client from IDL.
 const program = new anchor.Program(idl, programId, provider);
 
@@ -44,36 +44,23 @@ async function change_rates() {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  const unipet_box_account = getUnipetBoxAccount();
-  // const admin_account = getAdminAccount();
   const operator_account = getOperatorAccount();
+  const box_account = getBoxAccount(1);
 
-  const starttime = Math.floor(new Date().getTime() / 1000);
-  const endtime = starttime + 30 * 86400;
-  const rates = [0, 50, 90, 100];
-  const box1_name = "BOX 1";
-  const price = 1000000;
-
-  const box_account = getBoxAccount(3);
-
-  let listMint = [
-    new PublicKey("GqYMY6rEC1gAfzgteAmzCECKXZ8MeYsJnAjpQ3CQeN9z"),
-    new PublicKey("Ah8cetRhnCbAdwV83nQdwTta9mXEmy97mrF57B7Xy2qN"),
-  ];
-  // try {
-  //   await program.methods
-  //     .changeRates(3, Buffer.from([0, 100]))
-  //     .accounts({
-  //       operatorAccount: operator_account,
-  //       boxAccount: box_account,
-  //     })
-  //     .rpc();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    await program.methods
+      .changeRates(1, Buffer.from([0, 100]))
+      .accounts({
+        operatorAccount: operator_account,
+        boxAccount: box_account,
+      })
+      .rpc();
+  } catch (error) {
+    console.log(error);
+  }
 
   let box_account_info = await program.account.boxStruct.fetch(box_account);
-  console.log(box_account_info);
+  // console.log(box_account_info);
 }
 
 const getBoxAccount = (id) => {

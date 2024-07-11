@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::BoxStatus;
+// use crate::BoxStatus;
 
 // total 230
 #[account]
@@ -8,7 +8,7 @@ pub struct UnipetBox {
     pub admin: Pubkey,     //32
     pub operator: Pubkey,  //32
     pub box_id: u8,        //1
-    pub status: BoxStatus, // 1
+    // pub status: BoxStatus, // 1
     pub bump: u8,          //1
 }
 
@@ -18,14 +18,14 @@ impl UnipetBox {
         self.operator = operator;
         self.box_id = 1;
         self.bump = bump;
-        self.status = BoxStatus::Waiting;
+        // self.status = BoxStatus::Waiting;
 
         Ok(())
     }
 
-    pub fn set_status(&mut self, status: BoxStatus) {
-        self.status = status;
-    }
+    // pub fn set_status(&mut self, status: BoxStatus) {
+    //     self.status = status;
+    // }
 
     // pub fn get_box_id(&self) -> u8 {
     //     self.box_id

@@ -62,6 +62,7 @@ impl BoxStruct {
         for currency in currencies.iter() {
             self.add_currency(currency)?;
         }
+        
         Ok(())
     }
 

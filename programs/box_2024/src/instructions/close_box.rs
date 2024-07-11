@@ -5,7 +5,7 @@ use crate::{
 };
 
 #[derive(Accounts)]
-#[instruction(id: u8)]
+#[instruction(box_id: u8)]
 pub struct CloseBox<'info> {
     #[account(
         seeds = [OPERATOR_ROLE],
@@ -22,7 +22,7 @@ pub struct CloseBox<'info> {
     #[account(
         mut,
         close = authority,
-        seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
+        seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
         bump=box_account.bump, 
     )]
     pub box_account: Account<'info, BoxStruct>,
@@ -31,14 +31,14 @@ pub struct CloseBox<'info> {
 
 pub fn close_box_handler(
     ctx: Context<CloseBox>,
-    id: u8
+    box_id: u8
 ) -> Result<()> {
 
     //
     let clock = Clock::get().unwrap();
     emit!(CloseBoxEvent {
         authority: ctx.accounts.authority.key(),
-        id,
+        box_id,
         time: Clock::get()?.unix_timestamp,
         slot: clock.slot,
 
