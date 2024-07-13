@@ -7,7 +7,15 @@ import data from "../keys/dev/holder.json";
 
 // import { setTimeout } from "timers/promises";
 
-import { PublicKey, Keypair, Connection, clusterApiUrl } from "@solana/web3.js";
+import {
+  PublicKey,
+  Keypair,
+  Connection,
+  clusterApiUrl,
+  ComputeBudgetProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import {
   getAssociatedTokenAddress,
   getOrCreateAssociatedTokenAccount,
@@ -48,7 +56,8 @@ async function buy_box() {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  const box_account = getBoxAccount(1);
+  const box_id = 2;
+  const box_account = getBoxAccount(box_id);
 
   let buyer_account = getBuyerAccount(owner.publicKey);
 
@@ -67,8 +76,19 @@ async function buy_box() {
   );
 
   try {
-    await program.methods
-      .buyBoxSpl(1)
+    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+      units: 1000000,
+    });
+
+    const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: 1,
+    });
+    const addHeap = ComputeBudgetProgram.requestHeapFrame({
+      bytes: 1000,
+    });
+
+    const instruction = await program.methods
+      .buyBoxSpl(box_id)
       .accounts({
         boxAccount: box_account,
         buyer: owner.publicKey,
@@ -78,7 +98,20 @@ async function buy_box() {
         currencyBuyer: user_usdc_account,
       })
       .signers([owner.payer])
-      .rpc();
+      .instruction();
+
+    const transaction = new Transaction()
+      // .add(addHeap)
+      .add(modifyComputeUnits)
+      .add(addPriorityFee)
+      .add(instruction);
+
+    const signature = await sendAndConfirmTransaction(connection, transaction, [
+      wallet,
+    ]);
+    console.log(signature);
+    const result = await connection.getParsedTransaction(signature);
+    console.log(result);
   } catch (error) {
     console.log(error);
   }

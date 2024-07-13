@@ -24,7 +24,9 @@ impl UserStruct {
     }
 
     pub fn add_claims(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
+        msg!("Inside add claims ");
         for (index, mint) in mints.iter().enumerate() {
+            msg!("mint: {:}", *mint);
             self.add_claim(box_id, id + (index as u64), mint)?;
         }
 
@@ -32,12 +34,15 @@ impl UserStruct {
     }
 
     pub fn add_claim(&mut self, box_id: u8, id: u64, mint: &Pubkey) -> Result<()> {
+        msg!("Inside add claim");
         self.boughts.push(UserClaim {
             box_id,
             id,
             mint: *mint,
             is_claim: false,
         });
+
+        msg!("Add claim complete");
 
         Ok(())
     }

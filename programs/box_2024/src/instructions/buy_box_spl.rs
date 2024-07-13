@@ -38,16 +38,16 @@ pub struct BuyBoxSPL<'info> {
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
     )]
-    pub buyer_account: Account<'info, UserStruct>,
+    pub buyer_account: Box<Account<'info, UserStruct>>,
 
     #[account(
         mut,
         associated_token::mint = currency_mint,
         associated_token::authority = buyer,
     )]
-    pub currency_buyer: Account<'info, TokenAccount>,
+    pub currency_buyer: Box<Account<'info, TokenAccount>>,
 
-    pub currency_mint: Account<'info, Mint>,
+    pub currency_mint: Box<Account<'info, Mint>>,
 
     #[account(mut, signer)]
     pub buyer: Signer<'info>,
@@ -65,9 +65,9 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     let current = Clock::get()?.unix_timestamp;
 
     require_gte!(box_account.endtime, current, BoxErrors::BoxClosed);
-    msg!("Current: {:}", current);
-    msg!("Start: {:}", box_account.starttime);
-    msg!("End: {:}", box_account.endtime);
+    // msg!("Current: {:}", current);
+    // msg!("Start: {:}", box_account.starttime);
+    // msg!("End: {:}", box_account.endtime);
     require_gte!(current, box_account.starttime, BoxErrors::BoxNotStartYet);
 
     let amount = box_account.get_currency_amount(ctx.accounts.currency_mint.key());
@@ -95,10 +95,10 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     //get random
     let mut total = box_account.mints.len() as u64;
 
-    msg!("Total: {:}", total);
+    // msg!("Total: {:}", total);
 
     let mut unlock = (current % 100) as u8;
-    msg!("Unlock: {:}", unlock);
+    // msg!("Unlock: {:}", unlock);
 
     for i in 0..box_account.rates.len() - 1 {
         if unlock >= box_account.rates[i] && unlock <= box_account.rates[i + 1] {
@@ -117,15 +117,16 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
 
     let mut mint_unlocks = vec![];
 
-    for i in 0..unlock {
-        msg!("-----------------------");
-        msg!("Rand: {:}", rand);
-        msg!("I: {:}", i);
+    msg!("Get mint list");
+    for _ in 0..unlock {
+        // msg!("-----------------------");
+        // msg!("Rand: {:}", rand);
+        // msg!("I: {:}", i);
 
         let mint_index = (rand % total) as usize;
         let mint = box_account.mints[mint_index];
 
-        msg!("{:} : {:}", mint_index, mint);
+        // msg!("{:} : {:}", mint_index, mint);
 
         //Add mint to list unlocks
         mint_unlocks.push(mint);
@@ -144,12 +145,15 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     }
 
     // require_eq!(1, 2);
+    msg!("Update user struct");
 
     //update user struct
     //check is this is the first time buy, init
     if buyer_account.authority == Pubkey::default() {
+        msg!("Init buyer account");
         buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
     }
+    msg!("Add claim: {:?}", mint_unlocks);
     buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
 
     let clock = Clock::get().unwrap();
@@ -162,8 +166,9 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         slot: clock.slot,
     });
 
-    // //update box counter
-    box_account.counter = box_account.counter + unlock as u64;
+    // update box counter
+    msg!("update box counter");
+    box_account.counter = box_account.counter + (unlock as u64);
 
     Ok(())
 }
