@@ -22,7 +22,7 @@ export const create_box_premium = async () => {
   ];
   const box1_name = "BOX PREMIUM";
 
-  const box_account = getBoxAccount(2);
+  const box_account = getBoxAccount(3);
 
   console.log("--------------CREATE BOX PREMIUM-----------------");
   try {
@@ -51,4 +51,4 @@ export const create_box_premium = async () => {
   console.log(unipet_box_account_info);
 };
 
-// create_box_premium();
+create_box_premium();

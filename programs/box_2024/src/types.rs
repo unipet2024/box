@@ -22,6 +22,10 @@ pub struct UserClaim {
     pub is_claim: bool, // 1
 }
 
+impl UserClaim {
+    pub const SIZE: usize = 1 + 8 + 32 + 1;
+}
+
 #[derive(PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Clone, Debug, Copy)]
 pub struct Currency {
     pub mint: Pubkey, //32

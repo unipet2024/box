@@ -1,10 +1,10 @@
 use anchor_lang::prelude::*;
 
 use crate::state::*;
-use crate::error::*;
 use crate::constants::*;
 use crate::types::*;
 use crate::events::*;
+use crate::BoxErrors;
 
 #[derive(Accounts)]
 pub struct AdminInstruction<'info> {

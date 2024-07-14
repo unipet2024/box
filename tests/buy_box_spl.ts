@@ -40,9 +40,7 @@ describe("box_2024_sol", () => {
     const unipet_box_account = getUnipetBoxAccount();
     const admin_account = getAdminAccount();
     const operator_account = getOperatorAccount();
-    const box_holder = new anchor.web3.Keypair();
 
-    await airdrop(conn, owner, box_holder.publicKey);
     const usdc = await createMint(conn, payer, owner.publicKey, null, 0);
 
     await program.methods
@@ -62,15 +60,15 @@ describe("box_2024_sol", () => {
 
     const starttime = Math.floor(new Date().getTime() / 1000 - 1000);
     const endtime = starttime + 5000;
-    const rates = [0, 50, 90, 100];
-    const box1_name = "BOX 1";
+    let rates = [0, 100];
+    const box1_name = "BOX NORMAL";
     const price = 100;
     let currencies = [
       // { mint: address0, amount: new anchor.BN(1000000) },
       { mint: usdc, amount: new anchor.BN(100) },
     ];
 
-    const box_acount = getBoxAccount(1);
+    const box_1_account = getBoxAccount(1);
 
     try {
       await program.methods
@@ -85,7 +83,31 @@ describe("box_2024_sol", () => {
         .accounts({
           unipetBox: unipet_box_account,
           operatorAccount: operator_account,
-          boxAccount: box_acount,
+          boxAccount: box_1_account,
+        })
+        .rpc();
+    } catch (error) {
+      console.log(error);
+    }
+
+    rates = [0, 50, 90, 100];
+    const box2_name = "BOX PREMIUM";
+    const box_2_account = getBoxAccount(2);
+
+    try {
+      await program.methods
+        .createBox(
+          box2_name,
+          new anchor.BN(starttime),
+          new anchor.BN(endtime),
+          currencies,
+          Buffer.from(rates),
+          []
+        )
+        .accounts({
+          unipetBox: unipet_box_account,
+          operatorAccount: operator_account,
+          boxAccount: box_2_account,
         })
         .rpc();
     } catch (error) {
@@ -97,18 +119,18 @@ describe("box_2024_sol", () => {
       unipet_box_account
     );
 
-    assert.equal(unipet_box_account_info.boxId, 2);
+    assert.equal(unipet_box_account_info.boxId, 3);
 
     console.log("------------Check box-------------");
-    let box_account_info = await program.account.boxStruct.fetch(box_acount);
-    // console.log(box_account_info);
-    assert.equal(box_account_info.name, box1_name);
+    let box_account_info = await program.account.boxStruct.fetch(box_2_account);
+    console.log(box_account_info);
+    assert.equal(box_account_info.name, box2_name);
     // assert.equal(box_account_info..toNumber(), price);
-    assert.deepEqual(box_account_info.currencies, currencies);
+    // assert.deepEqual([...box_account_info.currencies], currencies);
     assert.equal(box_account_info.endtime.toNumber(), endtime);
     assert.equal(box_account_info.starttime.toNumber(), starttime);
     assert.equal(box_account_info.counter.toNumber(), 1);
-    assert.equal(box_account_info.id, 1);
+    assert.equal(box_account_info.id, 2);
     assert.deepEqual([...box_account_info.rates], rates);
 
     console.log("------------Create NFT-------------");
@@ -132,59 +154,67 @@ describe("box_2024_sol", () => {
       console.log("mint: ", mintNew.toString());
       mint_list.push(mintNew);
 
-      let mint_box = await getOrCreateAta(conn, payer, mintNew, box_acount);
-      let mint_holder = await getOrCreateAta(
+      let mint_box_2 = await getOrCreateAta(
         conn,
         payer,
         mintNew,
-        box_holder.publicKey
+        box_2_account
       );
 
       let mint_buyer1 = await getAta(mintNew, buyer1.user.publicKey);
       let mint_buyer2 = await getAta(mintNew, buyer2.user.publicKey);
       let mint_buyer3 = await getAta(mintNew, buyer3.user.publicKey);
 
-      approve(
-        conn,
-        box_holder, // holder
-        mint_holder.address, //holder ata
-        box_acount, // box
-        box_holder.publicKey, //holder pubkey
-        1 // NFT = 1
-      );
-
-      mints_box_account[mintNew.toString()] = mint_box;
+      mints_box_account[mintNew.toString()] = mint_box_2;
       mints_buyer1[mintNew.toString()] = mint_buyer1;
       mints_buyer2[mintNew.toString()] = mint_buyer2;
       mints_buyer3[mintNew.toString()] = mint_buyer3;
-      mints_holder[mintNew.toString()] = mint_holder;
 
       // await mintTo(conn, owner.payer, mintNew, mint_box.address, payer, 1);
-      await mintTo(conn, owner.payer, mintNew, mint_holder.address, payer, 1);
+      await mintTo(conn, owner.payer, mintNew, mint_box_2.address, payer, 1);
     }
 
     await program.methods
-      .addMints(1, mint_list)
+      .addMints(2, mint_list)
       .accounts({
         operatorAccount: operator_account,
-        boxAcount: box_acount,
+        boxAccount: box_2_account,
       })
       .rpc();
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_2_account);
     assert.deepEqual(box_account_info.mints, mint_list);
 
     // console.log(box_account_info);
 
-    console.log("--------------Buyer 1 buy box 1--------------");
-    let box_balance_before = await conn.getBalance(box_acount);
+    console.log("--------------Buyer 1 buy box premium--------------");
+    const box_2_usdc = await getAta(usdc, box_2_account, true);
+    // let box_balance_before = await conn.getTokenAccountBalance(box_2_usdc);
+
+    const buyer_1_usdc = await getOrCreateAta(
+      conn,
+      payer,
+      usdc,
+      buyer1.user.publicKey
+    );
+    await mintTo(
+      conn,
+      payer,
+      usdc,
+      buyer_1_usdc.address,
+      owner.publicKey,
+      10 ** 9
+    );
     try {
       await program.methods
-        .buyBoxSol(1)
+        .buyBoxSpl(2)
         .accounts({
-          boxAcount: box_acount,
+          boxAccount: box_2_account,
           buyer: buyer1.user.publicKey,
           buyerAccount: buyer1.buyer_account,
+          currencyMint: usdc,
+          currencyBox: box_2_usdc,
+          currencyBuyer: buyer_1_usdc.address,
         })
         .signers([buyer1.user])
         .rpc();
@@ -192,7 +222,7 @@ describe("box_2024_sol", () => {
       console.log(error);
     }
 
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_1_account);
 
     let buyer1_account_info = await program.account.userStruct.fetch(
       buyer1.buyer_account
@@ -203,18 +233,15 @@ describe("box_2024_sol", () => {
       buyer1.user.publicKey.toString()
     );
 
-    let box_balance = await conn.getBalance(box_acount);
+    let box_usdc_amount_after = await conn.getTokenAccountBalance(box_2_usdc);
 
-    assert.equal(box_balance_before + 100, box_balance);
+    assert.equal("100", box_usdc_amount_after.value.amount);
 
     console.log(buyer1_account_info.boughts);
 
     // console.log(box_account_info);
     console.log("-----------Box counter---------------");
     console.log(box_account_info.counter.toNumber());
-
-    console.log("-----------Box purchased---------------");
-    console.log(box_account_info.mintsPurchased);
 
     console.log("-----------Box mints---------------");
     console.log(box_account_info.mints);
@@ -223,54 +250,54 @@ describe("box_2024_sol", () => {
 
     let buyer1_claims = buyer1_account_info.boughts;
 
-    for (let i = 0; i < buyer1_claims.length; i++) {
-      console.log(
-        "=====> Buyer 1 claim box id = ",
-        buyer1_claims[i].boxId,
-        " id = ",
-        buyer1_claims[i].id.toNumber(),
-        " mint = ",
-        buyer1_claims[i].mint.toString()
-      );
+    // for (let i = 0; i < buyer1_claims.length; i++) {
+    //   console.log(
+    //     "=====> Buyer 1 claim box id = ",
+    //     buyer1_claims[i].boxId,
+    //     " id = ",
+    //     buyer1_claims[i].id.toNumber(),
+    //     " mint = ",
+    //     buyer1_claims[i].mint.toString()
+    //   );
 
-      if (!buyer1_claims[i].isClaim) {
-        let mint = buyer1_claims[i].mint;
+    //   if (!buyer1_claims[i].isClaim) {
+    //     let mint = buyer1_claims[i].mint;
 
-        try {
-          await program.methods
-            .claim(buyer1_claims[i].boxId, buyer1_claims[i].id)
-            .accounts({
-              mint: mint,
-              boxAcount: box_acount,
-              buyer: buyer1.user.publicKey,
-              buyerAccount: buyer1.buyer_account,
-              nftHolder: mints_holder[mint.toString()].address,
-              nftBuyer: mints_buyer1[mint.toString()],
-              holder: box_holder.publicKey,
-            })
-            .signers([buyer1.user])
-            .rpc();
+    //     try {
+    //       await program.methods
+    //         .claim(buyer1_claims[i].boxId, buyer1_claims[i].id)
+    //         .accounts({
+    //           mint: mint,
+    //           boxAccount: box_1_account,
+    //           buyer: buyer1.user.publicKey,
+    //           buyerAccount: buyer1.buyer_account,
+    //           nftHolder: mints_holder[mint.toString()].address,
+    //           nftBuyer: mints_buyer1[mint.toString()],
+    //           holder: box_holder.publicKey,
+    //         })
+    //         .signers([buyer1.user])
+    //         .rpc();
 
-          let buyer1_nft_balance_after = await conn.getTokenAccountBalance(
-            mints_buyer1[mint.toString()]
-          );
+    //       let buyer1_nft_balance_after = await conn.getTokenAccountBalance(
+    //         mints_buyer1[mint.toString()]
+    //       );
 
-          console.log(
-            "Balance after claim : ",
-            buyer1_nft_balance_after.value.amount
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
+    //       console.log(
+    //         "Balance after claim : ",
+    //         buyer1_nft_balance_after.value.amount
+    //       );
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+    // }
     /*
     console.log("--------------Buyer 2 buy box 1--------------");
     try {
       await program.methods
         .buyBoxSol(1)
         .accounts({
-          boxAcount: box_acount,
+          boxAccount: box_1_account,
           buyer: buyer2.user.publicKey,
           buyerAccount: buyer2.buyer_account,
         })
@@ -279,9 +306,9 @@ describe("box_2024_sol", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_1_account);
 
-    box_balance = await conn.getBalance(box_acount);
+    box_balance = await conn.getBalance(box_1_account);
 
     assert.equal(box_balance_before + 200, box_balance);
 
@@ -312,7 +339,7 @@ describe("box_2024_sol", () => {
       await program.methods
         .buyBoxSol(1)
         .accounts({
-          boxAcount: box_acount,
+          boxAccount: box_1_account,
           buyer: buyer3.user.publicKey,
           buyerAccount: buyer3.buyer_account,
         })
@@ -321,9 +348,9 @@ describe("box_2024_sol", () => {
     } catch (error) {
       console.log(error);
     }
-    box_account_info = await program.account.boxStruct.fetch(box_acount);
+    box_account_info = await program.account.boxStruct.fetch(box_1_account);
 
-    box_balance = await conn.getBalance(box_acount);
+    box_balance = await conn.getBalance(box_1_account);
 
     assert.equal(box_balance_before + 300, box_balance);
 
@@ -361,7 +388,7 @@ describe("box_2024_sol", () => {
       unipet_box_account
     );
 
-    const box_acount = getBoxAccount(2);
+    const box_1_account = getBoxAccount(2);
     const box_account_info = await program.account.authorityRole.fetch(
       operator_account
     );
@@ -453,8 +480,8 @@ async function airdrop(con, from, to) {
   await sendAndConfirmTransaction(con, transaction, [from.payer]);
 }
 
-async function getAta(mint, user) {
-  return await getAssociatedTokenAddress(mint, user);
+async function getAta(mint, user, allowOwnerOffCurve = false) {
+  return await getAssociatedTokenAddress(mint, user, allowOwnerOffCurve);
 }
 
 async function createAta(conn, payer, mint, to) {

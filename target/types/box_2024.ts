@@ -970,6 +970,16 @@ export type Box2024 = {
       "code": 6015,
       "name": "InvalidTime",
       "msg": "Invalid time"
+    },
+    {
+      "code": 6016,
+      "name": "IllegalAccountOwner",
+      "msg": "Account is not owned by Box program"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidAccount",
+      "msg": "Invalid account provided"
     }
   ]
 };
@@ -1946,6 +1956,16 @@ export const IDL: Box2024 = {
       "code": 6015,
       "name": "InvalidTime",
       "msg": "Invalid time"
+    },
+    {
+      "code": 6016,
+      "name": "IllegalAccountOwner",
+      "msg": "Account is not owned by Box program"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidAccount",
+      "msg": "Invalid account provided"
     }
   ]
 };

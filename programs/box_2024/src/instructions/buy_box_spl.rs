@@ -33,7 +33,8 @@ pub struct BuyBoxSPL<'info> {
 
     #[account(
         init_if_needed,
-        space = 8 + 4200,
+        // space = UserStruct::size(20),
+        space = 8 +4200,
         payer=buyer,
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
@@ -110,6 +111,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     if unlock as u64 > total {
         unlock = total as u8;
     }
+
     msg!("Unlock: {:}", unlock);
     // require_eq!(1,2);
 
@@ -118,6 +120,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     let mut mint_unlocks = vec![];
 
     msg!("Get mint list");
+    
     for _ in 0..unlock {
         // msg!("-----------------------");
         // msg!("Rand: {:}", rand);
@@ -154,7 +157,21 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
     }
     msg!("Add claim: {:?}", mint_unlocks);
+
+    UserStruct::realloc_if_needed(
+        buyer_account.to_account_info(),
+        buyer_account.boughts.len() + (unlock as usize),
+        ctx.accounts.buyer.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
     buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
+
+    msg!("set event");
+
+    // update box counter
+    msg!("update box counter");
+    box_account.counter = box_account.counter + (unlock as u64);
 
     let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
@@ -165,10 +182,6 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         time: clock.unix_timestamp,
         slot: clock.slot,
     });
-
-    // update box counter
-    msg!("update box counter");
-    box_account.counter = box_account.counter + (unlock as u64);
 
     Ok(())
 }

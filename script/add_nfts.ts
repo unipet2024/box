@@ -1,59 +1,65 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Program, AnchorProvider } from "@coral-xyz/anchor";
-import { IDL } from "../target/types/box_2024";
-import { Wallet } from "@coral-xyz/anchor";
 
-import data from "../keys/dev/holder.json";
-
-// import { setTimeout } from "timers/promises";
-
-import { PublicKey, Keypair, Connection, clusterApiUrl } from "@solana/web3.js";
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
-const wallet = Keypair.fromSecretKey(
-  Uint8Array.from([
-    60, 31, 216, 134, 68, 78, 5, 54, 175, 135, 221, 227, 168, 70, 131, 114, 133,
-    65, 139, 93, 195, 126, 28, 32, 17, 15, 252, 196, 1, 237, 44, 57, 8, 134, 50,
-    123, 56, 199, 184, 99, 61, 162, 196, 68, 143, 51, 117, 64, 26, 54, 84, 218,
-    154, 157, 209, 231, 34, 3, 251, 190, 216, 153, 90, 113,
-  ])
-);
-console.log("Wallet:", wallet.publicKey.toString());
-
-new Wallet(wallet);
-
-const provider = new AnchorProvider(
+import {
+  program,
   connection,
-  new Wallet(wallet),
-  anchor.AnchorProvider.defaultOptions()
-);
-// console.log("Provider: ", provider);
+  owner,
+  payer,
+  wallet,
+  getBoxAccount,
+  getOperatorAccount,
+  getBuyerAccount,
+} from "./helper";
 
-const idl = IDL;
-// Address of the deployed program.
-const programId = "FVqBXTrZRY9532siwpbRd4WWvYnHSLbUhrz72eTVvWbJ";
-// Generate the program client from IDL.
-const program = new anchor.Program(idl, programId, provider);
+import {
+  PublicKey,
+  Keypair,
+  Connection,
+  clusterApiUrl,
+  ComputeBudgetProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import {
+  createMint,
+  getAssociatedTokenAddress,
+  getOrCreateAssociatedTokenAccount,
+  mintTo,
+} from "@solana/spl-token";
 
 async function add_nfts() {
-  let owner = provider.wallet as Wallet;
-  const payer = owner.payer;
-  // Configure the client to use the local cluster.
-  anchor.setProvider(provider);
+  const box_id = 3;
+  const box_account = getBoxAccount(box_id);
+  //MINT
 
-  // const unipet_box_account = getUnipetBoxAccount();
-  // const admin_account = getAdminAccount();
+  let mint_list = [];
+  for (let i = 0; i < 10; i++) {
+    const mintNew = await createMint(
+      connection,
+      payer,
+      owner.publicKey,
+      null,
+      0
+    );
+    console.log(`MINT ${i} : ${mintNew.toString()}`);
+    mint_list.push(mintNew);
+
+    let mint_box = await getOrCreateAssociatedTokenAccount(
+      connection,
+      payer,
+      mintNew,
+      box_account,
+      true
+    );
+
+    await mintTo(connection, owner.payer, mintNew, mint_box.address, payer, 1);
+  }
+
   const operator_account = getOperatorAccount();
 
-  const box_account = getBoxAccount(1);
-
-  let listMint = [
-    new PublicKey("8DWBYqeZVQv5DDPcDySx8TZFCyZBBR8578PBkMw6wmvY"),
-    new PublicKey("DKmwqcb8sDgWfa5rXBGudjwbGEQbyYgZgJbF6yQGT5BV"),
-  ];
   try {
     await program.methods
-      .addMints(1, listMint)
+      .addMints(box_id, mint_list)
       .accounts({
         operatorAccount: operator_account,
         boxAccount: box_account,
@@ -63,50 +69,8 @@ async function add_nfts() {
     console.log(error);
   }
 
-  // let box_account_info = await program.account.boxStruct.fetch(box_account);
-  // console.log(box_account_info);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
+  console.log(box_account_info);
 }
-
-const getBoxAccount = (id) => {
-  const BOX_ACCOUNT = "BOX_ACCOUNT";
-  const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(BOX_ACCOUNT), new anchor.BN(id).toArrayLike(Buffer, "le", 1)],
-    program.programId
-  );
-  console.log("box account: ", box_account.toString());
-
-  return box_account;
-};
-
-const getUnipetBoxAccount = () => {
-  const UNIPET_BOX_ACCOUNT = "UNIPET_BOX_ACCOUNT";
-  const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(UNIPET_BOX_ACCOUNT)],
-    program.programId
-  );
-  console.log("unipet_box_account: ", mint.toString());
-  return mint;
-};
-
-const getOperatorAccount = () => {
-  const OPERATOR_ROLE = "OPERATOR_ROLE";
-  const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(OPERATOR_ROLE)],
-    program.programId
-  );
-  console.log("operator_account: ", mint.toString());
-  return mint;
-};
-
-const getAdminAccount = () => {
-  const ADMIN_ROLE = "ADMIN_ROLE";
-  const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(ADMIN_ROLE)],
-    program.programId
-  );
-  console.log("admin_account: ", mint.toString());
-
-  return mint;
-};
 
 add_nfts();

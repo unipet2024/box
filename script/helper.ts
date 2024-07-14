@@ -26,7 +26,7 @@ export const wallet = Keypair.fromSecretKey(
 //   }
 // }
 
-// Example usage
+// // Example usage
 // const base58PrivateKey =
 //   "4HsXNquntYAZJa8oWVAUYchBYB4FzQtSHg9rAJ5zugxTLTbbmKWHV5xwTyMD3QZJR89enwU5Hs8uhDdHN4fqv2s4"; // Replace with actual base58 private key
 // export const wallet = base58ToKeypair(base58PrivateKey);
@@ -87,6 +87,16 @@ export const getBoxAccount = (id) => {
     program.programId
   );
   console.log("BOX ", id, " : ", box_account.toString());
+
+  return box_account;
+};
+
+export const getBuyerAccount = (buyer) => {
+  const BOX_ACCOUNT = "USER_ACCOUNT";
+  const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from(BOX_ACCOUNT), buyer.toBuffer()],
+    program.programId
+  );
 
   return box_account;
 };

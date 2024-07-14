@@ -49,6 +49,12 @@ pub enum BoxErrors {
 
     #[msg("Invalid time")]
     InvalidTime,
+
+    #[msg("Account is not owned by Box program")]
+    IllegalAccountOwner,
+
+    #[msg("Invalid account provided")]
+    InvalidAccount,
 }
 
 impl From<BoxErrors> for ProgramError {
