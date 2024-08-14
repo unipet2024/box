@@ -1,8 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangCurrencyBoxEvent,
-    ChangRateBoxEvent, Currency, BOX_ACCOUNT, OPERATOR_ROLE,
+    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangCurrencyBoxEvent, ChangRateBoxEvent, ChangTimeBoxEvent, Currency, BOX_ACCOUNT, OPERATOR_ROLE
 };
 
 #[derive(Accounts)]
@@ -109,6 +108,29 @@ pub fn change_currencies_handler(
         authority: authority.key(),
         box_id,
         currencies,
+        time: Clock::get()?.unix_timestamp
+    });
+
+    Ok(())
+}
+
+pub fn change_time_handler(
+    ctx: Context<OperatorInstruction>,
+    box_id: u8,
+    starttime: i64,
+    endtime: i64
+) -> Result<()> {
+    let box_account = &mut ctx.accounts.box_account;
+    let authority = &ctx.accounts.authority;
+
+    require_gt!(endtime, starttime, BoxErrors::InvalidTime);
+    box_account.set_time(starttime, endtime)?;
+
+    emit!(ChangTimeBoxEvent {
+        authority: authority.key(),
+        box_id,
+        starttime,
+        endtime,
         time: Clock::get()?.unix_timestamp
     });
 

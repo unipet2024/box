@@ -219,6 +219,45 @@ export type Box2024 = {
       ]
     },
     {
+      "name": "changeTime",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "boxId",
+          "type": "u8"
+        },
+        {
+          "name": "starttime",
+          "type": "i64"
+        },
+        {
+          "name": "endtime",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "changeCurrencies",
       "accounts": [
         {
@@ -783,6 +822,36 @@ export type Box2024 = {
               "defined": "Currency"
             }
           },
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ChangTimeBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "boxId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "starttime",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "endtime",
+          "type": "i64",
           "index": false
         },
         {
@@ -1205,6 +1274,45 @@ export const IDL: Box2024 = {
       ]
     },
     {
+      "name": "changeTime",
+      "accounts": [
+        {
+          "name": "operatorAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "boxId",
+          "type": "u8"
+        },
+        {
+          "name": "starttime",
+          "type": "i64"
+        },
+        {
+          "name": "endtime",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "changeCurrencies",
       "accounts": [
         {
@@ -1769,6 +1877,36 @@ export const IDL: Box2024 = {
               "defined": "Currency"
             }
           },
+          "index": false
+        },
+        {
+          "name": "time",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ChangTimeBoxEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "boxId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "starttime",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "endtime",
+          "type": "i64",
           "index": false
         },
         {

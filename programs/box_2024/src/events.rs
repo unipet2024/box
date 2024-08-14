@@ -54,6 +54,15 @@ pub struct ChangCurrencyBoxEvent {
 }
 
 #[event]
+pub struct ChangTimeBoxEvent {
+    pub authority: Pubkey,
+    pub box_id: u8,
+    pub starttime: i64,
+    pub endtime: i64,
+    pub time: i64,
+}
+
+#[event]
 pub struct CloseBoxEvent {
     pub authority: Pubkey,
     pub box_id: u8,

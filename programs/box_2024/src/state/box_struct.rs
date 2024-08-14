@@ -62,7 +62,7 @@ impl BoxStruct {
         for currency in currencies.iter() {
             self.add_currency(currency)?;
         }
-        
+
         Ok(())
     }
 
@@ -127,6 +127,13 @@ impl BoxStruct {
         }
 
         true
+    }
+
+    pub fn set_time(&mut self, starttime: i64, endtime: i64) -> Result<()> {
+        self.starttime = starttime;
+        self.endtime = endtime;
+
+        Ok(())
     }
 
     pub fn get_size(&self) -> usize {

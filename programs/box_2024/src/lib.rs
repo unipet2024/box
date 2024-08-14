@@ -56,6 +56,15 @@ pub mod box_2024 {
         operator_instruction::change_rate_handler(ctx, id, rates)
     }
 
+    pub fn change_time(
+        ctx: Context<OperatorInstruction>,
+        box_id: u8,
+        starttime: i64,
+        endtime: i64,
+    ) -> Result<()> {
+        operator_instruction::change_time_handler(ctx, box_id, starttime, endtime)
+    }
+
     pub fn change_currencies(
         ctx: Context<OperatorInstruction>,
         id: u8,

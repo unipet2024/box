@@ -1,15 +1,14 @@
 import { program, getOperatorAccount, getBoxAccount } from "./helper";
+import { BN } from "@coral-xyz/anchor";
 
-const box_id = 3
-  ;
-
+const box_id = 3;
 async function change_rates() {
   const operator_account = getOperatorAccount();
   const box_account = getBoxAccount(box_id);
 
   try {
     await program.methods
-      .changeRates(box_id, Buffer.from([0, 33, 66, 100]))
+      .changeTime(box_id, new BN(1720955474), new BN(1793547474))
       .accounts({
         operatorAccount: operator_account,
         boxAccount: box_account,

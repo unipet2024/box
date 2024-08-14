@@ -83,7 +83,8 @@ async function buy_box() {
   }
 
   // let box_account_info = await program.account.boxStruct.fetch(box_account);
-  // console.log(box_account_info);
+  // console.log(box_account_info.starttime.toNumber());
+  // console.log(box_account_info.endtime.toNumber());
 }
 
 buy_box();
