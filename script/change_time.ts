@@ -1,7 +1,7 @@
 import { program, getOperatorAccount, getBoxAccount } from "./helper";
 import { BN } from "@coral-xyz/anchor";
 
-const box_id = 3;
+const box_id = 1;
 async function change_rates() {
   const operator_account = getOperatorAccount();
   const box_account = getBoxAccount(box_id);

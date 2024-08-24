@@ -22,7 +22,7 @@ import {
 } from "@solana/spl-token";
 
 async function buy_box() {
-  const box_id = 3;
+  const box_id = 1;
   const box_account = getBoxAccount(box_id);
 
   let buyer_account = getBuyerAccount(owner.publicKey);

@@ -13,11 +13,12 @@ import { SystemProgram } from "@coral-xyz/anchor";
 
 async function claim() {
   const claimer = wallet.publicKey;
-  const MINT = new PublicKey("22GbdSSMFXNTmsHi9cXVCAnM1wwvTnv6DaCgfU4axRdT");
+  const MINT = new PublicKey("5EjjDLW4oVSneMzGPhFSFZwhPmCtX4DWPXEJyy3LJPAW");
 
   const buyer_account = getBuyerAccount(claimer.toBuffer());
   // const buyer_account_info
-  const box_account = getBoxAccount(1);
+  let box_id = 1;
+  const box_account = getBoxAccount(box_id);
 
   const nft_box = await getAssociatedTokenAddress(MINT, box_account, true);
   console.log("NFT BOX:", nft_box.toString());
@@ -37,7 +38,8 @@ async function claim() {
     };
   });
 
-  console.log(buyer_account_info);
+  let len = buyer_account_info.boughts.length;
+  console.log(buyer_account_info.boughts[len - 1]);
 
   try {
     const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
@@ -49,7 +51,7 @@ async function claim() {
     });
 
     const instruction = await program.methods
-      .claim(1, new anchor.BN(26))
+      .claim(box_id, new anchor.BN(22))
       .accounts({
         boxAccount: box_account,
         nftBox: nft_box,
