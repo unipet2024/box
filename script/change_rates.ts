@@ -7,7 +7,7 @@ async function change_rates() {
 
   try {
     await program.methods
-      .changeRates(box_id, Buffer.from([0, 1, 2, 3, 4, 100]))
+      .changeRates(box_id, Buffer.from([0, 10, 50, 90, 100]))
       .accounts({
         operatorAccount: operator_account,
         boxAccount: box_account,
