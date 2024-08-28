@@ -13,7 +13,7 @@ pub enum BoxStatus {
     Close,
 }
 
-#[derive(PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Clone, Debug, Copy)]
+#[derive(PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Clone, Debug, Copy, InitSpace)]
 pub struct UserClaim {
     // pub authority: Pubkey, //32
     pub box_id: u8,     //1

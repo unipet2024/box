@@ -7,7 +7,7 @@ use anchor_spl::{
 // use anchor_spl::token::Transfer;
 use anchor_spl::token::{transfer, Transfer as SplTransfer};
 
-use crate::{BoxErrors, BoxStruct, BuyBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
+use crate::{BoxErrors, BoxStruct, BuyBoxEvent, UserClaim, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
 
 #[derive(Accounts)]
 #[instruction(box_id: u8)]
@@ -34,7 +34,7 @@ pub struct BuyBoxSPL<'info> {
     #[account(
         init_if_needed,
         // space = UserStruct::size(20),
-        space = 8 +4200,
+        space = 8 + UserStruct::INIT_SPACE,
         payer=buyer,
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
@@ -80,6 +80,13 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         BoxErrors::InsufficientAmount
     );
 
+    //update user struct
+    //check is this is the first time buy, init
+    if buyer_account.authority == Pubkey::default() {
+        msg!("Init buyer account");
+        buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
+    }
+
     //transfer currency from buyer to box
     transfer(
         CpiContext::new(
@@ -120,7 +127,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     let mut mint_unlocks = vec![];
 
     msg!("Get mint list");
-    
+
     for _ in 0..unlock {
         // msg!("-----------------------");
         // msg!("Rand: {:}", rand);
@@ -150,20 +157,24 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     // require_eq!(1, 2);
     msg!("Update user struct");
 
-    //update user struct
-    //check is this is the first time buy, init
-    if buyer_account.authority == Pubkey::default() {
-        msg!("Init buyer account");
-        buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
-    }
     msg!("Add claim: {:?}", mint_unlocks);
 
-    UserStruct::realloc_if_needed(
-        buyer_account.to_account_info(),
-        buyer_account.boughts.len() + (unlock as usize),
-        ctx.accounts.buyer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
+    // UserStruct::realloc_if_needed(
+    //     buyer_account.to_account_info(),
+    //     buyer_account.boughts.len() + (unlock as usize) + (100 as usize),
+    //     ctx.accounts.buyer.to_account_info(),
+    //     ctx.accounts.system_program.to_account_info(),
+    // )?;
+
+    // buyer_account.boughts.ca
+    let capacity = buyer_account.boughts.capacity();
+    let size_of_bought = std::mem::size_of::<UserClaim>();
+    msg!(
+        "Capacity: {}, Size Of Bought: {}, Size: {}",
+        capacity,
+        size_of_bought,
+        capacity * size_of_bought
+    );
 
     buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
 

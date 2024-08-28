@@ -569,6 +569,10 @@
             }
           },
           {
+            "name": "counter",
+            "type": "u16"
+          },
+          {
             "name": "bump",
             "type": "u8"
           }

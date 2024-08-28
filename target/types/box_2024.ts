@@ -569,6 +569,10 @@ export type Box2024 = {
             }
           },
           {
+            "name": "counter",
+            "type": "u16"
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -1622,6 +1626,10 @@ export const IDL: Box2024 = {
                 "defined": "UserClaim"
               }
             }
+          },
+          {
+            "name": "counter",
+            "type": "u16"
           },
           {
             "name": "bump",
