@@ -81,7 +81,7 @@ pub mod box_2024 {
     //     buy_box_sol::buy_box_sol_handler(ctx, box_id)
     // }
 
-    pub fn claim(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> {
+    pub fn claim(ctx: Context<ClaimBox>, box_id: u8, id: u16) -> Result<()> {
         claim_box::claim_handler(ctx, box_id, id)
     }
 

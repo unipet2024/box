@@ -82,8 +82,8 @@ async function buy_box() {
     console.log(error);
   }
 
-  // let box_account_info = await program.account.userStruct.fetch(buyer_account);
-  // console.log(box_account_info);
+  let box_account_info = await program.account.userStruct.fetch(buyer_account);
+  console.log(box_account_info);
 }
 
 buy_box();

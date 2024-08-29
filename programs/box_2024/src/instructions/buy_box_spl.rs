@@ -7,7 +7,7 @@ use anchor_spl::{
 // use anchor_spl::token::Transfer;
 use anchor_spl::token::{transfer, Transfer as SplTransfer};
 
-use crate::{BoxErrors, BoxStruct, BuyBoxEvent, UserClaim, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
+use crate::{BoxErrors, BoxStruct, BuyBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
 
 #[derive(Accounts)]
 #[instruction(box_id: u8)]
@@ -34,7 +34,8 @@ pub struct BuyBoxSPL<'info> {
     #[account(
         init_if_needed,
         // space = UserStruct::size(20),
-        space = 8 + UserStruct::INIT_SPACE,
+        // space = 8 + UserStruct::INIT_SPACE,
+        space = 8 + 9000,
         payer=buyer,
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
@@ -122,24 +123,21 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     msg!("Unlock: {:}", unlock);
     // require_eq!(1,2);
 
-    let mut rand = (current % 1000000) as u64;
+    // let mut rand = (current % 1000000) as u64;
 
-    let mut mint_unlocks = vec![];
+    // let mut mint_unlocks = vec![];
 
     msg!("Get mint list");
+    // let mut mint_index = 0;
 
     for _ in 0..unlock {
-        // msg!("-----------------------");
-        // msg!("Rand: {:}", rand);
-        // msg!("I: {:}", i);
-
-        let mint_index = (rand % total) as usize;
-        let mint = box_account.mints[mint_index];
-
-        // msg!("{:} : {:}", mint_index, mint);
+        let mint_index = (current as u64 % total) as usize;
+        // let mint = box_account.mints[mint_index];
 
         //Add mint to list unlocks
-        mint_unlocks.push(mint);
+        // mint_unlocks.push(box_account.mints[mint_index]);
+
+        buyer_account.add_claim(box_account.id, &box_account.mints[mint_index])?;
 
         //remove mint from list mints
         box_account.mints.remove(mint_index);
@@ -151,13 +149,13 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         total = total - 1;
 
         //update rand
-        rand = (current % 1000000) as u64;
+        // rand = (current % 1000000) as u64;
     }
 
     // require_eq!(1, 2);
     msg!("Update user struct");
 
-    msg!("Add claim: {:?}", mint_unlocks);
+    // msg!("Add claim: {:?}", mint_unlocks);
 
     // UserStruct::realloc_if_needed(
     //     buyer_account.to_account_info(),
@@ -167,31 +165,30 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     // )?;
 
     // buyer_account.boughts.ca
-    let capacity = buyer_account.boughts.capacity();
-    let size_of_bought = std::mem::size_of::<UserClaim>();
-    msg!(
-        "Capacity: {}, Size Of Bought: {}, Size: {}",
-        capacity,
-        size_of_bought,
-        capacity * size_of_bought
-    );
+    // let capacity = buyer_account.boughts.capacity();
+    // let size_of_bought = std::mem::size_of::<UserClaim>();
+    // msg!(
+    //     "Capacity: {}, Size Of Bought: {}, Size: {}",
+    //     capacity,
+    //     size_of_bought,
+    //     capacity * size_of_bought
+    // );
 
-    buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
+    // buyer_account.add_claims(box_account.id, &mint_unlocks)?;
 
     msg!("set event");
 
     // update box counter
-    msg!("update box counter");
-    box_account.counter = box_account.counter + (unlock as u64);
+    // msg!("update box counter");
+    // box_account.counter = box_account.counter + (unlock as u64);
 
-    let clock = Clock::get().unwrap();
+    // let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
         box_id,
-        id: box_account.counter,
+        // id: box_account.counter,
         buyer: buyer.key(),
-        mints: mint_unlocks,
-        time: clock.unix_timestamp,
-        slot: clock.slot,
+        // mints: mint_unlocks,
+        time: current // slot: clock.slot,
     });
 
     Ok(())

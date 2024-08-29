@@ -408,7 +408,7 @@ export type Box2024 = {
         },
         {
           "name": "id",
-          "type": "u64"
+          "type": "u16"
         }
       ]
     },
@@ -592,7 +592,7 @@ export type Box2024 = {
           },
           {
             "name": "id",
-            "type": "u64"
+            "type": "u16"
           },
           {
             "name": "mint",
@@ -899,30 +899,13 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "id",
-          "type": "u64",
-          "index": false
-        },
-        {
           "name": "buyer",
           "type": "publicKey",
           "index": false
         },
         {
-          "name": "mints",
-          "type": {
-            "vec": "publicKey"
-          },
-          "index": false
-        },
-        {
           "name": "time",
           "type": "i64",
-          "index": false
-        },
-        {
-          "name": "slot",
-          "type": "u64",
           "index": false
         }
       ]
@@ -942,7 +925,7 @@ export type Box2024 = {
         },
         {
           "name": "id",
-          "type": "u64",
+          "type": "u16",
           "index": false
         },
         {
@@ -1467,7 +1450,7 @@ export const IDL: Box2024 = {
         },
         {
           "name": "id",
-          "type": "u64"
+          "type": "u16"
         }
       ]
     },
@@ -1651,7 +1634,7 @@ export const IDL: Box2024 = {
           },
           {
             "name": "id",
-            "type": "u64"
+            "type": "u16"
           },
           {
             "name": "mint",
@@ -1958,30 +1941,13 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "id",
-          "type": "u64",
-          "index": false
-        },
-        {
           "name": "buyer",
           "type": "publicKey",
           "index": false
         },
         {
-          "name": "mints",
-          "type": {
-            "vec": "publicKey"
-          },
-          "index": false
-        },
-        {
           "name": "time",
           "type": "i64",
-          "index": false
-        },
-        {
-          "name": "slot",
-          "type": "u64",
           "index": false
         }
       ]
@@ -2001,7 +1967,7 @@ export const IDL: Box2024 = {
         },
         {
           "name": "id",
-          "type": "u64",
+          "type": "u16",
           "index": false
         },
         {

@@ -17,7 +17,7 @@ pub enum BoxStatus {
 pub struct UserClaim {
     // pub authority: Pubkey, //32
     pub box_id: u8,     //1
-    pub id: u64,        //8
+    pub id: u16,        //8
     pub mint: Pubkey,   //32
     pub is_claim: bool, // 1
 }

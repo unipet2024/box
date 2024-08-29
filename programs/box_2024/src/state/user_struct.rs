@@ -9,14 +9,14 @@ use crate::UserClaim;
 
 // total 11045
 #[account]
-#[derive(InitSpace)]
+// #[derive(InitSpace)]
 pub struct UserStruct {
     pub authority: Pubkey, //32
 
-    #[max_len(200)]
-    pub boughts: Vec<UserClaim>, //4 +42 * 200 = 11004
-    // pub counter: u16, //2
-    pub bump: u8, //1
+    // #[max_len(200)]
+    pub boughts: Vec<UserClaim>, //4 +42 * 200 = 8404
+    pub counter: u16,            //2
+    pub bump: u8,                //1
 }
 
 impl UserStruct {
@@ -24,7 +24,7 @@ impl UserStruct {
 
     pub fn initialize(&mut self, authority: &Pubkey, bump: u8) -> Result<()> {
         self.authority = *authority;
-        // self.counter = 0;
+        self.counter = 1;
 
         self.bump = bump;
 
@@ -44,30 +44,42 @@ impl UserStruct {
         Ok(())
     }
 
-    pub fn add_claims(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
-        msg!("Inside add claims ");
-        for (index, mint) in mints.iter().enumerate() {
-            msg!("mint: {:}", *mint);
+    // pub fn add_claims(&mut self, box_id: u8, mints: &Vec<Pubkey>) -> Result<()> {
+    //     msg!("Inside add claims ");
+    //     for (_, mint) in mints.iter().enumerate() {
+    //         msg!("mint: {:}", *mint);
 
-            // self.boughts[self.counter as usize] = UserClaim {
-            //     box_id,
-            //     id: id + (index as u64),
-            //     mint: *mint,
-            //     is_claim: false,
-            // };
-            self.boughts.push(UserClaim {
-                box_id,
-                id: id + (index as u64),
-                mint: *mint,
-                is_claim: false,
-            });
-            // self.counter = self.counter + 1;
-        }
+    //         // self.boughts[self.counter as usize] = UserClaim {
+    //         //     box_id,
+    //         //     id: id + (index as u64),
+    //         //     mint: *mint,
+    //         //     is_claim: false,
+    //         // };
+    //         self.boughts.push(UserClaim {
+    //             box_id,
+    //             id: self.counter,
+    //             mint: *mint,
+    //             is_claim: false,
+    //         });
+    //         self.counter = self.counter + 1;
+    //     }
+
+    //     Ok(())
+    // }
+
+    pub fn add_claim(&mut self, box_id: u8, mint: &Pubkey) -> Result<()> {
+        self.boughts.push(UserClaim {
+            box_id,
+            id: self.counter,
+            mint: *mint,
+            is_claim: false,
+        });
+        self.counter = self.counter + 1;
 
         Ok(())
     }
 
-    pub fn get_claim(&self, box_id: u8, id: u64) -> (usize, bool) {
+    pub fn get_claim(&self, box_id: u8, id: u16) -> (usize, bool) {
         for (i, user_claim) in self.boughts.iter().enumerate() {
             // msg!("user_claim: {:?}", user_claim);
             if user_claim.box_id == box_id && user_claim.id == id && !user_claim.is_claim {
