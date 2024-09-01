@@ -51,11 +51,11 @@ async function claim() {
     });
 
     const instruction = await program.methods
-      .claim(box_id, new anchor.BN(22))
+      .claim(box_id)
       .accounts({
         boxAccount: box_account,
         nftBox: nft_box,
-        buyerAccount: buyer_account,
+        // buyerAccount: buyer_account,
         nftBuyer: nft_buyer,
         mint: MINT,
         buyer: claimer,

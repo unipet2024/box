@@ -67,27 +67,27 @@ impl UserStruct {
     //     Ok(())
     // }
 
-    pub fn add_claim(&mut self, box_id: u8, mint: &Pubkey) -> Result<()> {
-        self.boughts.push(UserClaim {
-            box_id,
-            id: self.counter,
-            mint: *mint,
-            is_claim: false,
-        });
-        self.counter = self.counter + 1;
+    // pub fn add_claim(&mut self, box_id: u8, mint: &Pubkey) -> Result<()> {
+    //     self.boughts.push(UserClaim {
+    //         box_id,
+    //         id: self.counter,
+    //         mint: *mint,
+    //         is_claim: false,
+    //     });
+    //     self.counter = self.counter + 1;
 
-        Ok(())
-    }
+    //     Ok(())
+    // }
 
-    pub fn get_claim(&self, box_id: u8, id: u16) -> (usize, bool) {
-        for (i, user_claim) in self.boughts.iter().enumerate() {
-            // msg!("user_claim: {:?}", user_claim);
-            if user_claim.box_id == box_id && user_claim.id == id && !user_claim.is_claim {
-                return (i, true);
-            }
-        }
-        (0, false)
-    }
+    // pub fn get_claim(&self, box_id: u8, id: u16) -> (usize, bool) {
+    //     for (i, user_claim) in self.boughts.iter().enumerate() {
+    //         // msg!("user_claim: {:?}", user_claim);
+    //         if user_claim.box_id == box_id && user_claim.id == id && !user_claim.is_claim {
+    //             return (i, true);
+    //         }
+    //     }
+    //     (0, false)
+    // }
 
     pub fn size(boughts_length: usize) -> usize {
         return 8 + 32 + 4 + boughts_length * UserClaim::SIZE + 1;

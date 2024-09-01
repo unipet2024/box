@@ -20,9 +20,9 @@ pub struct AddMints<'info> {
         mut,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
         bump=box_account.bump,
-        realloc = 8 + box_account.get_size() + mints.len()*32,
-        realloc::zero = false,
-        realloc::payer = authority,
+        // realloc = 8 + box_account.get_size() + mints.len()*32,
+        // realloc::zero = false,
+        // realloc::payer = authority,
     )]
     pub box_account: Account<'info, BoxStruct>,
 

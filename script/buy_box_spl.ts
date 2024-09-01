@@ -22,10 +22,14 @@ import {
 } from "@solana/spl-token";
 
 async function buy_box() {
-  const box_id = 3;
+  const box_id = 7;
   const box_account = getBoxAccount(box_id);
 
-  let buyer_account = getBuyerAccount(owner.publicKey);
+  // const box_account_info = await program.account.boxStruct.fetch(box_account);
+  // console.log(box_account_info.mints.length);
+
+  // let buyer_account = getBuyerAccount(owner.publicKey);
+  // console.log("buyer_account :", buyer_account);
 
   const usdc = new PublicKey("BUJST4dk6fnM5G3FnhTVc3pjxRJE7w2C5YL9XgLbdsXW");
 
@@ -58,7 +62,7 @@ async function buy_box() {
       .accounts({
         boxAccount: box_account,
         buyer: owner.publicKey,
-        buyerAccount: buyer_account,
+        // buyerAccount: buyer_account,
         currencyMint: usdc,
         currencyBox: box_usdc_account,
         currencyBuyer: user_usdc_account,
@@ -82,8 +86,8 @@ async function buy_box() {
     console.log(error);
   }
 
-  let box_account_info = await program.account.userStruct.fetch(buyer_account);
-  console.log(box_account_info);
+  let box_account_info = await program.account.boxStruct.fetch(box_account);
+  console.log(box_account_info.purchased);
 }
 
 buy_box();

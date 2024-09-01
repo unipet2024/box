@@ -28,7 +28,7 @@ import {
 } from "@solana/spl-token";
 
 async function add_nfts() {
-  const box_id = 3;
+  const box_id = 7;
   const box_account = getBoxAccount(box_id);
   //MINT
 

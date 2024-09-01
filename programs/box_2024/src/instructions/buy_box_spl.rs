@@ -7,7 +7,7 @@ use anchor_spl::{
 // use anchor_spl::token::Transfer;
 use anchor_spl::token::{transfer, Transfer as SplTransfer};
 
-use crate::{BoxErrors, BoxStruct, BuyBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
+use crate::{BoxErrors, BoxStruct, BuyBoxEvent, BOX_ACCOUNT};
 
 #[derive(Accounts)]
 #[instruction(box_id: u8)]
@@ -31,17 +31,16 @@ pub struct BuyBoxSPL<'info> {
     )]
     pub currency_box: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        init_if_needed,
-        // space = UserStruct::size(20),
-        // space = 8 + UserStruct::INIT_SPACE,
-        space = 8 + 9000,
-        payer=buyer,
-        seeds = [USER_ACCOUNT, buyer.key.as_ref()],
-        bump,
-    )]
-    pub buyer_account: Box<Account<'info, UserStruct>>,
-
+    // #[account(
+    //     init_if_needed,
+    //     // space = UserStruct::size(20),
+    //     // space = 8 + UserStruct::INIT_SPACE,
+    //     space = 8 + 9000,
+    //     payer=buyer,
+    //     seeds = [USER_ACCOUNT, buyer.key.as_ref()],
+    //     bump,
+    // )]
+    // pub buyer_account: Account<'info, UserStruct>,
     #[account(
         mut,
         associated_token::mint = currency_mint,
@@ -61,7 +60,7 @@ pub struct BuyBoxSPL<'info> {
 
 pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     let box_account = &mut ctx.accounts.box_account;
-    let buyer_account = &mut ctx.accounts.buyer_account;
+    // let buyer_account = &mut ctx.accounts.buyer_account;
     let buyer = &ctx.accounts.buyer;
 
     let current = Clock::get()?.unix_timestamp;
@@ -83,10 +82,10 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
 
     //update user struct
     //check is this is the first time buy, init
-    if buyer_account.authority == Pubkey::default() {
-        msg!("Init buyer account");
-        buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
-    }
+    // if buyer_account.authority == Pubkey::default() {
+    //     // msg!("Init buyer account");
+    //     buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
+    // }
 
     //transfer currency from buyer to box
     transfer(
@@ -120,14 +119,14 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         unlock = total as u8;
     }
 
-    msg!("Unlock: {:}", unlock);
+    // msg!("Unlock: {:}", unlock);
     // require_eq!(1,2);
 
     // let mut rand = (current % 1000000) as u64;
 
-    // let mut mint_unlocks = vec![];
+    let mut mint_unlocks = vec![];
 
-    msg!("Get mint list");
+    // msg!("Get mint list");
     // let mut mint_index = 0;
 
     for _ in 0..unlock {
@@ -135,15 +134,13 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         // let mint = box_account.mints[mint_index];
 
         //Add mint to list unlocks
-        // mint_unlocks.push(box_account.mints[mint_index]);
+        mint_unlocks.push(box_account.mints[mint_index]);
 
-        buyer_account.add_claim(box_account.id, &box_account.mints[mint_index])?;
+        // buyer_account.add_claim(box_account.id, &box_account.mints[mint_index])?;
 
         //remove mint from list mints
-        box_account.mints.remove(mint_index);
-
-        //add mint to purchased mints
-        // box_account.mints_purchased.push(mint);
+        // box_account.mints.remove(mint_index);
+        // box_account.mints[mint_index].authority = buyer.key();
 
         //update total
         total = total - 1;
@@ -153,9 +150,12 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     }
 
     // require_eq!(1, 2);
-    msg!("Update user struct");
+    // msg!("Update user struct");
 
-    // msg!("Add claim: {:?}", mint_unlocks);
+    msg!("Add claim: {:?}", mint_unlocks);
+
+    //add mint to purchased mints
+    box_account.add_purchase(&mint_unlocks, &buyer.key())?;
 
     // UserStruct::realloc_if_needed(
     //     buyer_account.to_account_info(),
@@ -187,7 +187,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         box_id,
         // id: box_account.counter,
         buyer: buyer.key(),
-        // mints: mint_unlocks,
+        mints: mint_unlocks,
         time: current // slot: clock.slot,
     });
 

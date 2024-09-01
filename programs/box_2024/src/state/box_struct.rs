@@ -1,6 +1,8 @@
+// use std::collections::HashMap;
+
 use anchor_lang::prelude::*;
 
-use crate::{BoxErrors, Currency};
+use crate::{BoxErrors, Currency, UserClaim};
 
 // total 100
 #[account]
@@ -15,7 +17,8 @@ pub struct BoxStruct {
     // pub amount: u64,               //8
     pub rates: Vec<u8>,     // 4+ 1*10 = 14
     pub mints: Vec<Pubkey>, // 4 + 32*100= 3200
-    // pub mints_purchased: Vec<Pubkey>,
+    // pub mints: HashMap<Pubkey, Pubkey>,
+    pub purchased: Vec<UserClaim>,
     pub counter: u64, //8
     // pub holder: Pubkey, //32
     pub bump: u8, //1
@@ -84,25 +87,58 @@ impl BoxStruct {
     }
 
     fn set_mints(&mut self, mints: &Vec<Pubkey>) -> Result<()> {
-        self.mints = vec![];
-
         for mint in mints.iter() {
-            self.add_mint(&mint)?;
+            // self.mints.insert(*mint, Pubkey::default());
+            self.mints.push(*mint);
         }
+        // self.mints.sort_by_key(|f| *f);
         Ok(())
     }
 
     pub fn add_mints(&mut self, mints: &Vec<Pubkey>) -> Result<()> {
         for mint in mints.iter() {
-            self.add_mint(&mint)?;
+            self.mints.push(*mint);
         }
+
+        // self.mints.sort_by_key(|f| f.mint);
         Ok(())
     }
 
-    fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
-        self.mints.push(*mint);
+    pub fn add_purchase(&mut self, mints: &Vec<Pubkey>, buyer: &Pubkey) -> Result<()> {
+        for mint in mints.iter() {
+            self.purchased.push(UserClaim {
+                mint: *mint,
+                authority: *buyer,
+                is_claim: false,
+            });
+        }
+
+        self.purchased.sort_by_key(|f| f.mint);
+
         Ok(())
     }
+
+    pub fn get_purchase(&self, mint: &Pubkey) -> i32 {
+        match self.purchased.binary_search_by(|a| a.mint.cmp(mint)) {
+            Ok(index) => return index as i32,
+            Err(_) => return -1,
+        }
+    }
+
+    // fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
+    //     if self.mints.contains_key(mint) {
+    //         return err!(BoxErrors::InputInvalid);
+    //     }
+
+    //     self.mints.insert(
+    //         *mint,
+    //         UserClaim {
+    //             authority: Pubkey::default(),
+    //             is_claim: false,
+    //         },
+    //     );
+    //     Ok(())
+    // }
 
     pub fn set_rates(&mut self, rates: &Vec<u8>) -> Result<()> {
         require_eq!(self.check_rates(&rates), true, BoxErrors::RateInvalid);

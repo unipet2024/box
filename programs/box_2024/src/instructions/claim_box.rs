@@ -8,10 +8,10 @@ use anchor_spl::{
 use anchor_spl::token::transfer;
 use anchor_spl::token::Transfer;
 
-use crate::{BoxErrors, BoxStruct, ClaimBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
+use crate::{BoxErrors, BoxStruct, ClaimBoxEvent, BOX_ACCOUNT};
 
 #[derive(Accounts)]
-#[instruction(box_id: u8, id: u16)]
+#[instruction(box_id: u8)]
 pub struct ClaimBox<'info> {
     #[account(
         // mut,
@@ -29,14 +29,13 @@ pub struct ClaimBox<'info> {
     )]
     pub nft_box: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        mut,
-        seeds = [USER_ACCOUNT, buyer.key.as_ref()],
-        constraint = buyer_account.authority == buyer.key() @ BoxErrors::AccountInvalid,
-        bump,
-    )]
-    pub buyer_account: Box<Account<'info, UserStruct>>,
-
+    // #[account(
+    //     mut,
+    //     seeds = [USER_ACCOUNT, buyer.key.as_ref()],
+    //     constraint = buyer_account.authority == buyer.key() @ BoxErrors::AccountInvalid,
+    //     bump,
+    // )]
+    // pub buyer_account: Box<Account<'info, UserStruct>>,
     #[account(
         init_if_needed,
         payer= buyer,
@@ -56,20 +55,20 @@ pub struct ClaimBox<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u16) -> Result<()> {
-    let buyer_account = &mut ctx.accounts.buyer_account;
+pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8) -> Result<()> {
+    // let buyer_account = &mut ctx.accounts.buyer_account;
     let box_account = &ctx.accounts.box_account;
-    // let buyer = &ctx.accounts.buyer;
+    let buyer = &ctx.accounts.buyer;
     let mint = &ctx.accounts.mint;
     // msg!("BOX ID: {:}", box_id);
     // msg!("ID: {:}", id);
 
-    let (claim_id, check) = buyer_account.get_claim(box_id, id);
-    require_neq!(check, false, BoxErrors::InputInvalid);
-
-    require_keys_eq!(
-        buyer_account.boughts[claim_id].mint,
-        mint.key(),
+    // let (claim_id, check) = buyer_account.get_claim(box_id, id);
+    let id = box_account.get_purchase(&mint.key());
+    require_neq!(id, -1, BoxErrors::InputInvalid);
+    require_keys_neq!(
+        box_account.purchased[id as usize].authority,
+        buyer.key(),
         BoxErrors::InputInvalid
     );
 
@@ -91,13 +90,14 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u16) -> Result<()> 
     )?;
 
     //update buyer account
-    buyer_account.boughts[claim_id].is_claim = true;
+    // buyer_account.boughts[claim_id].is_claim = true;
+    // box_account.mints[id as usize]
 
     let lock = Clock::get().unwrap();
     emit!(ClaimBoxEvent {
         buyer: ctx.accounts.buyer.key(),
         box_id,
-        id,
+        // id,
         time: lock.unix_timestamp,
         mint: mint.key(), //CHECK: mint.key().to_string() or mint.key().to_string(),
         slot: lock.slot,

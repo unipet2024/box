@@ -38,7 +38,7 @@ pub struct CreateBox<'info> {
     #[account(
         init,
         payer=authority,
-        space = 8 + 300,
+        space = 8 + 10000,
         seeds = [BOX_ACCOUNT, unipet_box.box_id.to_le_bytes().as_ref()],
         // seeds = [BOX_ACCOUNT],
         bump,
