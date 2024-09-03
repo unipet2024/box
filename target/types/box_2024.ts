@@ -475,15 +475,15 @@ export type Box2024 = {
             "type": "bool"
           },
           {
-            "name": "authorities",
-            "type": {
-              "vec": "publicKey"
-            }
-          },
-          {
             "name": "role",
             "type": {
               "defined": "AuthRole"
+            }
+          },
+          {
+            "name": "authorities",
+            "type": {
+              "vec": "publicKey"
             }
           }
         ]
@@ -495,16 +495,16 @@ export type Box2024 = {
         "kind": "struct",
         "fields": [
           {
-            "name": "creator",
-            "type": "publicKey"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "id",
             "type": "u8"
           },
           {
-            "name": "name",
-            "type": "string"
+            "name": "counter",
+            "type": "u64"
           },
           {
             "name": "starttime",
@@ -515,16 +515,24 @@ export type Box2024 = {
             "type": "i64"
           },
           {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "rates",
+            "type": "bytes"
+          },
+          {
             "name": "currencies",
             "type": {
               "vec": {
                 "defined": "Currency"
               }
             }
-          },
-          {
-            "name": "rates",
-            "type": "bytes"
           },
           {
             "name": "mints",
@@ -537,14 +545,6 @@ export type Box2024 = {
             "type": {
               "vec": "publicKey"
             }
-          },
-          {
-            "name": "counter",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }
@@ -555,6 +555,14 @@ export type Box2024 = {
         "kind": "struct",
         "fields": [
           {
+            "name": "boxId",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
             "name": "admin",
             "type": "publicKey"
           },
@@ -563,18 +571,10 @@ export type Box2024 = {
             "type": "publicKey"
           },
           {
-            "name": "boxId",
-            "type": "u8"
-          },
-          {
             "name": "status",
             "type": {
               "defined": "BoxStatus"
             }
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }
@@ -584,6 +584,10 @@ export type Box2024 = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -595,10 +599,6 @@ export type Box2024 = {
                 "defined": "UserClaim"
               }
             }
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }
@@ -1524,15 +1524,15 @@ export const IDL: Box2024 = {
             "type": "bool"
           },
           {
-            "name": "authorities",
-            "type": {
-              "vec": "publicKey"
-            }
-          },
-          {
             "name": "role",
             "type": {
               "defined": "AuthRole"
+            }
+          },
+          {
+            "name": "authorities",
+            "type": {
+              "vec": "publicKey"
             }
           }
         ]
@@ -1544,16 +1544,16 @@ export const IDL: Box2024 = {
         "kind": "struct",
         "fields": [
           {
-            "name": "creator",
-            "type": "publicKey"
+            "name": "bump",
+            "type": "u8"
           },
           {
             "name": "id",
             "type": "u8"
           },
           {
-            "name": "name",
-            "type": "string"
+            "name": "counter",
+            "type": "u64"
           },
           {
             "name": "starttime",
@@ -1564,16 +1564,24 @@ export const IDL: Box2024 = {
             "type": "i64"
           },
           {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "rates",
+            "type": "bytes"
+          },
+          {
             "name": "currencies",
             "type": {
               "vec": {
                 "defined": "Currency"
               }
             }
-          },
-          {
-            "name": "rates",
-            "type": "bytes"
           },
           {
             "name": "mints",
@@ -1586,14 +1594,6 @@ export const IDL: Box2024 = {
             "type": {
               "vec": "publicKey"
             }
-          },
-          {
-            "name": "counter",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }
@@ -1604,6 +1604,14 @@ export const IDL: Box2024 = {
         "kind": "struct",
         "fields": [
           {
+            "name": "boxId",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
             "name": "admin",
             "type": "publicKey"
           },
@@ -1612,18 +1620,10 @@ export const IDL: Box2024 = {
             "type": "publicKey"
           },
           {
-            "name": "boxId",
-            "type": "u8"
-          },
-          {
             "name": "status",
             "type": {
               "defined": "BoxStatus"
             }
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }
@@ -1633,6 +1633,10 @@ export const IDL: Box2024 = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -1644,10 +1648,6 @@ export const IDL: Box2024 = {
                 "defined": "UserClaim"
               }
             }
-          },
-          {
-            "name": "bump",
-            "type": "u8"
           }
         ]
       }

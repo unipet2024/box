@@ -15,7 +15,7 @@ pub struct BuyBoxSPL<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
-        bump=box_account.bump,
+        bump = box_account.bump,
         constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
         // constraint = box_account.currency == currency_mint.key() @ BoxErrors::CurrencyNotSupport,
         constraint = box_account.mints.len() >0 @ BoxErrors::SoldOut,
@@ -34,7 +34,7 @@ pub struct BuyBoxSPL<'info> {
     #[account(
         init_if_needed,
         space = 8 + 4200,
-        payer=buyer,
+        payer = buyer,
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
     )]
