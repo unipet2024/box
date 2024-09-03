@@ -17,7 +17,7 @@ pub struct BuyBoxSOL<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, box_id.to_le_bytes().as_ref()],
-        bump=box_account.bump,
+        bump = box_account.bump,
         constraint = box_account.creator != Pubkey::default() @ BoxErrors::BoxClosed,
         // constraint = box_account.get_currency_amount(Pubkey::default()) >0 @ BoxErrors::CurrencyNotSupport,
         constraint = box_account.mints.len() >0 @ BoxErrors::SoldOut,

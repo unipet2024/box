@@ -6,19 +6,21 @@ use crate::{BoxErrors, Currency};
 #[account]
 // #[derive(InitSpace)]
 pub struct BoxStruct {
-    pub creator: Pubkey,           //32
-    pub id: u8,                    //1
-    pub name: String,              //4+50
+    pub bump: u8, //1
+    pub id: u8,  //1
+    pub counter: u64, //8
     pub starttime: i64,            //4
     pub endtime: i64,              //4
+    pub creator: Pubkey,           //32
+                     //1
+    pub name: String,              //4+50
+    pub rates: Vec<u8>,     // 4+ 1*10 = 14
     pub currencies: Vec<Currency>, //4 + 40*n
     // pub amount: u64,               //8
-    pub rates: Vec<u8>,     // 4+ 1*10 = 14
     pub mints: Vec<Pubkey>, // 4 + 32*100= 3200
     pub mints_purchased: Vec<Pubkey>,
-    pub counter: u64, //8
     // pub holder: Pubkey, //32
-    pub bump: u8, //1
+
 }
 
 impl BoxStruct {

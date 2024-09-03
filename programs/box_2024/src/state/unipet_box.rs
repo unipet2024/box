@@ -5,11 +5,12 @@ use crate::BoxStatus;
 // total 230
 #[account]
 pub struct UnipetBox {
+
+    pub box_id: u8,    
+    pub bump: u8,     //1
     pub admin: Pubkey,     //32
     pub operator: Pubkey,  //32
-    pub box_id: u8,        //1
     pub status: BoxStatus, // 1
-    pub bump: u8,          //1
 }
 
 impl UnipetBox {

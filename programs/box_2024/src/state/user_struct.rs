@@ -6,9 +6,10 @@ use crate::UserClaim;
 #[account]
 // #[derive(InitSpace)]
 pub struct UserStruct {
+    pub bump: u8,                //1
     pub authority: Pubkey,       //32
     pub boughts: Vec<UserClaim>, //4+ 110*100 = 11004
-    pub bump: u8,                //1
+
 }
 
 impl UserStruct {
