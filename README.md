@@ -10,4 +10,6 @@ Deployer: aGwtDcFXg9FMJ43axF1x1wqeVjPSLHeVGhmgEGgWn16
 
 Box 1 Premium [86PtpMzu1PzhE7CodUPApDYiT6QTzXx43sv4R9xkDrYe](https://explorer.solana.com/address/86PtpMzu1PzhE7CodUPApDYiT6QTzXx43sv4R9xkDrYe?cluster=devnet)
 
+Box 2 Premium [4F62gNJWs62vgiLnk9MQam3Ni3Uy9SkrazWHtYGq7xbC](https://explorer.solana.com/address/4F62gNJWs62vgiLnk9MQam3Ni3Uy9SkrazWHtYGq7xbC?cluster=devnet)
+
 solana program extend 6ZHVd3e9rykT1WeMrAxbs7ur8hkrwXwDn7VV1eBuQyDW 204800

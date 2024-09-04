@@ -21,8 +21,8 @@ export const create_box_premium = async () => {
     { mint: usdc, amount: new anchor.BN(1000000) },
   ];
   // const box1_name = "BOX PREMIUM";
-
-  const box_account = getBoxAccount(1);
+  const box_id = 2;
+  const box_account = getBoxAccount(box_id);
 
   console.log("--------------CREATE BOX PREMIUM-----------------");
   try {

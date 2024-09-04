@@ -485,13 +485,6 @@ export type Box2024 = {
             "type": "u8"
           },
           {
-<<<<<<< HEAD
-            "name": "counter",
-            "type": "u64"
-          },
-          {
-=======
->>>>>>> 5df87f2 (update)
             "name": "starttime",
             "type": "i64"
           },
@@ -502,11 +495,6 @@ export type Box2024 = {
           {
             "name": "creator",
             "type": "publicKey"
-<<<<<<< HEAD
-          },
-          {
-            "name": "name",
-            "type": "string"
           },
           {
             "name": "rates",
@@ -514,23 +502,6 @@ export type Box2024 = {
           },
           {
             "name": "currencies",
-            "type": {
-              "vec": {
-                "defined": "Currency"
-              }
-            }
-          },
-          {
-            "name": "mints",
-=======
-          },
-          {
-            "name": "rates",
-            "type": "bytes"
-          },
-          {
-            "name": "currencies",
->>>>>>> 5df87f2 (update)
             "type": {
               "vec": {
                 "defined": "Currency"
@@ -1522,13 +1493,6 @@ export const IDL: Box2024 = {
             "type": "u8"
           },
           {
-<<<<<<< HEAD
-            "name": "counter",
-            "type": "u64"
-          },
-          {
-=======
->>>>>>> 5df87f2 (update)
             "name": "starttime",
             "type": "i64"
           },
@@ -1539,11 +1503,6 @@ export const IDL: Box2024 = {
           {
             "name": "creator",
             "type": "publicKey"
-<<<<<<< HEAD
-          },
-          {
-            "name": "name",
-            "type": "string"
           },
           {
             "name": "rates",
@@ -1551,23 +1510,6 @@ export const IDL: Box2024 = {
           },
           {
             "name": "currencies",
-            "type": {
-              "vec": {
-                "defined": "Currency"
-              }
-            }
-          },
-          {
-            "name": "mints",
-=======
-          },
-          {
-            "name": "rates",
-            "type": "bytes"
-          },
-          {
-            "name": "currencies",
->>>>>>> 5df87f2 (update)
             "type": {
               "vec": {
                 "defined": "Currency"
