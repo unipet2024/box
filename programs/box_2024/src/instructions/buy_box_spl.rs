@@ -32,16 +32,10 @@ pub struct BuyBoxSPL<'info> {
     pub currency_box: Box<Account<'info, TokenAccount>>,
 
     #[account(
-<<<<<<< HEAD
-        init_if_needed,
-        space = 8 + 4200,
-        payer = buyer,
-=======
         // init_if_needed,
         // space = 8 + 5000,
         // payer=buyer,
         mut,
->>>>>>> 5df87f2 (update)
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
     )]
