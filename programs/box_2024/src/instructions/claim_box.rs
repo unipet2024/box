@@ -11,7 +11,7 @@ use anchor_spl::token::Transfer;
 use crate::{BoxErrors, BoxStruct, ClaimBoxEvent, UserStruct, BOX_ACCOUNT, USER_ACCOUNT};
 
 #[derive(Accounts)]
-#[instruction(box_id: u8, id: u64)]
+#[instruction(box_id: u8)]
 pub struct ClaimBox<'info> {
     #[account(
         // mut,
@@ -62,15 +62,15 @@ pub struct ClaimBox<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> {
+pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8) -> Result<()> {
     let buyer_account = &mut ctx.accounts.buyer_account;
     let box_account = &ctx.accounts.box_account;
     // let buyer = &ctx.accounts.buyer;
     let mint = &ctx.accounts.mint;
     msg!("BOX ID: {:}", box_id);
-    msg!("ID: {:}", id);
+    // msg!("ID: {:}", id);
 
-    let (claim_id, check) = buyer_account.get_claim(box_id, id);
+    let (claim_id, check) = buyer_account.get_claim(box_id, &mint.key());
     require_neq!(check, false, BoxErrors::InputInvalid);
 
     require_keys_eq!(
@@ -103,9 +103,9 @@ pub fn claim_handler(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> 
     emit!(ClaimBoxEvent {
         buyer: ctx.accounts.buyer.key(),
         box_id,
-        id,
+        // id,
         time: lock.unix_timestamp,
-        mint: mint.key(),  //CHECK: mint.key().to_string() or mint.key().to_string(),
+        mint: mint.key(), //CHECK: mint.key().to_string() or mint.key().to_string(),
         slot: lock.slot,
     });
 

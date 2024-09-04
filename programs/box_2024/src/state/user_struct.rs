@@ -8,8 +8,7 @@ use crate::UserClaim;
 pub struct UserStruct {
     pub bump: u8,                //1
     pub authority: Pubkey,       //32
-    pub boughts: Vec<UserClaim>, //4+ 110*100 = 11004
-
+    pub boughts: Vec<UserClaim>, //4+ 44*100 = 4404
 }
 
 impl UserStruct {
@@ -18,24 +17,26 @@ impl UserStruct {
 
         self.bump = bump;
 
+        // self.boughts = Vec::with_capacity(50);
         self.boughts = vec![];
 
         // self.status = BoxStatus::Open;
         Ok(())
     }
 
-    pub fn add_claims(&mut self, box_id: u8, id: u64, mints: &Vec<Pubkey>) -> Result<()> {
-        for (index, mint) in mints.iter().enumerate() {
-            self.add_claim(box_id, id + (index as u64), mint)?;
+    pub fn add_claims(&mut self, box_id: u8, mints: &Vec<Pubkey>) -> Result<()> {
+        for mint in mints.iter() {
+            self.add_claim(box_id, mint)?;
         }
 
         Ok(())
     }
 
-    pub fn add_claim(&mut self, box_id: u8, id: u64, mint: &Pubkey) -> Result<()> {
+    pub fn add_claim(&mut self, box_id: u8, mint: &Pubkey) -> Result<()> {
+        msg!("Add claim");
         self.boughts.push(UserClaim {
             box_id,
-            id,
+            // id,
             mint: *mint,
             is_claim: false,
         });
@@ -43,10 +44,10 @@ impl UserStruct {
         Ok(())
     }
 
-    pub fn get_claim(&self, box_id: u8, id: u64) -> (usize, bool) {
+    pub fn get_claim(&self, box_id: u8, mint: &Pubkey) -> (usize, bool) {
         for (i, user_claim) in self.boughts.iter().enumerate() {
-            msg!("user_claim: {:?}", user_claim);
-            if user_claim.box_id == box_id && user_claim.id == id && !user_claim.is_claim {
+            // msg!("user_claim: {:?}", user_claim);
+            if user_claim.box_id == box_id && user_claim.mint == *mint && !user_claim.is_claim {
                 return (i, true);
             }
         }

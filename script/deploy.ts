@@ -8,8 +8,8 @@ const deploy = async () => {
   try {
     await init();
     await set_operator();
-    await create_box_normal();
-    await create_box_premium();
+    // await create_box_normal();
+    // await create_box_premium();
   } catch (error) {
     console.log(error);
   }

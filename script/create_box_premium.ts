@@ -17,18 +17,18 @@ export const create_box_premium = async () => {
   const endtime = starttime + 30 * 86400;
   const rates = [0, 60, 90, 100];
   let currencies = [
-    { mint: address0, amount: new anchor.BN(1000000) },
+    // { mint: address0, amount: new anchor.BN(1000000) },
     { mint: usdc, amount: new anchor.BN(1000000) },
   ];
-  const box1_name = "BOX PREMIUM";
+  // const box1_name = "BOX PREMIUM";
 
-  const box_account = getBoxAccount(2);
+  const box_account = getBoxAccount(1);
 
   console.log("--------------CREATE BOX PREMIUM-----------------");
   try {
     await program.methods
       .createBox(
-        box1_name,
+        // box1_name,
         new anchor.BN(starttime),
         new anchor.BN(endtime),
         currencies,
@@ -50,3 +50,5 @@ export const create_box_premium = async () => {
   );
   console.log(unipet_box_account_info);
 };
+
+create_box_premium();

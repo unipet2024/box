@@ -7,7 +7,7 @@ use crate::{
 
 #[derive(Accounts)]
 #[instruction(
-    name: String,
+    // name: String,
     starttime: i64,
     endtime: i64,
     currencies: Vec<Currency>,
@@ -38,7 +38,7 @@ pub struct CreateBox<'info> {
     #[account(
         init,
         payer=authority,
-        space = 8 + 3300,
+        space = 10240,
         seeds = [BOX_ACCOUNT, unipet_box.box_id.to_le_bytes().as_ref()],
         // seeds = [BOX_ACCOUNT],
         bump,
@@ -49,7 +49,7 @@ pub struct CreateBox<'info> {
 
 pub fn create_box_handler(
     ctx: Context<CreateBox>,
-    name: String,
+    // name: String,
     start_time: i64,
     end_time: i64,
     currencies: Vec<Currency>,
@@ -75,7 +75,7 @@ pub fn create_box_handler(
     box_account.initialize(
         authority.key,
         box_id,
-        name.clone(),
+        // name.clone(),
         start_time,
         end_time,
         &currencies,
@@ -91,7 +91,7 @@ pub fn create_box_handler(
     emit!(CreationBoxEvent {
         authority: authority.key(),
         id: box_id,
-        name,
+        // name,
         start_time,
         end_time,
         currencies,

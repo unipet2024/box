@@ -153,10 +153,6 @@ export type Box2024 = {
       ],
       "args": [
         {
-          "name": "name",
-          "type": "string"
-        },
-        {
           "name": "startTime",
           "type": "i64"
         },
@@ -369,13 +365,8 @@ export type Box2024 = {
       ]
     },
     {
-      "name": "buyBoxSol",
+      "name": "initBuyer",
       "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "buyerAccount",
           "isMut": true,
@@ -392,12 +383,7 @@ export type Box2024 = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
+      "args": []
     },
     {
       "name": "claim",
@@ -452,10 +438,6 @@ export type Box2024 = {
         {
           "name": "boxId",
           "type": "u8"
-        },
-        {
-          "name": "id",
-          "type": "u64"
         }
       ]
     }
@@ -503,10 +485,13 @@ export type Box2024 = {
             "type": "u8"
           },
           {
+<<<<<<< HEAD
             "name": "counter",
             "type": "u64"
           },
           {
+=======
+>>>>>>> 5df87f2 (update)
             "name": "starttime",
             "type": "i64"
           },
@@ -517,6 +502,7 @@ export type Box2024 = {
           {
             "name": "creator",
             "type": "publicKey"
+<<<<<<< HEAD
           },
           {
             "name": "name",
@@ -536,12 +522,23 @@ export type Box2024 = {
           },
           {
             "name": "mints",
+=======
+          },
+          {
+            "name": "rates",
+            "type": "bytes"
+          },
+          {
+            "name": "currencies",
+>>>>>>> 5df87f2 (update)
             "type": {
-              "vec": "publicKey"
+              "vec": {
+                "defined": "Currency"
+              }
             }
           },
           {
-            "name": "mintsPurchased",
+            "name": "mints",
             "type": {
               "vec": "publicKey"
             }
@@ -613,10 +610,6 @@ export type Box2024 = {
           {
             "name": "boxId",
             "type": "u8"
-          },
-          {
-            "name": "id",
-            "type": "u64"
           },
           {
             "name": "mint",
@@ -740,11 +733,6 @@ export type Box2024 = {
         {
           "name": "id",
           "type": "u8",
-          "index": false
-        },
-        {
-          "name": "name",
-          "type": "string",
           "index": false
         },
         {
@@ -899,11 +887,6 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "id",
-          "type": "u64",
-          "index": false
-        },
-        {
           "name": "buyer",
           "type": "publicKey",
           "index": false
@@ -938,11 +921,6 @@ export type Box2024 = {
         {
           "name": "boxId",
           "type": "u8",
-          "index": false
-        },
-        {
-          "name": "id",
-          "type": "u64",
           "index": false
         },
         {
@@ -1043,6 +1021,16 @@ export type Box2024 = {
       "code": 6015,
       "name": "InvalidTime",
       "msg": "Invalid time"
+    },
+    {
+      "code": 6016,
+      "name": "IllegalAccountOwner",
+      "msg": "Account is not owned by Box program"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidAccount",
+      "msg": "Invalid account provided"
     }
   ]
 };
@@ -1202,10 +1190,6 @@ export const IDL: Box2024 = {
       ],
       "args": [
         {
-          "name": "name",
-          "type": "string"
-        },
-        {
           "name": "startTime",
           "type": "i64"
         },
@@ -1418,13 +1402,8 @@ export const IDL: Box2024 = {
       ]
     },
     {
-      "name": "buyBoxSol",
+      "name": "initBuyer",
       "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "buyerAccount",
           "isMut": true,
@@ -1441,12 +1420,7 @@ export const IDL: Box2024 = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
+      "args": []
     },
     {
       "name": "claim",
@@ -1501,10 +1475,6 @@ export const IDL: Box2024 = {
         {
           "name": "boxId",
           "type": "u8"
-        },
-        {
-          "name": "id",
-          "type": "u64"
         }
       ]
     }
@@ -1552,10 +1522,13 @@ export const IDL: Box2024 = {
             "type": "u8"
           },
           {
+<<<<<<< HEAD
             "name": "counter",
             "type": "u64"
           },
           {
+=======
+>>>>>>> 5df87f2 (update)
             "name": "starttime",
             "type": "i64"
           },
@@ -1566,6 +1539,7 @@ export const IDL: Box2024 = {
           {
             "name": "creator",
             "type": "publicKey"
+<<<<<<< HEAD
           },
           {
             "name": "name",
@@ -1585,12 +1559,23 @@ export const IDL: Box2024 = {
           },
           {
             "name": "mints",
+=======
+          },
+          {
+            "name": "rates",
+            "type": "bytes"
+          },
+          {
+            "name": "currencies",
+>>>>>>> 5df87f2 (update)
             "type": {
-              "vec": "publicKey"
+              "vec": {
+                "defined": "Currency"
+              }
             }
           },
           {
-            "name": "mintsPurchased",
+            "name": "mints",
             "type": {
               "vec": "publicKey"
             }
@@ -1662,10 +1647,6 @@ export const IDL: Box2024 = {
           {
             "name": "boxId",
             "type": "u8"
-          },
-          {
-            "name": "id",
-            "type": "u64"
           },
           {
             "name": "mint",
@@ -1789,11 +1770,6 @@ export const IDL: Box2024 = {
         {
           "name": "id",
           "type": "u8",
-          "index": false
-        },
-        {
-          "name": "name",
-          "type": "string",
           "index": false
         },
         {
@@ -1948,11 +1924,6 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "id",
-          "type": "u64",
-          "index": false
-        },
-        {
           "name": "buyer",
           "type": "publicKey",
           "index": false
@@ -1987,11 +1958,6 @@ export const IDL: Box2024 = {
         {
           "name": "boxId",
           "type": "u8",
-          "index": false
-        },
-        {
-          "name": "id",
-          "type": "u64",
           "index": false
         },
         {
@@ -2092,6 +2058,16 @@ export const IDL: Box2024 = {
       "code": 6015,
       "name": "InvalidTime",
       "msg": "Invalid time"
+    },
+    {
+      "code": 6016,
+      "name": "IllegalAccountOwner",
+      "msg": "Account is not owned by Box program"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidAccount",
+      "msg": "Invalid account provided"
     }
   ]
 };

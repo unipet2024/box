@@ -5,14 +5,14 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-box_2024 = "D186vYcHBQkqi3pwWgef4vbhrGagEdCXFf2JkyBXFowL"
+box_2024 = "CgiGkh9SCX36F7Xv3zkHYj7gxns4do21vaRA8Qv37rvR"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Devnet"
-wallet = "/Users/roster/.config/solana/id.json"
+wallet = "/Users/tabatrung/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

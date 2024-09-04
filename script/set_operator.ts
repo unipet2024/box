@@ -33,3 +33,6 @@ export const set_operator = async () => {
   );
   console.log(operator_account_info);
 };
+
+
+set_operator()

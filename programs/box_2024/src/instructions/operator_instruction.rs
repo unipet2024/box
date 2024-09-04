@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangRateBoxEvent, BOX_ACCOUNT, OPERATOR_ROLE
+    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangRateBoxEvent, BOX_ACCOUNT,
+    OPERATOR_ROLE,
 };
 
 #[derive(Accounts)]
@@ -19,8 +20,7 @@ pub struct OperatorInstruction<'info> {
     #[account(
         mut,
         seeds = [BOX_ACCOUNT, id.to_le_bytes().as_ref()],
-        bump=box_account.bump,
-        // constraint = box_account.authority == authority.key() @ BoxErrors::OnlyOperator,
+        bump=box_account.bump
     )]
     pub box_account: Account<'info, BoxStruct>,
 
@@ -38,6 +38,15 @@ pub fn add_mints_handler(
     let box_account = &mut ctx.accounts.box_account;
     let authority = &ctx.accounts.authority;
 
+    BoxStruct::realloc_if_needed(
+        box_account.to_account_info(),
+        box_account.rates.len(),
+        box_account.currencies.len(),
+        box_account.mints.len() + mints.len(),
+        authority.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
     box_account.add_mints(&mints)?;
 
     let clock = Clock::get().unwrap();
@@ -46,7 +55,7 @@ pub fn add_mints_handler(
         id,
         mints,
         time: clock.unix_timestamp,
-        slot:clock.slot
+        slot: clock.slot
     });
 
     Ok(())

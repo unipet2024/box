@@ -8,7 +8,7 @@ import {
 export const init = async () => {
   // anchor.setProvider(provider);
 
-  console.log("--------------INIT-----------------")
+  console.log("--------------INIT-----------------");
   try {
     await program.methods
       .initialize()
@@ -27,3 +27,5 @@ export const init = async () => {
   );
   console.log(unipet_box_account_info);
 };
+
+init();

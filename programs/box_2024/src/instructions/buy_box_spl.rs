@@ -32,9 +32,16 @@ pub struct BuyBoxSPL<'info> {
     pub currency_box: Box<Account<'info, TokenAccount>>,
 
     #[account(
+<<<<<<< HEAD
         init_if_needed,
         space = 8 + 4200,
         payer = buyer,
+=======
+        // init_if_needed,
+        // space = 8 + 5000,
+        // payer=buyer,
+        mut,
+>>>>>>> 5df87f2 (update)
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,
     )]
@@ -65,9 +72,9 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
     let current = Clock::get()?.unix_timestamp;
 
     require_gte!(box_account.endtime, current, BoxErrors::BoxClosed);
-    msg!("Current: {:}", current);
-    msg!("Start: {:}", box_account.starttime);
-    msg!("End: {:}", box_account.endtime);
+    // msg!("Current: {:}", current);
+    // msg!("Start: {:}", box_account.starttime);
+    // msg!("End: {:}", box_account.endtime);
     require_gte!(current, box_account.starttime, BoxErrors::BoxNotStartYet);
 
     let amount = box_account.get_currency_amount(ctx.accounts.currency_mint.key());
@@ -134,7 +141,7 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
         box_account.mints.remove(mint_index);
 
         //add mint to purchased mints
-        box_account.mints_purchased.push(mint);
+        // box_account.mints_purchased.push(mint);
 
         //update total
         total = total - 1;
@@ -147,19 +154,20 @@ pub fn buy_box_spl_handler(ctx: Context<BuyBoxSPL>, box_id: u8) -> Result<()> {
 
     //update user struct
     //check is this is the first time buy, init
+    msg!("Init user");
     if buyer_account.authority == Pubkey::default() {
         buyer_account.initialize(buyer.key, ctx.bumps.buyer_account)?;
     }
-    buyer_account.add_claims(box_account.id, box_account.counter, &mint_unlocks)?;
+    msg!("Add claim");
+    buyer_account.add_claims(box_account.id, &mint_unlocks)?;
 
     // //update box counter
-    box_account.counter = box_account.counter + unlock as u64;
-
+    // box_account.counter = box_account.counter + unlock as u64;
 
     let clock = Clock::get().unwrap();
     emit!(BuyBoxEvent {
         box_id,
-        id: box_account.counter,
+        // id: box_account.counter,
         buyer: buyer.key(),
         mints: mint_unlocks,
         time: clock.unix_timestamp,

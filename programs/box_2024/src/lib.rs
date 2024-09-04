@@ -14,7 +14,7 @@ pub use instructions::*;
 pub use state::*;
 pub use types::*;
 
-declare_id!("D186vYcHBQkqi3pwWgef4vbhrGagEdCXFf2JkyBXFowL");
+declare_id!("CgiGkh9SCX36F7Xv3zkHYj7gxns4do21vaRA8Qv37rvR");
 
 #[program]
 pub mod box_2024 {
@@ -38,14 +38,14 @@ pub mod box_2024 {
 
     pub fn create_box(
         ctx: Context<CreateBox>,
-        name: String,
+        // name: String,
         start_time: i64,
         end_time: i64,
         currencies: Vec<Currency>,
         rates: Vec<u8>,
         nfts: Vec<Pubkey>,
     ) -> Result<()> {
-        create_box::create_box_handler(ctx, name, start_time, end_time, currencies, rates, nfts)
+        create_box::create_box_handler(ctx, start_time, end_time, currencies, rates, nfts)
     }
 
     pub fn add_mints(ctx: Context<OperatorInstruction>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
@@ -64,11 +64,15 @@ pub mod box_2024 {
         buy_box_spl::buy_box_spl_handler(ctx, box_id)
     }
 
-    pub fn buy_box_sol(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
-        buy_box_sol::buy_box_sol_handler(ctx, box_id)
+    // pub fn buy_box_sol(ctx: Context<BuyBoxSOL>, box_id: u8) -> Result<()> {
+    //     buy_box_sol::buy_box_sol_handler(ctx, box_id)
+    // }
+
+    pub fn init_buyer(ctx: Context<InitBuyer>) -> Result<()> {
+        init_buyer::init_buyer_handle(ctx)
     }
 
-    pub fn claim(ctx: Context<ClaimBox>, box_id: u8, id: u64) -> Result<()> {
-        claim_box::claim_handler(ctx, box_id, id)
+    pub fn claim(ctx: Context<ClaimBox>, box_id: u8) -> Result<()> {
+        claim_box::claim_handler(ctx, box_id)
     }
 }
