@@ -1,9 +1,10 @@
 use anchor_lang::prelude::*;
 
-use crate::{
-    AuthRole, AuthorityRole, BoxErrors, BoxStruct, CreationBoxEvent, Currency, UnipetBox,
-    BOX_ACCOUNT, OPERATOR_ROLE, UNIPET_BOX_ACCOUNT,
-};
+use crate::constants::*;
+use crate::error::*;
+use crate::events::*;
+use crate::state::*;
+use crate::types::*;
 
 #[derive(Accounts)]
 #[instruction(
@@ -11,8 +12,8 @@ use crate::{
     starttime: i64,
     endtime: i64,
     currencies: Vec<Currency>,
-    rates: Vec<u8>,
-    nfts: Vec<Pubkey>
+    rates: Vec<u8>
+    // nfts: Vec<Pubkey>
 )]
 pub struct CreateBox<'info> {
     #[account(
@@ -38,12 +39,19 @@ pub struct CreateBox<'info> {
     #[account(
         init,
         payer=authority,
-        space = 10240,
+        space = 700,
         seeds = [BOX_ACCOUNT, unipet_box.box_id.to_le_bytes().as_ref()],
-        // seeds = [BOX_ACCOUNT],
         bump,
     )]
     pub box_account: Account<'info, BoxStruct>,
+    #[account(
+        init,
+        payer=authority,
+        space = 9610,
+        seeds = [BOX_STORAGE, unipet_box.box_id.to_le_bytes().as_ref()],
+        bump,
+    )]
+    pub box_storage: Account<'info, BoxStorage>,
     pub system_program: Program<'info, System>,
 }
 
@@ -54,10 +62,11 @@ pub fn create_box_handler(
     end_time: i64,
     currencies: Vec<Currency>,
     rates: Vec<u8>,
-    nfts: Vec<Pubkey>,
+    // nfts: Vec<Pubkey>,
 ) -> Result<()> {
     let unipet_box = &mut ctx.accounts.unipet_box;
     let box_account = &mut ctx.accounts.box_account;
+    let box_storage = &mut ctx.accounts.box_storage;
     let authority = &ctx.accounts.authority;
 
     //Check time
@@ -80,9 +89,11 @@ pub fn create_box_handler(
         end_time,
         &currencies,
         &rates,
-        &nfts,
+        // &nfts,
         ctx.bumps.box_account,
     )?;
+
+    box_storage.initialize(box_id, ctx.bumps.box_storage)?;
 
     unipet_box.box_id = box_id + 1;
 

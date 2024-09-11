@@ -1,9 +1,10 @@
 use anchor_lang::prelude::*;
 
-use crate::{
-    AddNftsBoxEvent, AuthRole, AuthorityRole, BoxErrors, BoxStruct, ChangRateBoxEvent, BOX_ACCOUNT,
-    OPERATOR_ROLE,
-};
+use crate::constants::*;
+use crate::error::*;
+use crate::events::*;
+use crate::state::*;
+use crate::types::*;
 
 #[derive(Accounts)]
 #[instruction(id: u8)]
@@ -24,6 +25,13 @@ pub struct OperatorInstruction<'info> {
     )]
     pub box_account: Account<'info, BoxStruct>,
 
+    #[account(
+        mut,
+        seeds = [BOX_STORAGE, id.to_le_bytes().as_ref()],
+        bump = box_storage.bump,
+    )]
+    pub box_storage: Account<'info, BoxStorage>,
+
     #[account(mut, signer)]
     pub authority: Signer<'info>,
 
@@ -36,18 +44,21 @@ pub fn add_mints_handler(
     mints: Vec<Pubkey>,
 ) -> Result<()> {
     let box_account = &mut ctx.accounts.box_account;
+    let box_storage = &mut ctx.accounts.box_storage;
+
     let authority = &ctx.accounts.authority;
 
-    BoxStruct::realloc_if_needed(
-        box_account.to_account_info(),
-        box_account.rates.len(),
-        box_account.currencies.len(),
-        box_account.mints.len() + mints.len(),
-        authority.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
+    // BoxStruct::realloc_if_needed(
+    //     box_account.to_account_info(),
+    //     box_account.rates.len(),
+    //     box_account.currencies.len(),
+    //     box_account.mints.len() + mints.len(),
+    //     authority.to_account_info(),
+    //     ctx.accounts.system_program.to_account_info(),
+    // )?;
 
-    box_account.add_mints(&mints)?;
+    box_storage.add_mints(&mints)?;
+    box_account.add_ids(mints.len() as u16)?;
 
     let clock = Clock::get().unwrap();
     emit!(AddNftsBoxEvent {

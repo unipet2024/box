@@ -5,7 +5,7 @@ use crate::{AuthRole, AuthorityRole, UnipetBox, ADMIN_ROLE, OPERATOR_ROLE, UNIPE
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     #[account(
-        init_if_needed,
+        init,
         payer = authority,
         space =8 + 250,
         seeds = [UNIPET_BOX_ACCOUNT],
@@ -13,7 +13,7 @@ pub struct Initialize<'info> {
     )]
     pub unipet_box: Box<Account<'info, UnipetBox>>,
     #[account(
-        init_if_needed,
+        init,
         space = 8 + 170,
         payer = authority,
         seeds = [ADMIN_ROLE],
@@ -21,7 +21,7 @@ pub struct Initialize<'info> {
     )]
     pub admin_account: Account<'info, AuthorityRole>,
     #[account(
-        init_if_needed,
+        init,
         space = 8 + 170,
         payer = authority,
         seeds = [OPERATOR_ROLE],

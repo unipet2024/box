@@ -10,30 +10,26 @@ use crate::{BoxErrors, Currency};
 #[account]
 // #[derive(InitSpace)]
 pub struct BoxStruct {
-    pub bump: u8, //1
-    pub id: u8,   //1
-    // pub counter: u64,    //8
-    pub starttime: i64,  //4
-    pub endtime: i64,    //4
-    pub creator: Pubkey, //32
-    //1
-    // pub name: String,              //4+50
+    pub bump: u8,                  //1
+    pub id: u8,                    //1
+    pub counter: u16,              //8
+    pub starttime: i64,            //4
+    pub endtime: i64,              //4
+    pub creator: Pubkey,           //32
     pub rates: Vec<u8>,            // 4+ 1*10 = 14
     pub currencies: Vec<Currency>, //4 + 40*n
-    // pub amount: u64,               //8
-    pub mints: Vec<Pubkey>, // 4 + 32*100= 3200
-                            // pub mints_purchased: Vec<Pubkey>,
-                            // pub holder: Pubkey, //32
+    pub ids: Vec<u16>,             // 4 + 2*300= 604
 }
 
 impl BoxStruct {
     pub fn size(rates_length: usize, currencies_length: usize, mints_lenth: usize) -> usize {
         return 8
-            + 1
-            + 1
-            + 8
-            + 8
-            + 32
+            + 1 //bump
+            + 1 //id
+            + 2 // counter
+            + 8 //starttime
+            + 8 //endtime
+            + 32 //creator
             + (4 + rates_length)
             + (4 + currencies_length * 40)
             + (4 + mints_lenth * 32);
@@ -48,7 +44,7 @@ impl BoxStruct {
         currencies: &Vec<Currency>,
         // amount: u64,
         rates: &Vec<u8>,
-        mints: &Vec<Pubkey>,
+        // mints: &Vec<Pubkey>,
         // holder: &Pubkey,
         bump: u8,
     ) -> Result<()> {
@@ -63,7 +59,7 @@ impl BoxStruct {
 
         self.set_currencies(&currencies)?;
         self.set_rates(&rates)?;
-        self.set_mints(&mints)?;
+        self.ids = Vec::with_capacity(300);
         // self.counter = 1;
 
         self.bump = bump;
@@ -98,24 +94,17 @@ impl BoxStruct {
         0
     }
 
-    fn set_mints(&mut self, mints: &Vec<Pubkey>) -> Result<()> {
-        self.mints = vec![];
-
-        for mint in mints.iter() {
-            self.add_mint(&mint)?;
+    pub fn add_ids(&mut self, length: u16) -> Result<()> {
+        for id in self.counter..(self.counter + length) {
+            self.add_id(id)?;
         }
+
+        self.counter = self.counter + length;
         Ok(())
     }
 
-    pub fn add_mints(&mut self, mints: &Vec<Pubkey>) -> Result<()> {
-        for mint in mints.iter() {
-            self.add_mint(&mint)?;
-        }
-        Ok(())
-    }
-
-    pub fn add_mint(&mut self, mint: &Pubkey) -> Result<()> {
-        self.mints.push(*mint);
+    pub fn add_id(&mut self, id: u16) -> Result<()> {
+        self.ids.push(id);
         Ok(())
     }
 

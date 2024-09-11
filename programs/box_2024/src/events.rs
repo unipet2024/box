@@ -67,7 +67,7 @@ pub struct BuyBoxEvent {
     pub box_id: u8,
     // pub id: u64,
     pub buyer: Pubkey,
-    pub mints: Vec<Pubkey>,
+    pub ids: Vec<u16>,
     pub time: i64,
     pub slot: u64,
 }

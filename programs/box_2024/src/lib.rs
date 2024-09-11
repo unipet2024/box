@@ -43,17 +43,12 @@ pub mod box_2024 {
         end_time: i64,
         currencies: Vec<Currency>,
         rates: Vec<u8>,
-        nfts: Vec<Pubkey>,
     ) -> Result<()> {
-        create_box::create_box_handler(ctx, start_time, end_time, currencies, rates, nfts)
+        create_box::create_box_handler(ctx, start_time, end_time, currencies, rates)
     }
 
     pub fn add_mints(ctx: Context<OperatorInstruction>, id: u8, nfts: Vec<Pubkey>) -> Result<()> {
         operator_instruction::add_mints_handler(ctx, id, nfts)
-    }
-
-    pub fn add_nft_to_box(ctx: Context<OperatorAddNftBox>, id: u8) -> Result<()> {
-        handle_add_nft_to_box(ctx, id)
     }
 
     pub fn change_rates(ctx: Context<OperatorInstruction>, id: u8, rates: Vec<u8>) -> Result<()> {
@@ -72,7 +67,7 @@ pub mod box_2024 {
         init_buyer::init_buyer_handle(ctx)
     }
 
-    pub fn claim(ctx: Context<ClaimBox>, box_id: u8) -> Result<()> {
-        claim_box::claim_handler(ctx, box_id)
-    }
+    // pub fn claim(ctx: Context<ClaimBox>, box_id: u8) -> Result<()> {
+    //     claim_box::claim_handler(ctx, box_id)
+    // }
 }

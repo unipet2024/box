@@ -9,6 +9,7 @@ import {
   getBoxAccount,
   getOperatorAccount,
   getBuyerAccount,
+  getBoxStorage,
 } from "./helper";
 
 import {
@@ -28,12 +29,13 @@ import {
 } from "@solana/spl-token";
 
 async function add_nfts() {
-  const box_id = 1;
+  const box_id = 6;
   const box_account = getBoxAccount(box_id);
+  const box_storage = getBoxStorage(box_id);
   //MINT
 
   let mint_list = [];
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 1; i++) {
     // const mintNew = await createMint(
     //   connection,
     //   payer,
@@ -75,6 +77,7 @@ async function add_nfts() {
       .accounts({
         operatorAccount: operator_account,
         boxAccount: box_account,
+        boxStorage: box_storage,
       })
       .instruction();
     const transaction = new Transaction()
@@ -94,7 +97,10 @@ async function add_nfts() {
   }
 
   let box_account_info = await program.account.boxStruct.fetch(box_account);
-  console.log(box_account_info.mints.length);
+  console.log(box_account_info.ids);
+
+  let box_storage_info = await program.account.boxStorage.fetch(box_storage);
+  console.log(box_storage_info.mints.length);
 }
 
 add_nfts();

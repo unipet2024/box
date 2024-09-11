@@ -146,6 +146,11 @@ export type Box2024 = {
           "isSigner": false
         },
         {
+          "name": "boxStorage",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -171,12 +176,6 @@ export type Box2024 = {
         {
           "name": "rates",
           "type": "bytes"
-        },
-        {
-          "name": "nfts",
-          "type": {
-            "vec": "publicKey"
-          }
         }
       ]
     },
@@ -194,6 +193,11 @@ export type Box2024 = {
           "isSigner": false
         },
         {
+          "name": "boxStorage",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "authority",
           "isMut": true,
           "isSigner": true
@@ -218,62 +222,6 @@ export type Box2024 = {
       ]
     },
     {
-      "name": "addNftToBox",
-      "accounts": [
-        {
-          "name": "operatorAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "boxAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "id",
-          "type": "u8"
-        }
-      ]
-    },
-    {
       "name": "changeRates",
       "accounts": [
         {
@@ -283,6 +231,11 @@ export type Box2024 = {
         },
         {
           "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "boxStorage",
           "isMut": true,
           "isSigner": false
         },
@@ -384,62 +337,6 @@ export type Box2024 = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "claim",
-      "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftBuyer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -472,6 +369,28 @@ export type Box2024 = {
       }
     },
     {
+      "name": "boxStorage",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "mints",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "boxStruct",
       "type": {
         "kind": "struct",
@@ -483,6 +402,10 @@ export type Box2024 = {
           {
             "name": "id",
             "type": "u8"
+          },
+          {
+            "name": "counter",
+            "type": "u16"
           },
           {
             "name": "starttime",
@@ -509,9 +432,9 @@ export type Box2024 = {
             }
           },
           {
-            "name": "mints",
+            "name": "ids",
             "type": {
-              "vec": "publicKey"
+              "vec": "u16"
             }
           }
         ]
@@ -583,8 +506,8 @@ export type Box2024 = {
             "type": "u8"
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            "name": "id",
+            "type": "u16"
           },
           {
             "name": "isClaim",
@@ -863,9 +786,9 @@ export type Box2024 = {
           "index": false
         },
         {
-          "name": "mints",
+          "name": "ids",
           "type": {
-            "vec": "publicKey"
+            "vec": "u16"
           },
           "index": false
         },
@@ -1154,6 +1077,11 @@ export const IDL: Box2024 = {
           "isSigner": false
         },
         {
+          "name": "boxStorage",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -1179,12 +1107,6 @@ export const IDL: Box2024 = {
         {
           "name": "rates",
           "type": "bytes"
-        },
-        {
-          "name": "nfts",
-          "type": {
-            "vec": "publicKey"
-          }
         }
       ]
     },
@@ -1202,6 +1124,11 @@ export const IDL: Box2024 = {
           "isSigner": false
         },
         {
+          "name": "boxStorage",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "authority",
           "isMut": true,
           "isSigner": true
@@ -1226,62 +1153,6 @@ export const IDL: Box2024 = {
       ]
     },
     {
-      "name": "addNftToBox",
-      "accounts": [
-        {
-          "name": "operatorAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "boxAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "boxAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "id",
-          "type": "u8"
-        }
-      ]
-    },
-    {
       "name": "changeRates",
       "accounts": [
         {
@@ -1291,6 +1162,11 @@ export const IDL: Box2024 = {
         },
         {
           "name": "boxAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "boxStorage",
           "isMut": true,
           "isSigner": false
         },
@@ -1392,62 +1268,6 @@ export const IDL: Box2024 = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "claim",
-      "accounts": [
-        {
-          "name": "boxAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftBuyer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "boxId",
-          "type": "u8"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -1480,6 +1300,28 @@ export const IDL: Box2024 = {
       }
     },
     {
+      "name": "boxStorage",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "mints",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "boxStruct",
       "type": {
         "kind": "struct",
@@ -1491,6 +1333,10 @@ export const IDL: Box2024 = {
           {
             "name": "id",
             "type": "u8"
+          },
+          {
+            "name": "counter",
+            "type": "u16"
           },
           {
             "name": "starttime",
@@ -1517,9 +1363,9 @@ export const IDL: Box2024 = {
             }
           },
           {
-            "name": "mints",
+            "name": "ids",
             "type": {
-              "vec": "publicKey"
+              "vec": "u16"
             }
           }
         ]
@@ -1591,8 +1437,8 @@ export const IDL: Box2024 = {
             "type": "u8"
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            "name": "id",
+            "type": "u16"
           },
           {
             "name": "isClaim",
@@ -1871,9 +1717,9 @@ export const IDL: Box2024 = {
           "index": false
         },
         {
-          "name": "mints",
+          "name": "ids",
           "type": {
-            "vec": "publicKey"
+            "vec": "u16"
           },
           "index": false
         },

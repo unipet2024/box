@@ -15,20 +15,19 @@ export const wallet = Keypair.fromSecretKey(
   ])
 );
 
-// import bs58 from "bs58";
+import bs58 from "bs58";
 
-// function base58ToKeypair(base58PrivateKey: string): Keypair {
-//   try {
-//     const privateKeyBuffer = bs58.decode(base58PrivateKey);
-//     return Keypair.fromSecretKey(privateKeyBuffer);
-//   } catch (error) {
-//     throw new Error("Invalid base58 private key.");
-//   }
-// }
+function base58ToKeypair(base58PrivateKey: string): Keypair {
+  try {
+    const privateKeyBuffer = bs58.decode(base58PrivateKey);
+    return Keypair.fromSecretKey(privateKeyBuffer);
+  } catch (error) {
+    throw new Error("Invalid base58 private key.");
+  }
+}
 
-// Example usage
 // const base58PrivateKey =
-//   "5U74SZSVTBLHoXaxro37sGRmsoBNUqirUYcDZJ7eozigE5EK9nuM89UK4bEqHZBKczztsTRP9u9V7VNM2TNXtFRD"; // Replace with actual base58 private key
+//   "5LpkoJndJ9YR6oupvjPC9LqZ8nWnaBZ7ZyBLzMLeEnKXnfw5Ap55sqMYE3jbgh8gbn4uAU79qEGQRtPyiggWHRdd"; // Replace with actual base58 private key
 // export const wallet = base58ToKeypair(base58PrivateKey);
 // console.log(`Public Key: ${wallet.publicKey.toBase58()}`); //prints the base58-encoded public key
 // console.log(`Private Key (Base58): ${wallet.secretKey.toString()}`); // prints the base58-encoded private key
@@ -86,7 +85,18 @@ export const getBoxAccount = (id) => {
     [Buffer.from(BOX_ACCOUNT), new anchor.BN(id).toArrayLike(Buffer, "le", 1)],
     program.programId
   );
-  console.log("BOX ", id, " : ", box_account.toString());
+  console.log("BOX account ", id, " : ", box_account.toString());
+
+  return box_account;
+};
+
+export const getBoxStorage = (id) => {
+  const BOX_STORAGE = "BOX_STORAGE";
+  const [box_account] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from(BOX_STORAGE), new anchor.BN(id).toArrayLike(Buffer, "le", 1)],
+    program.programId
+  );
+  console.log("BOX storage ", id, " : ", box_account.toString());
 
   return box_account;
 };

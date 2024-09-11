@@ -6,7 +6,7 @@ use crate::{UserStruct, USER_ACCOUNT};
 pub struct InitBuyer<'info> {
     #[account(
         init,
-        space = 8 + 5000,
+        space = 445,
         payer=buyer,
         seeds = [USER_ACCOUNT, buyer.key.as_ref()],
         bump,

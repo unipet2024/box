@@ -22,7 +22,7 @@ import {
 } from "@solana/spl-token";
 
 async function buy_box() {
-  const box_id = 1;
+  const box_id = 6;
   const box_account = getBoxAccount(box_id);
 
   // const box_account_info = await program.account.boxStruct.fetch(box_account);
@@ -57,15 +57,15 @@ async function buy_box() {
       bytes: 1000,
     });
 
-    console.log("INIT BUYER");
-    await program.methods
-      .initBuyer()
-      .accounts({
-        buyer: owner.publicKey,
-        buyerAccount: buyer_account,
-      })
-      .signers([owner.payer])
-      .rpc();
+    // console.log("INIT BUYER");
+    // await program.methods
+    //   .initBuyer()
+    //   .accounts({
+    //     buyer: owner.publicKey,
+    //     buyerAccount: buyer_account,
+    //   })
+    //   .signers([owner.payer])
+    //   .rpc();
 
     console.log("BUYER");
     const instruction = await program.methods
@@ -99,10 +99,10 @@ async function buy_box() {
   }
 
   let box_account_info = await program.account.boxStruct.fetch(box_account);
-  console.log(box_account_info.mints.length);
+  console.log(box_account_info.ids);
 
   let user_account_info = await program.account.userStruct.fetch(buyer_account);
-  console.log(user_account_info.boughts);
+  console.log(user_account_info.boughts.length);
 }
 
 buy_box();
